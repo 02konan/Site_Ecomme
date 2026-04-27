@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Tous nos produits - eShop{% endblock %}
+
+{% block content %}
+    <div class="container py-5">
+        <!-- Header -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <h1 class="subtitle" data-aos="fade-up">Nos Produits</h1>
+                <p class="text-muted" data-aos="zoom-out" data-aos-delay="200">Découvrez notre vaste sélection de produits de qualité</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Filters -->
+            <div class="col-lg-3 mb-4" data-aos="fade-right">
+                <div class="filter-panel">
+                    <h5 class="mb-3">Filtrer par</h5>
+                    
+                    <!-- Categories -->
+                    <div class="filter-group mb-4">
+                        <h6 class="filter-title">Catégories</h6>
+                        {% for category in categories %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="category" id="cat{{ loop.index }}" value="{{ category.name }}">
+                            <label class="form-check-label" for="cat{{ loop.index }}">
+                                {{ category.name }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Price Range -->
+                    <div class="filter-group mb-4">
+                        <h6 class="filter-title">Gamme de prix</h6>
+                        <div class="d-flex gap-2 mb-2">
+                            <input type="number" class="form-control form-control-sm" placeholder="Min" min="0">
+                            <input type="number" class="form-control form-control-sm" placeholder="Max" min="0">
+                        </div>
+                        <button class="btn btn-sm btn-outline-primary w-100">Appliquer</button>
+                    </div>
+
+                    <!-- Ratings -->
+                    <div class="filter-group">
+                        <h6 class="filter-title">Note</h6>
+                        {% for i in range(5, 0, -1) %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="rating{{ i }}" value="{{ i }}">
+                            <label class="form-check-label" for="rating{{ i }}">
+                                {% for j in range(i) %}<i class="bi bi-star-fill text-warning"></i>{% endfor %} & plus
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="col-lg-9">
+                <!-- Sort Options -->
+                <div class="row mb-4">
+                    <div class="col-12 d-flex justify-content-between align-items-center">
+                        <p class="text-muted mb-0">Affichage {{ products|length }} produits</p>
+                        <select class="form-select form-select-sm" style="width: auto;">
+                            <option selected>Recommandé</option>
+                            <option>Prix croissant</option>
+                            <option>Prix décroissant</option>
+                            <option>Plus récent</option>
+                            <option>Meilleur note</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Products -->
+                <div class="row g-4" data-aos="fade-up">
+                    {% if products %}
+                        {% for product in products %}
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                            <a href="{{ url_for('product', product_id=product.id) }}" class="text-decoration-none">
+                                <div class="product-card">
+                                    <div class="position-relative">
+                                        <img src="{{ product.image }}" alt="{{ product.name }}" class="img-fluid w-100" style="height: 250px; object-fit: cover;">
+                                        <button class="btn btn-light btn-sm position-absolute top-2 end-2" style="border-radius: 50%;">
+                                            <i class="bi bi-heart"></i>
+                                        </button>
+                                    </div>
+                                    <div class="p-3">
+                                        <p class="text-muted small mb-1">{{ product.category }}</p>
+                                        <h6 class="mb-2">{{ product.name }}</h6>
+                                        <p class="text-muted small mb-3">{{ product.description }}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="fw-bold text-primary">{{ "%.2f"|format(product.price) }} XOF</span>
+                                            <button class="btn btn-sm btn-primary-custom">
+                                                <i class="bi bi-bag-fill"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <div class="col-12">
+                        <div class="alert alert-info text-center" role="alert">
+                            Aucun produit trouvé. Essayez une autre catégorie.
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Pagination -->
+                <nav class="mt-5" aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item"><a class="page-link" href="#">Précédent</a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Suivant</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+{% endblock %}

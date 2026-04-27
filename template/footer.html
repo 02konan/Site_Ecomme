@@ -1,0 +1,143 @@
+
+<footer class="footer">
+            <div class="footer-top">
+                <div class="container">
+                    <div class="row g-5">
+
+                        <!-- Colonne 1 — Brand -->
+                        <div class="col-12 col-md-4">
+                            <div class="footer-brand mb-3">
+                                <span class="title" style="font-size:22px;">e<span style="color:var(--primary);">Shop</span></span>
+                            </div>
+                            <p class="footer-desc">Votre spécialiste pour tous vos divers articles en Côte d'Ivoire. Qualité professionnelle, livraison rapide à Abidjan et dans tout le pays.</p>
+                            <div class="footer-socials mt-4 d-flex gap-3">
+                                <a href="#" class="social-icon"><i class="bi bi-facebook"></i></a>
+                                <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
+                                <a href="#" class="social-icon"><i class="bi bi-tiktok"></i></a>
+                                <a href="#" class="social-icon"><i class="bi bi-whatsapp"></i></a>
+                            </div>
+                        </div>
+
+                        <!-- Colonne 2 — Liens rapides -->
+                        <div class="col-6 col-md-2">
+                            <h6 class="footer-heading">Boutique</h6>
+                            <ul class="footer-links">
+                                <li><a href="#">Tous les produits</a></li>
+                                <li><a href="#">Nouveautés</a></li>
+                                <li><a href="#">Promotions</a></li>
+                                <li><a href="#">Appareils photo</a></li>
+                                <li><a href="#">Drones</a></li>
+                                <li><a href="#">Accessoires</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Colonne 3 — Aide -->
+                        <div class="col-6 col-md-2">
+                            <h6 class="footer-heading">Aide</h6>
+                            <ul class="footer-links">
+                                <li><a href="#">Mon compte</a></li>
+                                <li><a href="#">Suivi commande</a></li>
+                                <li><a href="#">Retours & SAV</a></li>
+                                <li><a href="#">FAQ</a></li>
+                                <li><a href="#">Centre d'aide</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Colonne 4 — Contact -->
+                        <div class="col-12 col-md-4">
+                            <h6 class="footer-heading">Contact</h6>
+                            <ul class="footer-contact">
+                                <li>
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    <span>Cocody Riviera Palmeraie, Abidjan, CI</span>
+                                </li>
+                                <li>
+                                    <i class="bi bi-telephone-fill"></i>
+                                    <span>+225 07 00 00 00 00</span>
+                                </li>
+                                <li>
+                                    <i class="bi bi-envelope-fill"></i>
+                                    <span>contact@photoshop.ci</span>
+                                </li>
+                                <li>
+                                    <i class="bi bi-clock-fill"></i>
+                                    <span>Lun – Sam : 08h00 – 19h00</span>
+                                </li>
+                            </ul>
+
+                            <!-- Newsletter -->
+                            <div class="footer-newsletter mt-4">
+                                <p class="footer-newsletter-label">Recevoir nos offres</p>
+                                <div class="newsletter-input-group">
+                                    <input type="email" placeholder="Votre adresse email">
+                                    <button><i class="bi bi-send-fill"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+           <!-- Footer bottom -->
+            <div class="footer-bottom">
+                <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+                    <p class="mb-0">© 2026 eShop CI — Tous droits réservés</p>
+                    <div class="d-flex gap-3">
+                        <a href="#">Mentions légales</a>
+                        <a href="#">Confidentialité</a>
+                        <a href="#">CGV</a>
+                    </div>
+                </div>
+            </div>
+</footer>
+    
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbar = document.querySelector('.navbar');
+            const productsSection = document.querySelector('.container.pt-5.event');
+
+            function updateNavbarColor() {
+                if (!productsSection) return;
+
+                const productsSectionTop = productsSection.offsetTop;
+                const navbarHeight = navbar.offsetHeight;
+                const scrollPosition = window.scrollY;
+
+                // Si la navbar atteint la section des produits (fond blanc)
+                if (scrollPosition + navbarHeight >= productsSectionTop) {
+                    navbar.classList.add('navbar-dark');
+                } else {
+                    navbar.classList.remove('navbar-dark');
+                }
+            }
+
+            // Écouter les événements de scroll
+            window.addEventListener('scroll', updateNavbarColor);
+            // Vérifier au chargement de la page
+            updateNavbarColor();
+
+            // Prevent link activation when clicking on "Panier" buttons
+            const panierButtons = document.querySelectorAll('.product-card .btn');
+            panierButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    // Add your cart logic here if needed
+                    console.log('Panier button clicked');
+                });
+            });
+        });
+       
+      AOS.init({
+        duration: 1000,
+        once: true
+      });
+    
+</script>
+</body>
+</html>

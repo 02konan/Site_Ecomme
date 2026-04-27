@@ -1,0 +1,59 @@
+ <!-- OFFCANVAS navigation mobile -->
+<div class="offcanvas offcanvas-start nav-offcanvas" tabindex="-1" id="navOffcanvas" aria-labelledby="navOffcanvasLabel">
+            <div class="offcanvas-header">
+                <a href="{{ url_for('index') }}" class="text-decoration-none" style="color: inherit;">
+                    <span class="title" style="font-size:20px;" id="navOffcanvasLabel">e<span style="color:var(--primary);">Shop</span></span>
+                </a>
+                <button type="button" class="btn-close-offcanvas" data-bs-dismiss="offcanvas" aria-label="Fermer">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="offcanvas-nav">
+                    <li>
+                        <a href="{{ url_for('produits') }}" class="offcanvas-link">
+                            <span class="oc-icon"><i class="bi bi-grid"></i></span>
+                            Tous nos produits
+                            <i class="bi bi-chevron-right ms-auto"></i>
+                        </a>
+                    </li>
+                    <li class="oc-has-sub">
+                        <button class="offcanvas-link oc-toggle" type="button">
+                            <span class="oc-icon"><i class="bi bi-tag"></i></span>
+                            Catégories
+                            <i class="bi bi-chevron-down ms-auto oc-chevron"></i>
+                        </button>
+                        <ul class="oc-submenu">
+                            <li><a href="{{ url_for('categorie', slug='appareil-photo') }}"><i class="bi bi-camera me-2"></i>Appareil photo</a></li>
+                            <li><a href="{{ url_for('categorie', slug='camera') }}"><i class="bi bi-camera-video me-2"></i>Caméra</a></li>
+                            <li><a href="{{ url_for('categorie', slug='trepied') }}"><i class="bi bi-badge-3d me-2"></i>Trépieds</a></li>
+                            <li><a href="{{ url_for('categorie', slug='drones') }}"><i class="bi bi-airplane me-2"></i>Drones</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('index') }}" class="offcanvas-link">
+                            <span class="oc-icon"><i class="bi bi-stars"></i></span>
+                            Nouveauté
+                            <i class="bi bi-chevron-right ms-auto"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('index') }}" class="offcanvas-link">
+                            <span class="oc-icon"><i class="bi bi-headset"></i></span>
+                            Centre d'aide
+                            <i class="bi bi-chevron-right ms-auto"></i>
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Profil rapide en bas -->
+                <div class="oc-profile">
+                    <img src="https://i.pravatar.cc/40" alt="Profil" width="40" height="40" class="rounded-circle">
+                    <div>
+                        <div style="font-weight:600;font-size:13px;">Mon compte</div>
+                        <div style="font-size:11px;color:var(--text-secondary);">Voir le profil</div>
+                    </div>
+                    <a href="#" class="ms-auto btn btn-sm btn-primary-custom">Déco</a>
+                </div>
+            </div>
+</div>
