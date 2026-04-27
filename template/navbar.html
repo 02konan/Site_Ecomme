@@ -1,67 +1,72 @@
  <!-- Navbar fixe -->
-        <nav class="navbar">
-            <div class="container-fluid px-3 px-lg-4 d-flex align-items-center justify-content-between">
+<nav class="navbar">
+    <div class="container-fluid px-3 px-lg-4 d-flex align-items-center justify-content-between">
 
-                <!-- Gauche : burger (mobile) + logo -->
-                <div class="d-flex align-items-center gap-3">
-                    <!-- Burger → ouvre l'offcanvas (visible seulement mobile/tablette) -->
-                    <button class="d-lg-none navbar-burger" type="button" data-bs-toggle="offcanvas" data-bs-target="#navOffcanvas" aria-controls="navOffcanvas">
-                        <i class="bi bi-list"></i>
-                    </button>
-                    <!-- Logo -->
-                    <a href="{{ url_for('index') }}" class="text-decoration-none" style="color: inherit;">
-                        <span class="title" style="font-size:18px;">eShop</span>
-                    </a>
+        <!-- Gauche : burger (mobile) + logo -->
+        <div class="d-flex align-items-center gap-3">
+            <!-- Burger → ouvre l'offcanvas (visible seulement mobile/tablette) -->
+            <button class="navbar-burger" type="button" data-bs-toggle="offcanvas" data-bs-target="#navOffcanvas" aria-controls="navOffcanvas">
+                <i class="bi bi-list"></i>
+            </button>
+            <!-- Logo -->
+            <img class="logo" src="{{ url_for('static', filename='back/logo.jpeg') }}" alt="Logo TouAchat">
+        </div>
+
+        <!-- Droite : panier + profil -->
+        <div class="d-flex align-items-center gap-2">
+            <a href="./cart.html" class="btn btn-sm btn-primary-custom rounded-circle position-relative cart">
+                <i class="bi bi-bag-fill"></i>
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger rounded-circle">
+                    <span class="visually-hidden">New alerts</span>
+                </span>
+            </a>
+            <!-- <div class="vr mx-1"></div>
+            <div class="dropdown">
+                <div class="d-flex align-items-center dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
+                    <img src="https://i.pravatar.cc/40" alt="Profil" width="36" height="36" class="rounded-circle">
                 </div>
-
-                <!-- Centre : liens de navigation (desktop uniquement) -->
-                <ul class="navbar-nav d-none d-lg-flex flex-row gap-2 mb-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('produits') }}">Tous nos produits</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button">
-                            Catégories <i class="bi bi-chevron-down"></i>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <a class="dropdown-item" href="{{ url_for('categorie', slug='appareil-photo') }}">Appareil photo</a>
-                            <a class="dropdown-item" href="{{ url_for('categorie', slug='camera') }}">Caméra</a>
-                            <a class="dropdown-item" href="{{ url_for('categorie', slug='trepied') }}">Trépieds</a>
-                            <a class="dropdown-item" href="{{ url_for('categorie', slug='drones') }}">Drones</a>
-                            <a class="dropdown-item" href="{{ url_for('categorie', slug='pc') }}">PC</a>
-                            <a class="dropdown-item" href="{{ url_for('categorie', slug='moniteurs') }}">Moniteurs</a>
-                            <a class="dropdown-item" href="{{ url_for('categorie', slug='casques') }}">Casques</a>
-                            <a class="dropdown-item" href="{{ url_for('categorie', slug='tv') }}">TV</a>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('index') }}">Nouveauté</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('index') }}">Centre d'aide</a>
-                    </li>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="profileDropdown">
+                    <li><a class="dropdown-item" href="#">Mon profil</a></li>
+                    <li><a class="dropdown-item" href="#">Paramètres</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#" id="logoutBtn">Déconnexion</a></li>
                 </ul>
+            </div> -->
+        </div>
+    </div>
+</nav>
 
-                <!-- Droite : panier + profil -->
-                <div class="d-flex align-items-center gap-2">
-                    <a href="#" class="btn btn-sm btn-primary-custom rounded-circle position-relative cart">
-                        <i class="bi bi-bag-fill"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger rounded-circle">
-                            <span class="visually-hidden">New alerts</span>
-                        </span>
-                    </a>
-                    <div class="vr mx-1"></div>
-                    <div class="dropdown">
-                        <div class="d-flex align-items-center dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
-                            <img src="https://i.pravatar.cc/40" alt="Profil" width="36" height="36" class="rounded-circle">
-                        </div>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="profileDropdown">
-                            <li><a class="dropdown-item" href="#">Mon profil</a></li>
-                            <li><a class="dropdown-item" href="#">Paramètres</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#" id="logoutBtn">Déconnexion</a></li>
-                        </ul>
+
+<!-- Barre de recherche sticky -->
+<div class="search-sticky-wrapper">
+    <div class="search-container sticky" id="searchContainer">
+        <div class="container">
+            <div class="search-wrapper">
+                <div class="search-input-group">
+                    <span class="search-icon">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" 
+                        class="search-input" 
+                        placeholder="Rechercher un produit, une marque..." 
+                        id="searchInput">
+                    <button class="search-clear" id="searchClear" style="display: none;">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                    <button class="btn btn-sm btn-primary-custom rounded-circle me-2"><i class="bi bi-arrow-right"></i></button>
+                </div>
+                
+                <!-- Suggestions de recherche -->
+                <div class="search-suggestions" id="searchSuggestions" style="display: none;">
+                    <div class="suggestions-header">
+                        <span>Suggestions récentes</span>
+                        <button class="clear-all">Tout effacer</button>
+                    </div>
+                    <div class="suggestions-list">
+                        <!-- Suggestions dynamiques -->
                     </div>
                 </div>
             </div>
-        </nav>
+        </div>
+    </div>
+</div>

@@ -11,36 +11,5 @@
     {% include 'produits.html' %}
     
     <!-- Featured Products -->
-    <section class="container mt-5 mb-5">
-        <div class="row">
-            <div class="col-12 mb-4">
-                <h2 class="subtitle">Nos Produits Vedettes</h2>
-                <p class="text-muted">Découvrez notre sélection exclusive</p>
-            </div>
-        </div>
-        
-        <div class="row g-4">
-            {% for product in featured_products %}
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <a href="{{ url_for('product', product_id=product.id) }}" class="text-decoration-none">
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="{{ product.image }}" alt="{{ product.name }}" class="img-fluid">
-                        </div>
-                        <div class="product-info">
-                            <h5>{{ product.name }}</h5>
-                            <p class="text-muted small">{{ product.category }}</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="price">{{ "%.2f"|format(product.price) }} XOF</span>
-                                <button class="btn btn-sm btn-primary-custom">
-                                    <i class="bi bi-bag-fill"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            {% endfor %}
-        </div>
-    </section>
+    
 {% endblock %}

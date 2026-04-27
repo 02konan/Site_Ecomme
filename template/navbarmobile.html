@@ -1,59 +1,200 @@
  <!-- OFFCANVAS navigation mobile -->
 <div class="offcanvas offcanvas-start nav-offcanvas" tabindex="-1" id="navOffcanvas" aria-labelledby="navOffcanvasLabel">
-            <div class="offcanvas-header">
-                <a href="{{ url_for('index') }}" class="text-decoration-none" style="color: inherit;">
-                    <span class="title" style="font-size:20px;" id="navOffcanvasLabel">e<span style="color:var(--primary);">Shop</span></span>
-                </a>
-                <button type="button" class="btn-close-offcanvas" data-bs-dismiss="offcanvas" aria-label="Fermer">
-                    <i class="bi bi-x-lg"></i>
+    <div class="offcanvas-header">
+        <img class="logo" src="{{ url_for('static', filename='back/logo.jpeg') }}" alt="Logo">
+        <button type="button" class="btn-close-offcanvas" data-bs-dismiss="offcanvas" aria-label="Fermer">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="offcanvas-nav">
+            <!-- ========== CATÉGORIE 1 : ÉLECTROMÉNAGER ========== -->
+            <li>
+                <button class="offcanvas-link-level1" data-level1="electro">
+                    <span>ÉLECTROMÉNAGER</span>
+                    <i class="bi bi-chevron-down level1-chevron"></i>
                 </button>
-            </div>
-            <div class="offcanvas-body">
-                <ul class="offcanvas-nav">
-                    <li>
-                        <a href="{{ url_for('produits') }}" class="offcanvas-link">
-                            <span class="oc-icon"><i class="bi bi-grid"></i></span>
-                            Tous nos produits
-                            <i class="bi bi-chevron-right ms-auto"></i>
-                        </a>
-                    </li>
-                    <li class="oc-has-sub">
-                        <button class="offcanvas-link oc-toggle" type="button">
-                            <span class="oc-icon"><i class="bi bi-tag"></i></span>
-                            Catégories
-                            <i class="bi bi-chevron-down ms-auto oc-chevron"></i>
-                        </button>
-                        <ul class="oc-submenu">
-                            <li><a href="{{ url_for('categorie', slug='appareil-photo') }}"><i class="bi bi-camera me-2"></i>Appareil photo</a></li>
-                            <li><a href="{{ url_for('categorie', slug='camera') }}"><i class="bi bi-camera-video me-2"></i>Caméra</a></li>
-                            <li><a href="{{ url_for('categorie', slug='trepied') }}"><i class="bi bi-badge-3d me-2"></i>Trépieds</a></li>
-                            <li><a href="{{ url_for('categorie', slug='drones') }}"><i class="bi bi-airplane me-2"></i>Drones</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('index') }}" class="offcanvas-link">
-                            <span class="oc-icon"><i class="bi bi-stars"></i></span>
-                            Nouveauté
-                            <i class="bi bi-chevron-right ms-auto"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('index') }}" class="offcanvas-link">
-                            <span class="oc-icon"><i class="bi bi-headset"></i></span>
-                            Centre d'aide
-                            <i class="bi bi-chevron-right ms-auto"></i>
-                        </a>
-                    </li>
-                </ul>
-
-                <!-- Profil rapide en bas -->
-                <div class="oc-profile">
-                    <img src="https://i.pravatar.cc/40" alt="Profil" width="40" height="40" class="rounded-circle">
-                    <div>
-                        <div style="font-weight:600;font-size:13px;">Mon compte</div>
-                        <div style="font-size:11px;color:var(--text-secondary);">Voir le profil</div>
-                    </div>
-                    <a href="#" class="ms-auto btn btn-sm btn-primary-custom">Déco</a>
+                <div class="level2-wrapper" id="level1-electro">
+                    <ul class="level2-list">
+                        <!-- Sous-catégorie : GROS ÉLECTROMÉNAGER -->
+                        <li class="level2-item">
+                            <button class="offcanvas-link-level2" data-level2="gros-electro">
+                                <span>GROS ÉLECTROMÉNAGER</span>
+                                <i class="bi bi-chevron-down level2-chevron"></i>
+                            </button>
+                            <div class="level3-wrapper" id="level2-gros-electro">
+                                <ul class="level3-list">
+                                    <li><a href="#" class="level3-link">Réfrigérateurs</a></li>
+                                    <li><a href="#" class="level3-link">Congélateurs</a></li>
+                                    <li><a href="#" class="level3-link">Lave-linge</a></li>
+                                    <li><a href="#" class="level3-link">Lave-vaisselle</a></li>
+                                    <li><a href="#" class="level3-link">Cuisinières & Fours</a></li>
+                                    <li><a href="#" class="level3-link">Sèche-linge</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!-- Sous-catégorie : PETIT ÉLECTROMÉNAGER -->
+                        <li class="level2-item">
+                            <button class="offcanvas-link-level2" data-level2="petit-electro">
+                                <span>PETIT ÉLECTROMÉNAGER</span>
+                                <i class="bi bi-chevron-down level2-chevron"></i>
+                            </button>
+                            <div class="level3-wrapper" id="level2-petit-electro">
+                                <ul class="level3-list">
+                                    <li><a href="#" class="level3-link">Cafetières & Expresso</a></li>
+                                    <li><a href="#" class="level3-link">Mixeurs & Blenders</a></li>
+                                    <li><a href="#" class="level3-link">Friteuses & Air Fryer</a></li>
+                                    <li><a href="#" class="level3-link">Robots pâtissiers</a></li>
+                                    <li><a href="#" class="level3-link">Centrifugeuses</a></li>
+                                    <li><a href="#" class="level3-link">Grille-pain</a></li>
+                                    <li><a href="#" class="level3-link">Ventilateurs & radiateurs</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!-- Sous-catégorie : CUISINE & PRÉPARATION -->
+                        <li class="level2-item">
+                            <button class="offcanvas-link-level2" data-level2="cuisine">
+                                <span>CUISINE & PRÉPARATION</span>
+                                <i class="bi bi-chevron-down level2-chevron"></i>
+                            </button>
+                            <div class="level3-wrapper" id="level2-cuisine">
+                                <ul class="level3-list">
+                                    <li><a href="#" class="level3-link">Plaques de cuisson</a></li>
+                                    <li><a href="#" class="level3-link">Hottes aspirantes</a></li>
+                                    <li><a href="#" class="level3-link">Fours encastrables</a></li>
+                                    <li><a href="#" class="level3-link">Micro-ondes</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
+            </li>
+
+            <!-- ========== CATÉGORIE 2 : INFORMATIQUE & MULTIMÉDIA ========== -->
+            <li>
+                <button class="offcanvas-link-level1" data-level1="informatique">
+                    <span>INFORMATIQUE & MULTIMÉDIA</span>
+                    <i class="bi bi-chevron-down level1-chevron"></i>
+                </button>
+                <div class="level2-wrapper" id="level1-informatique">
+                    <ul class="level2-list">
+                        <li class="level2-item">
+                            <button class="offcanvas-link-level2" data-level2="ordi">
+                                <span>Ordinateurs & PC</span>
+                                <i class="bi bi-chevron-down level2-chevron"></i>
+                            </button>
+                            <div class="level3-wrapper" id="level2-ordi">
+                                <ul class="level3-list">
+                                    <li><a href="#" class="level3-link">Ordinateurs portables</a></li>
+                                    <li><a href="#" class="level3-link">PC de bureau</a></li>
+                                    <li><a href="#" class="level3-link">Mac & Apple</a></li>
+                                    <li><a href="#" class="level3-link">Composants PC</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="level2-item">
+                            <button class="offcanvas-link-level2" data-level2="periph">
+                                <span>Périphériques & Accessoires</span>
+                                <i class="bi bi-chevron-down level2-chevron"></i>
+                            </button>
+                            <div class="level3-wrapper" id="level2-periph">
+                                <ul class="level3-list">
+                                    <li><a href="#" class="level3-link">Claviers & souris</a></li>
+                                    <li><a href="#" class="level3-link">Écrans & moniteurs</a></li>
+                                    <li><a href="#" class="level3-link">Disques durs & SSD</a></li>
+                                    <li><a href="#" class="level3-link">Hubs & adaptateurs</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- ========== CATÉGORIE 3 : PHOTO & VIDÉO ========== -->
+            <li>
+                <button class="offcanvas-link-level1" data-level1="photo">
+                    <span>PHOTO & VIDÉO</span>
+                    <i class="bi bi-chevron-down level1-chevron"></i>
+                </button>
+                <div class="level2-wrapper" id="level1-photo">
+                    <ul class="level2-list">
+                        <li class="level2-item">
+                            <button class="offcanvas-link-level2" data-level2="appareils">
+                                <span>Appareils photo</span>
+                                <i class="bi bi-chevron-down level2-chevron"></i>
+                            </button>
+                            <div class="level3-wrapper" id="level2-appareils">
+                                <ul class="level3-list">
+                                    <li><a href="#" class="level3-link">Appareils reflex</a></li>
+                                    <li><a href="#" class="level3-link">Hybrides (Mirrorless)</a></li>
+                                    <li><a href="#" class="level3-link">Compacts experts</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="level2-item">
+                            <button class="offcanvas-link-level2" data-level2="optiques">
+                                <span>Objectifs & optiques</span>
+                                <i class="bi bi-chevron-down level2-chevron"></i>
+                            </button>
+                            <div class="level3-wrapper" id="level2-optiques">
+                                <ul class="level3-list">
+                                    <li><a href="#" class="level3-link">Grands angles</a></li>
+                                    <li><a href="#" class="level3-link">Téléobjectifs</a></li>
+                                    <li><a href="#" class="level3-link">Objectifs macro</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- ========== CATÉGORIE 4 : SON & AUDIO ========== -->
+            <li>
+                <button class="offcanvas-link-level1" data-level1="audio">
+                    <span>SON & AUDIO</span>
+                    <i class="bi bi-chevron-down level1-chevron"></i>
+                </button>
+                <div class="level2-wrapper" id="level1-audio">
+                    <ul class="level2-list">
+                        <li class="level2-item">
+                            <button class="offcanvas-link-level2" data-level2="casques">
+                                <span>Casques & écouteurs</span>
+                                <i class="bi bi-chevron-down level2-chevron"></i>
+                            </button>
+                            <div class="level3-wrapper" id="level2-casques">
+                                <ul class="level3-list">
+                                    <li><a href="#" class="level3-link">Casques Bluetooth</a></li>
+                                    <li><a href="#" class="level3-link">Casques filaires</a></li>
+                                    <li><a href="#" class="level3-link">Écouteurs true wireless</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="level2-item">
+                            <button class="offcanvas-link-level2" data-level2="enceintes">
+                                <span>Enceintes & soundbars</span>
+                                <i class="bi bi-chevron-down level2-chevron"></i>
+                            </button>
+                            <div class="level3-wrapper" id="level2-enceintes">
+                                <ul class="level3-list">
+                                    <li><a href="#" class="level3-link">Enceintes connectées</a></li>
+                                    <li><a href="#" class="level3-link">Soundbars</a></li>
+                                    <li><a href="#" class="level3-link">Enceintes Hi-Fi</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+
+        <!-- Profil en bas -->
+        <div class="oc-profile">
+            <img src="https://i.pravatar.cc/42" alt="Profil" width="42" height="42" class="rounded-circle">
+            <div class="profile-info">
+                <div class="profile-name">Mon compte</div>
+                <div class="profile-email">client@eshop.ci</div>
             </div>
+            <a href="#" class="profile-icon-btn"><i class="bi bi-box-arrow-right"></i></a>
+        </div>
+    </div>
 </div>
