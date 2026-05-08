@@ -25,7 +25,6 @@ function afficheBanner(banners) {
     const container = document.getElementById("heroCarousel");
     if (!container) return;
 
-    // Récupérer les éléments existants du carrousel
     const indicatorsContainer = container.querySelector('.carousel-indicators');
     const innerContainer = container.querySelector('.carousel-inner');
     const prevButton = container.querySelector('.carousel-control-prev');
@@ -33,13 +32,10 @@ function afficheBanner(banners) {
 
     if (!indicatorsContainer || !innerContainer) return;
 
-    // Vider les conteneurs existants
     indicatorsContainer.innerHTML = '';
     innerContainer.innerHTML = '';
 
-    // Créer les slides et indicateurs dynamiquement
     banners.forEach((banner, index) => {
-        // Créer l'indicateur
         const indicator = document.createElement('button');
         indicator.type = 'button';
         indicator.setAttribute('data-bs-target', '#heroCarousel');
@@ -51,19 +47,16 @@ function afficheBanner(banners) {
         indicator.setAttribute('aria-label', `Slide ${index + 1}`);
         indicatorsContainer.appendChild(indicator);
 
-        // Créer le slide
         const slide = document.createElement('div');
         slide.classList.add('carousel-item');
         if (index === 0) slide.classList.add('active');
 
-        // Utiliser les données de la bannière ou des valeurs par défaut
         const title = banner.titre || 'Découvrez nos offres';
         const description = banner.description  || 'Profitez de nos meilleures offres du moment';
         const buttonText = banner.bouton_texte || 'Achetez maintenant';
         const buttonLink = banner.bouton_lien || banner.button_link || '#';
         const backgroundImage = banner.img  || '/static/back/back_banner.jpg';
 
-        // Structure HTML du slide
         slide.innerHTML = `
             <div class="content">
                 <h1 class="title">${escapeHtml(title)}</h1>
@@ -78,7 +71,6 @@ function afficheBanner(banners) {
         innerContainer.appendChild(slide);
     });
 
-    // Réattacher les contrôles s'ils ont été supprimés
     if (prevButton && nextButton) {
         if (!container.contains(prevButton)) container.appendChild(prevButton);
         if (!container.contains(nextButton)) container.appendChild(nextButton);
@@ -94,7 +86,6 @@ function afficheBanner(banners) {
     }
 }
 
-// Fonction utilitaire pour échapper les caractères HTML (sécurité)
 function escapeHtml(str) {
     if (!str) return '';
     return str

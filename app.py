@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from backend.read_data import details_produits,liste_produits,liste_banners
+from backend.read_data import details_produits,liste_produits,liste_banners,liste_produits_une,liste_Nouveaute
 import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
 from flask_cors import CORS
@@ -50,10 +50,39 @@ def produits_list():
             }
             table.append(information)
     return jsonify({"data":table})
-       
-    
-    
-    
+
+@app.route('/produit_une/list')
+def produit_une():
+    data=liste_produits_une()
+    table=[]
+    if data:
+        for i in data:
+            information={
+                "id_produits":i[0],
+                "nom_produits":i[1],
+                "descriptin_produits":i[2],
+                "prix_produits":i[3],
+                "img_produits": i[4]
+            }
+            table.append(information)
+    return jsonify({"data":table})
+
+@app.route('/produit_nouveaute/list')
+def produits_produit_nouveaute():
+    data=liste_Nouveaute()
+    table=[]
+    if data:
+        for i in data:
+            information={
+                "id_produits":i[0],
+                "nom_produits":i[1],
+                "descriptin_produits":i[2],
+                "prix_produits":i[3],
+                "img_produits": i[4]
+            }
+            table.append(information)
+    return jsonify({"data":table})
+  
 @app.route('/banner/list')
 def banner():
     data=liste_banners()
@@ -73,9 +102,9 @@ def banner():
 def produits():
     return render_template('produits_list.html')
 
-@app.route('/detail_produit')
-def produits_details():
-    data=details_produits()
+@app.route('/detail_produit/<id_produits>')
+def produits_details(id_produits):
+    data=details_produits(id_produits)
     table=[]
     if data:
         for i in data:
@@ -90,7 +119,7 @@ def produits_details():
             }
             table.append(information)
     
-    return render_template('product_detail.html',product=table)
+    return jsonify({"data":table})
 
 
 
