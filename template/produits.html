@@ -30,8 +30,6 @@
 
 <div class="container pb-5">
     <p class="text-muted fs-5" data-aos="fade-up" data-aos-delay="0">Produits les plus vendus</p>
-
-    <!-- Carousel produits - avance 1 par 1 -->
     <div class="products-carousel-wrapper position-relative mt-4" data-aos="fade-up" data-aos-delay="0">
 
         <!-- Flèche gauche -->
@@ -45,7 +43,7 @@
 
                 <!-- Produit 1 -->
                 <div class="products-carousel-slide">
-                    <a href="product.html" class="text-decoration-none">
+                    <a href="/detail_produit" class="text-decoration-none">
                         <div class="product-card">
                             <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
                             <div class="like"><i class="bi bi-heart"></i></div>
@@ -70,7 +68,7 @@
 
                 <!-- Produit 2 -->
                 <div class="products-carousel-slide">
-                    <a href="product.html" class="text-decoration-none">
+                    <a href="/detail_produit" class="text-decoration-none">
                         <div class="product-card">
                             <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
                             <div class="like"><i class="bi bi-heart"></i></div>
@@ -95,7 +93,7 @@
 
                 <!-- Produit 3 -->
                 <div class="products-carousel-slide">
-                    <a href="product.html" class="text-decoration-none">
+                    <a href="/detail_produit" class="text-decoration-none">
                         <div class="product-card">
                             <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
                             <div class="like"><i class="bi bi-heart"></i></div>
@@ -120,7 +118,7 @@
 
                 <!-- Produit 4 -->
                 <div class="products-carousel-slide">
-                    <a href="product.html" class="text-decoration-none">
+                    <a href="/detail_produit" class="text-decoration-none">
                         <div class="product-card">
                             <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
                             <div class="like"><i class="bi bi-heart"></i></div>
@@ -144,7 +142,7 @@
                 </div>
                 <!-- Produit 4 -->
                 <div class="products-carousel-slide">
-                    <a href="product.html" class="text-decoration-none">
+                    <a href="/detail_produit" class="text-decoration-none">
                         <div class="product-card">
                             <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
                             <div class="like"><i class="bi bi-heart"></i></div>
@@ -168,7 +166,7 @@
                 </div>
                 <!-- Produit 1 -->
                 <div class="products-carousel-slide">
-                    <a href="product.html" class="text-decoration-none">
+                    <a href="/detail_produit" class="text-decoration-none">
                         <div class="product-card">
                             <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
                             <div class="like"><i class="bi bi-heart"></i></div>
@@ -193,7 +191,7 @@
 
                 <!-- Produit 2 -->
                 <div class="products-carousel-slide">
-                    <a href="product.html" class="text-decoration-none">
+                    <a href="/detail_produit" class="text-decoration-none">
                         <div class="product-card">
                             <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
                             <div class="like"><i class="bi bi-heart"></i></div>
@@ -242,208 +240,12 @@
             </div>
         </a>
     </div>
-    <div class="row g-4 mt-4" data-aos="fade-up" data-aos-delay="0">
-
-        <!-- Produit 1 — Drone -->
+    <div class="row g-4 mt-4" id="NosProduits" data-aos="fade-up" data-aos-delay="0">
         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
             <a href="product.html" class="text-decoration-none">
-                <div class="product-card">
-                    <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
-                    <div class="like"><i class="bi bi-heart"></i></div>
-                    <img src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=600" class="product-img">
-                    <div class="product-body d-flex">
-                        <div class="col-8">
-                            <div class="product-title">DJI Mini 4 Pro</div>
-                            <p class="small product-desc text-muted">Drone compact 4K avec stabilisation 3 axes et autonomie 34 min.</p>
-                            <div class="product-star d-flex gap-1">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
-                                <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.7</span>
-                            </div>
-                        </div>
-                        <div class="col-4 d-flex flex-column">
-                            <div class="product-price ms-auto">FCFA 520,000 <span class="text-decoration-line-through text-muted">FCFA 650,000</span></div>
-                        </div>
-                    </div>
-                    <button class="btn btn-sm btn-outline-dark rounded-pill mt-2 panier-btn"><i class="bi bi-cart me-2"></i>Panier</button>
-                </div>
+                <!-- affiche produits dynamique -->
             </a>
         </div>
-
-        <!-- Produit 2 — Caméra vidéo -->
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-            <a href="product.html" class="text-decoration-none">
-                <div class="product-card">
-                    <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
-                    <div class="like"><i class="bi bi-heart"></i></div>
-                    <img src="https://www.sony.ch/image/2f3120b61d3cfbe9abcfc8ca42e9212f?fmt=png-alpha&wid=1578&hei=1050&bgcolor=F6F9FF" class="product-img">
-                    <div class="product-body d-flex">
-                        <div class="col-8">
-                            <div class="product-title">Sony FX3 Cinéma</div>
-                            <p class="small product-desc text-muted">Caméra cinéma plein format, 4K 120fps, idéale pour la vidéo pro.</p>
-                            <div class="product-star d-flex gap-1">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.9</span>
-                            </div>
-                        </div>
-                        <div class="col-4 d-flex flex-column">
-                            <div class="product-price ms-auto">FCFA 2,100,000 <span class="text-decoration-line-through text-muted">FCFA 650,000</span></div>
-                        </div>
-                    </div>
-                    <button class="btn btn-sm btn-outline-dark rounded-pill m-0 mt-auto"><i class="bi bi-cart me-2"></i>Panier</button>
-                </div>
-            </a>
-        </div>
-
-        <!-- Produit 3 — Trépied -->
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-            <a href="product.html" class="text-decoration-none">
-                <div class="product-card">
-                    <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
-                    <div class="like"><i class="bi bi-heart"></i></div>
-                    <img src="https://cdn.mos.cms.futurecdn.net/v2/t:0,l:800,cw:1200,ch:1200,q:80,w:1200/pgKdCqYV86FTGdh59Gz37T.jpg" class="product-img">
-                    <div class="product-body d-flex">
-                        <div class="col-8">
-                            <div class="product-title">Joby GorillaPod 5K</div>
-                            <p class="small product-desc text-muted">Trépied flexible tout-terrain, charge max 5 kg, rotule pro incluse.</p>
-                            <div class="product-star d-flex gap-1">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i>
-                                <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.2</span>
-                            </div>
-                        </div>
-                        <div class="col-4 d-flex flex-column">
-                            <div class="product-price ms-auto">FCFA 95,000 <span class="text-decoration-line-through text-muted">FCFA 650,000</span></div>
-                        </div>
-                    </div>
-                    <button class="btn btn-sm btn-outline-dark rounded-pill m-0 mt-auto"><i class="bi bi-cart me-2"></i>Panier</button>
-                </div>
-            </a>
-        </div>
-
-        <!-- Produit 4 — Objectif -->
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-            <a href="product.html" class="text-decoration-none">
-                <div class="product-card">
-                    <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
-                    <div class="like"><i class="bi bi-heart"></i></div>
-                    <img src="https://i5.walmartimages.com/seo/Sigma-340306-35mm-F1-4-DG-HSM-Lens-for-Nikon-Black-International-Version-No-Warranty_1022d226-2a80-46d7-af45-533fa02ea097_1.258c4448f1ef8dd4f7386b2d5b05a143.jpeg" class="product-img">
-                    <div class="product-body d-flex">
-                        <div class="col-8">
-                            <div class="product-title">Sigma 35mm f/1.4 Art</div>
-                            <p class="small product-desc text-muted">Objectif grand angle lumineux, piqué exceptionnel, compatible Sony/Nikon.</p>
-                            <div class="product-star d-flex gap-1">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
-                                <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.6</span>
-                            </div>
-                        </div>
-                        <div class="col-4 d-flex flex-column">
-                            <div class="product-price ms-auto">FCFA 480,000 <span class="text-decoration-line-through text-muted">FCFA 650,000</span></div>
-                        </div>
-                    </div>
-                    <button class="btn btn-sm btn-outline-dark rounded-pill m-0 mt-auto"><i class="bi bi-cart me-2"></i>Panier</button>
-                </div>
-            </a>
-        </div>
-
-        <!-- Produit 5 — Stabilisateur -->
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-            <a href="product.html" class="text-decoration-none">
-                <div class="product-card">
-                    <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
-                    <div class="like"><i class="bi bi-heart"></i></div>
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRY9tkmMfDlIVshk-wV2XxNizIryJNYskAmzA&s" class="product-img">
-                    <div class="product-body d-flex">
-                        <div class="col-8">
-                            <div class="product-title">DJI RS 3 Pro</div>
-                            <p class="small product-desc text-muted">Stabilisateur 3 axes pour reflex et hybrides, charge 4,5 kg.</p>
-                            <div class="product-star d-flex gap-1">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i>
-                                <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.3</span>
-                            </div>
-                        </div>
-                        <div class="col-4 d-flex flex-column">
-                            <div class="product-price ms-auto">FCFA 310,000 <span class="text-decoration-line-through text-muted">FCFA 650,000</span></div>
-                        </div>
-                    </div>
-                    <button class="btn btn-sm btn-outline-dark rounded-pill m-0 mt-auto"><i class="bi bi-cart me-2"></i>Panier</button>
-                </div>
-            </a>
-        </div>
-
-        <!-- Produit 6 — Flash -->
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-            <a href="product.html" class="text-decoration-none">
-                <div class="product-card">
-                    <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
-                    <div class="like"><i class="bi bi-heart"></i></div>
-                    <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=600" class="product-img">
-                    <div class="product-body d-flex">
-                        <div class="col-8">
-                            <div class="product-title">Godox V1 Pro Flash</div>
-                            <p class="small product-desc text-muted">Flash cobra TTL rond, rechargement rapide, compatible multi-marques.</p>
-                            <div class="product-star d-flex gap-1">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i>
-                                <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.1</span>
-                            </div>
-                        </div>
-                        <div class="col-4 d-flex flex-column">
-                            <div class="product-price ms-auto">FCFA 145,000 <span class="text-decoration-line-through text-muted">FCFA 650,000</span></div>
-                        </div>
-                    </div>
-                    <button class="btn btn-sm btn-outline-dark rounded-pill m-0 mt-auto"><i class="bi bi-cart me-2"></i>Panier</button>
-                </div>
-            </a>
-        </div>
-
-        <!-- Produit 7 — Sac photo -->
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-            <a href="product.html" class="text-decoration-none">
-                <div class="product-card">
-                    <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
-                    <div class="like"><i class="bi bi-heart"></i></div>
-                    <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600" class="product-img">
-                    <div class="product-body d-flex">
-                        <div class="col-8">
-                            <div class="product-title">Lowepro ProTrekker 450</div>
-                            <p class="small product-desc text-muted">Sac à dos photo renforcé, compartiments modulables, accès latéral rapide.</p>
-                            <div class="product-star d-flex gap-1">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
-                                <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.4</span>
-                            </div>
-                        </div>
-                        <div class="col-4 d-flex flex-column">
-                            <div class="product-price ms-auto">FCFA 78,000 <span class="text-decoration-line-through text-muted">FCFA 650,000</span></div>
-                        </div>
-                    </div>
-                    <button class="btn btn-sm btn-outline-dark rounded-pill m-0 mt-auto"><i class="bi bi-cart me-2"></i>Panier</button>
-                </div>
-            </a>
-        </div>
-
-        <!-- Produit 8 — Écran moniteur -->
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-            <a href="product.html" class="text-decoration-none">
-                <div class="product-card">
-                    <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
-                    <div class="like"><i class="bi bi-heart"></i></div>
-                    <img src="https://images.unsplash.com/photo-1547082299-de196ea013d6?w=600" class="product-img">
-                    <div class="product-body d-flex">
-                        <div class="col-8">
-                            <div class="product-title">Atomos Shinobi 5"</div>
-                            <p class="small product-desc text-muted">Moniteur de champ 5 pouces 4K HDMI, luminosité 1000 nits, ultra-fin.</p>
-                            <div class="product-star d-flex gap-1">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i>
-                                <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.0</span>
-                            </div>
-                        </div>
-                        <div class="col-4 d-flex flex-column">
-                            <div class="product-price ms-auto">FCFA 195,000 <span class="text-decoration-line-through text-muted">FCFA 650,000</span></div>
-                        </div>
-                    </div>
-                    <button class="btn btn-sm btn-outline-dark rounded-pill m-0 mt-auto"><i class="bi bi-cart me-2"></i>Panier</button>
-                </div>
-            </a>
-        </div>
-
     </div>
 </div>
 <div class="container pb-5">
