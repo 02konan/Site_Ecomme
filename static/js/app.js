@@ -59,90 +59,93 @@ document.addEventListener('DOMContentLoaded', function () {
     /* ========================
        CAROUSEL PRODUITS LES PLUS VENDUS
        ======================== */
-    const track       = document.getElementById('productsTrack');
-    const prevBtn     = document.getElementById('productsPrev');
-    const nextBtn     = document.getElementById('productsNext');
+    const track = document.getElementById('productsTrack');
+    const prevBtn = document.getElementById('productsPrev');
+    const nextBtn = document.getElementById('productsNext');
     const dotsContainer = document.getElementById('productsDots');
 
-    if (!track) return;
+    if (track) {
+        const slides = Array.from(track.querySelectorAll('.products-carousel-slide'));
+        let current = 0;
 
-    const slides = Array.from(track.querySelectorAll('.products-carousel-slide'));
-    let current = 0;
-
-    /* Nombre de slides visibles selon breakpoint */
-    function getVisible() {
-        if (window.innerWidth < 576) return 1;
-        if (window.innerWidth < 992) return 2;
-        return 4;
-    }
-
-    /* Gap entre les slides selon breakpoint */
-    function getGap() {
-        return window.innerWidth < 576 ? 0 : 16;
-    }
-
-    /* Nombre total de positions */
-    function getTotal() {
-        return slides.length - getVisible() + 1;
-    }
-
-    /* Construction des dots */
-    function buildDots() {
-        dotsContainer.innerHTML = '';
-        const total = getTotal();
-        for (let i = 0; i < total; i++) {
-            const dot = document.createElement('button');
-            dot.classList.add('dot');
-            if (i === current) dot.classList.add('active');
-            dot.addEventListener('click', () => goTo(i));
-            dotsContainer.appendChild(dot);
+        /* Nombre de slides visibles selon breakpoint */
+        function getVisible() {
+            if (window.innerWidth < 576) return 1;
+            if (window.innerWidth < 992) return 2;
+            return 4;
         }
-    }
 
-    /* Mise à jour visuelle des dots */
-    function updateDots() {
-        dotsContainer.querySelectorAll('.dot').forEach((d, i) => {
-            d.classList.toggle('active', i === current);
+        /* Gap entre les slides selon breakpoint */
+        function getGap() {
+            return window.innerWidth < 576 ? 0 : 16;
+        }
+
+        /* Nombre total de positions */
+        function getTotal() {
+            return slides.length - getVisible() + 1;
+        }
+
+        /* Construction des dots */
+        function buildDots() {
+            dotsContainer.innerHTML = '';
+            const total = getTotal();
+            for (let i = 0; i < total; i++) {
+                const dot = document.createElement('button');
+                dot.classList.add('dot');
+                if (i === current) dot.classList.add('active');
+                dot.addEventListener('click', () => goTo(i));
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        /* Mise à jour visuelle des dots */
+        function updateDots() {
+            dotsContainer.querySelectorAll('.dot').forEach((d, i) => {
+                d.classList.toggle('active', i === current);
+            });
+        }
+
+        /* Mise à jour des boutons prev/next */
+        function updateBtns() {
+            prevBtn.disabled = current === 0;
+            nextBtn.disabled = current >= getTotal() - 1;
+        }
+
+        /* Déplacement vers une position */
+        function goTo(index) {
+            current = Math.max(0, Math.min(index, getTotal() - 1));
+
+            /* Largeur d'une slide + gap pour calculer le décalage */
+            const slideWidth = slides[0].offsetWidth + getGap();
+            track.style.transform = `translateX(-${current * slideWidth}px)`;
+
+            updateDots();
+            updateBtns();
+        }
+
+        /* Événements boutons */
+        prevBtn.addEventListener('click', () => goTo(current - 1));
+        nextBtn.addEventListener('click', () => goTo(current + 1));
+
+        /* Resize : recalcul complet */
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                current = 0;
+                buildDots();
+                goTo(0);
+            }, 150);
         });
+
+        /* Init */
+        buildDots();
+        goTo(0);
     }
 
-    /* Mise à jour des boutons prev/next */
-    function updateBtns() {
-        prevBtn.disabled = current === 0;
-        nextBtn.disabled = current >= getTotal() - 1;
-    }
-
-    /* Déplacement vers une position */
-    function goTo(index) {
-        current = Math.max(0, Math.min(index, getTotal() - 1));
-
-        /* Largeur d'une slide + gap pour calculer le décalage */
-        const slideWidth = slides[0].offsetWidth + getGap();
-        track.style.transform = `translateX(-${current * slideWidth}px)`;
-
-        updateDots();
-        updateBtns();
-    }
-
-    /* Événements boutons */
-    prevBtn.addEventListener('click', () => goTo(current - 1));
-    nextBtn.addEventListener('click', () => goTo(current + 1));
-
-    /* Resize : recalcul complet */
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-            current = 0;
-            buildDots();
-            goTo(0);
-        }, 150);
-    });
-
-    /* Init */
-    buildDots();
-    goTo(0);
-    
+    /* ========================
+       QUANTITY INPUT HANDLER
+       ======================== */
     const quantityInput = document.querySelector('.count input');
     const btnPlus = document.querySelector('.btn-count:last-child');
     const btnMinus = document.querySelector('.btn-count:first-child');
@@ -178,9 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (currentValue < maxStock) {
                     updateQuantity(currentValue + 1);
                 } else {
-                    // Optionnel: notification de stock maximum
                     console.log(`Stock maximum atteint (${maxStock})`);
-                    // Afficher un toast ou une notification
                 }
             } else {
                 updateQuantity(1);
@@ -195,8 +196,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!isNaN(currentValue) && currentValue > 1) {
                 updateQuantity(currentValue - 1);
             } else if (currentValue === 1) {
-                // Optionnel: notification quantité minimum
-                console.log('Quantité minimum atteinte');
             } else {
                 updateQuantity(1);
             }
@@ -210,8 +209,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 updateQuantity(1);
             } else if (value > maxStock) {
                 updateQuantity(maxStock);
-                // Optionnel: notification
-                console.log(`Quantité maximum: ${maxStock}`);
             } else {
                 updateQuantity(value);
             }
@@ -229,6 +226,10 @@ document.addEventListener('DOMContentLoaded', function () {
             quantityInput.value = 1;
         }
     }
+
+    /* ========================
+       SEARCH FUNCTIONALITY
+       ======================== */
     const searchContainer = document.getElementById('searchContainer');
     const searchInput = document.getElementById('searchInput');
     const searchClear = document.getElementById('searchClear');
@@ -237,42 +238,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const suggestionsList = document.querySelector('.suggestions-list');
     const clearAllBtn = document.querySelector('.clear-all');
     
-    let isSticky = false;
-    let stickyTop = 0;
-    
-    // Fonction pour calculer la position où la barre devient sticky
-    // function calculateStickyPosition() {
-    //     const searchWrapper = document.querySelector('.search-sticky-wrapper');
-    //     if (searchWrapper) {
-    //         // La barre devient sticky quand on dépasse sa position
-    //         stickyTop = searchWrapper.offsetTop;
-    //     }
-    // }
-    
-    // Fonction pour gérer l'effet sticky
-    // function handleStickyScroll() {
-    //     if (!searchContainer) return;
-        
-    //     const scrollY = window.scrollY;
-        
-    //     if (scrollY >= stickyTop) {
-    //         if (!isSticky) {
-    //             // Devient sticky
-    //             searchContainer.classList.add('sticky');
-    //             document.body.classList.add('sticky-search-padding');
-    //             isSticky = true;
-    //         }
-    //     } else {
-    //         if (isSticky) {
-    //             // Quitte le sticky
-    //             searchContainer.classList.remove('sticky');
-    //             document.body.classList.remove('sticky-search-padding');
-    //             isSticky = false;
-    //         }
-    //     }
-    // }
-    
-    // Afficher/masquer le bouton clear
+    // Fonction pour afficher/masquer le bouton clear
     function toggleClearButton() {
         if (searchInput && searchClear) {
             if (searchInput.value.length > 0) {
@@ -317,7 +283,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function loadSuggestions(query) {
         if (!suggestionsList) return;
         
-        // Exemple de suggestions
         const mockSuggestions = [
             { text: `${query} appareil photo`, count: 45 },
             { text: `${query} drone professionnel`, count: 23 },
@@ -352,7 +317,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const query = searchInput.value.trim();
         if (query.length > 0) {
             saveToHistory(query);
-            // Rediriger vers la page de recherche
             window.location.href = `./search.html?q=${encodeURIComponent(query)}`;
         }
     }
@@ -400,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     
-    // Initialisation des événements
+    // Initialisation des événements de recherche
     if (searchInput) {
         searchInput.addEventListener('input', () => {
             toggleClearButton();
@@ -449,28 +413,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
     
-    // Initialisation
-    // calculateStickyPosition();
-    // handleStickyScroll();
     toggleClearButton();
-    
-    // // Événements de scroll avec debounce pour performance
-    // let ticking = false;
-    // window.addEventListener('scroll', () => {
-    //     if (!ticking) {
-    //         requestAnimationFrame(() => {
-    //             handleStickyScroll();
-    //             ticking = false;
-    //         });
-    //         ticking = true;
-    //     }
-    // });
-    
-    // window.addEventListener('resize', () => {
-    //     calculateStickyPosition();
-    //     // handleStickyScroll();
-    // });
 
+    /* ========================
+       PRODUCT TITLE TRUNCATE
+       ======================== */
     const productTitles = document.querySelectorAll('.product-title');
     
     productTitles.forEach(function(title) {
@@ -479,9 +426,36 @@ document.addEventListener('DOMContentLoaded', function () {
             title.innerText = text.substring(0, 15) + '...';
         }
     });
-    document.querySelectorAll('.offcanvas-link-level1').forEach(button => {
-            button.addEventListener('click', function(e) {
+
+    /* ========================
+       MENU OFFCANVAS À PLUSIEURS NIVEAUX
+       ======================== */
+    
+    // Fonction pour initialiser le menu offcanvas
+    function initOffcanvasMenu() {
+        // Gestion des toggles pour niveau 1 (catégories principales)
+        const level1Buttons = document.querySelectorAll('.offcanvas-link-level1');
+        const level2Buttons = document.querySelectorAll('.offcanvas-link-level2');
+        const level3Links = document.querySelectorAll('.level3-link');
+        
+        // Réinitialiser tous les états (tout fermé)
+        document.querySelectorAll('.level2-wrapper, .level3-wrapper').forEach(wrapper => {
+            wrapper.classList.remove('open');
+        });
+        document.querySelectorAll('.offcanvas-link-level1, .offcanvas-link-level2').forEach(btn => {
+            btn.classList.remove('open');
+        });
+        
+        // Gestion des clics sur les boutons de niveau 1
+        level1Buttons.forEach(button => {
+            // Supprimer les anciens listeners pour éviter les doublons
+            const newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
+            
+            newButton.addEventListener('click', function(e) {
+                e.preventDefault();
                 e.stopPropagation();
+                
                 const level1Id = this.getAttribute('data-level1');
                 const targetWrapper = document.getElementById(`level1-${level1Id}`);
                 
@@ -491,17 +465,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 targetWrapper.classList.toggle('open');
                 // Toggle la classe open sur le bouton (pour la flèche)
                 this.classList.toggle('open');
-                
-                // Optionnel : fermer les autres niveaux 1 (comportement accordéon)
-                // Désactiver l'accordéon automatique si on veut plusieurs ouverts simultanément
-                // Pour un comportement plus propre, on peut laisser l'utilisateur ouvrir plusieurs catégories
             });
         });
         
-        // Gestion des toggles pour niveau 2 (sous-catégories)
-        document.querySelectorAll('.offcanvas-link-level2').forEach(button => {
-            button.addEventListener('click', function(e) {
+        // Gestion des clics sur les boutons de niveau 2
+        level2Buttons.forEach(button => {
+            // Supprimer les anciens listeners pour éviter les doublons
+            const newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
+            
+            newButton.addEventListener('click', function(e) {
+                e.preventDefault();
                 e.stopPropagation();
+                
                 const level2Id = this.getAttribute('data-level2');
                 const targetWrapper = document.getElementById(`level2-${level2Id}`);
                 
@@ -512,37 +488,33 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
         
-        // Fermer l'offcanvas quand on clique sur un lien de niveau 3 (optionnel)
-        document.querySelectorAll('.level3-link').forEach(link => {
+        // Fermer l'offcanvas quand on clique sur un lien de niveau 3
+        const offcanvasElement = document.getElementById('navOffcanvas');
+        level3Links.forEach(link => {
             link.addEventListener('click', function(e) {
-                const offcanvasElement = document.getElementById('navOffcanvas');
-                const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
-                if (bsOffcanvas) {
-                    bsOffcanvas.hide();
-                }
-                // Rediriger vers le lien (comportement par défaut conservé)
-            });
-        });
-        
-        // Petit fix : prévenir la propagation des clics sur les liens pour éviter de fermer accidentellement
-        document.querySelectorAll('.level3-link, .offcanvas-link-level2, .offcanvas-link-level1').forEach(el => {
-            el.addEventListener('click', (e) => {
-                if (el.classList && (el.classList.contains('offcanvas-link-level1') || el.classList.contains('offcanvas-link-level2'))) {
-                    // Les boutons ne doivent pas fermer l'offcanvas, juste toggler
-                    e.preventDefault();
+                if (offcanvasElement) {
+                    const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+                    if (bsOffcanvas) {
+                        bsOffcanvas.hide();
+                    }
                 }
             });
         });
-        
-        // Option: initialisation de l'état (tout fermé au départ)
-        // Pour s'assurer que tous les wrappers sont fermés par défaut
-        document.querySelectorAll('.level2-wrapper, .level3-wrapper').forEach(wrapper => {
-            wrapper.classList.remove('open');
-        });
-        document.querySelectorAll('.offcanvas-link-level1, .offcanvas-link-level2').forEach(btn => {
-            btn.classList.remove('open');
-        });
-
-
-
+    }
+    
+    // Attendre que le DOM soit complètement chargé avant d'initialiser le menu
+    // Utiliser un petit délai pour s'assurer que tout le contenu est bien chargé
+    setTimeout(initOffcanvasMenu, 100);
+    
+    // Alternative: utiliser MutationObserver pour détecter l'ajout dynamique du menu
+    const observer = new MutationObserver(function(mutations) {
+        const offcanvas = document.getElementById('navOffcanvas');
+        if (offcanvas && offcanvas.querySelectorAll('.offcanvas-link-level1').length > 0) {
+            initOffcanvasMenu();
+            observer.disconnect(); // Arrêter l'observation une fois initialisé
+        }
+    });
+    
+    observer.observe(document.body, { childList: true, subtree: true });
 });
+

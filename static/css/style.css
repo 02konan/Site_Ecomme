@@ -279,7 +279,25 @@ img.logo.other{
     border-right: none;
     box-shadow: 2px 0 20px rgba(0,0,0,0.08);
 }
+/* Correction du backdrop offcanvas */
+.offcanvas-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1040;
+    background-color: rgba(0, 0, 0, 0.5);
+}
 
+.offcanvas-backdrop.show {
+    opacity: 1;
+}
+
+/* S'assurer que le backdrop se ferme correctement */
+.offcanvas.show ~ .offcanvas-backdrop {
+    display: block;
+}
 .offcanvas-header {
     display: flex;
     align-items: center;
@@ -353,6 +371,7 @@ img.logo.other{
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: 'Inter', sans-serif;
+    text-transform: uppercase;
 }
 
 .offcanvas-link-level1:hover {
@@ -429,11 +448,13 @@ img.logo.other{
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: 'Inter', sans-serif;
+    text-transform: uppercase !important;
 }
 
 .offcanvas-link-level2:hover {
     background: rgba(232, 175, 1, 0.08);
     color: var(--primary);
+    text-transform: uppercase !important;
 }
 
 .level2-chevron {

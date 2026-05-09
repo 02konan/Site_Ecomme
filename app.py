@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from backend.read_data import details_produits,liste_produits,liste_banners,liste_produits_une,liste_Nouveaute
+from backend.read_data import details_produits,liste_produits,liste_banners,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
 import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
 from flask_cors import CORS
@@ -34,6 +34,28 @@ app.permanent_session_lifetime= timedelta(minutes=5)
 def index():
     """Page d'accueil"""
     return render_template('index.html')
+
+@app.route('/menu')
+def menu():
+    data = get_categories_with_subcategories()
+    # Vérifier si c'est une erreur
+    if isinstance(data, dict) and not data.get('success', True):
+        return jsonify({"error": data.get('error', 'Erreur inconnue')}), 500
+    
+    # Si data est une liste (cas de succès)
+    if isinstance(data, list):
+        table = []
+        for category in data:
+            information = {
+                "id": category['id'],
+                "nom": category['nom'],
+                "subcategories": category['subcategories']
+            }
+            table.append(information)
+        return jsonify({"data": table, "success": True})
+    
+    # Si le format est différent
+    return jsonify({"error": "Format de données inattendu"}), 500
 
 @app.route('/produit/list')
 def produits_list():

@@ -131,3 +131,68 @@ def get_user_id(user_id):
         
     except Exception as e:
         return (f"Erreur lors de la lecture des commissions: {e}")
+
+def get_categories_with_subcategories():
+    """
+    Récupère toutes les catégories avec leurs sous-catégories (2 niveaux)
+    Returns:
+        dict: Structure hiérarchique des catégories
+    """
+    try:
+        with connexion() as conn:
+            with conn.cursor() as cursor:
+                # Récupérer toutes les catégories parentes (niveau 1)
+                cursor.execute("""
+                    SELECT 
+                        c.id, 
+                        c.nom 
+                    FROM categories c
+                    WHERE 1
+                    ORDER BY c.nom ASC
+                """)
+                categories = cursor.fetchall()
+                
+                result = []
+                
+                # Pour chaque catégorie parente, récupérer ses sous-catégories
+                for cat in categories:
+                    # Accès par index car c'est un tuple
+                    # cat[0] = id, cat[1] = nom
+                    category_data = {
+                        'id': cat[0],      # index 0 pour l'id
+                        'nom': cat[1],     # index 1 pour le nom
+                        'subcategories': []
+                    }
+                    
+                    # Récupérer les sous-catégories (niveau 2)
+                    cursor.execute("""
+                        SELECT 
+                            sc.id, 
+                            sc.nom
+                        FROM sous_categories sc
+                        WHERE sc.id_categorie = %s 
+                    """, (cat[0],))  # Utiliser cat[0] pour l'id
+                    
+                    subcategories = cursor.fetchall()
+                    
+                    for subcat in subcategories:
+                        subcategory_data = {
+                            'id': subcat[0],   # index 0 pour l'id
+                            'nom': subcat[1],  # index 1 pour le nom
+                        }
+                        category_data['subcategories'].append(subcategory_data)
+                    
+                    # Compter les produits (correction de la ligne qui causait l'erreur)
+                    category_data['total_products'] = len(category_data['subcategories'])
+                    # Ou si vous avez une fonction pour compter les produits:
+                    # category_data['total_products'] = get_products_count_by_category(cat[0])
+                    
+                    result.append(category_data)
+                
+                return result
+                
+    except Exception as e:
+        return {
+            'success': False,
+            'error': f"Erreur lors de la récupération des catégories: {str(e)}"
+        }
