@@ -26,6 +26,9 @@ function afficheproduit_la_une(produits){
             const prixActuel = pdt.prix_produits;
             const prixAvant = Math.round(prixActuel * 1.25); // +25% = prix avant réduction
             const reduction = Math.round(((prixAvant - prixActuel) / prixAvant) * 100); // % de réduction
+            const imageSrc = pdt.img_produits
+                ? (/^https?:\/\//i.test(pdt.img_produits) ? pdt.img_produits : `${window.urlProduitImage}${pdt.img_produits}`)
+                : `${window.urlProduitImage}default_1.png`;
 
             const item = document.createElement("div");
             item.className = "products-carousel-slide"; 
@@ -35,7 +38,7 @@ function afficheproduit_la_une(produits){
                         <div class="product-card">
                             <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction"> - ${reduction}</span>
                             <div class="like"><i class="bi bi-heart"></i></div>
-                            <img src="${pdt.img_produits}" class="product-img">
+                            <img src="${imageSrc}" class="product-img">
                             <div class="product-body d-flex">
                                 <div class="col-8">
                                     <div class="product-title">${pdt.nom_produits}</div>
@@ -45,11 +48,14 @@ function afficheproduit_la_une(produits){
                                         <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">3.2</span>
                                     </div>
                                 </div>
-                                <div class="col-4 d-flex flex-column">
-                                    <div class="product-price ms-auto">FCFA ${prixActuel}<span class="text-decoration-line-through text-muted">FCFA ${prixAvant}</span></div>
+                                <div class="col-4 d-flex flex- ps-1">
+                                    <div class="product-price ms-auto">FCFA ${prixActuel} <br/> <span class="text-decoration-line-through text-muted">FCFA ${prixAvant}</span></div>
                                 </div>
                             </div>
-                            <button class="btn btn-sm btn-outline-dark rounded-pill m-0 mt-auto"><i class="bi bi-cart me-2"></i>Panier</button>
+                            <div class="d-flex box-card-btn">
+                                <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0"><i class="bi bi-cart me-2"></i>Panier</button>
+                                <button class="btn flex-grow-1 btn-sm btn-primary-custom rounded-pill m-0"><i class="bi bi-check-circle me-2"></i>Acheter</button>
+                            </div>
                         </div>
                     </a>
             `;
@@ -86,6 +92,9 @@ function afficheproduits(produits) {
             const prixActuel = pdt.prix_produits;
             const prixAvant = Math.round(prixActuel * 1.25); // +25% = prix avant réduction
             const reduction = Math.round(((prixAvant - prixActuel) / prixAvant) * 100); // % de réduction
+            const imageSrc = pdt.img_produits
+                ? (/^https?:\/\//i.test(pdt.img_produits) ? pdt.img_produits : `${window.urlProduitImage}${pdt.img_produits}`)
+                : `${window.urlProduitImage}default_1.png`;
 
             const item = document.createElement("div");
             item.className = "col-12 col-sm-6 col-md-4 col-lg-3"; 
@@ -95,7 +104,7 @@ function afficheproduits(produits) {
                 <div class="product-card">
                     <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction"> - ${reduction}%</span>
                     <div class="like"><i class="bi bi-heart"></i></div>
-                    <img src="${pdt.img_produits}" class="product-img">
+                    <img src="${imageSrc}" class="product-img">
                     <div class="product-body d-flex">
                         <div class="col-8">
                             <div class="product-title">${pdt.nom_produits}</div>
@@ -105,11 +114,14 @@ function afficheproduits(produits) {
                                 <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.7</span>
                             </div>
                         </div>
-                        <div class="col-4 d-flex flex-column">
+                        <div class="col-4 d-flex flex-column ps-1">
                             <div class="product-price ms-auto">FCFA ${prixActuel} <br/> <span class="text-decoration-line-through text-muted">FCFA ${prixAvant}</span></div>
                         </div>
                     </div>
-                    <button class="btn btn-sm btn-outline-dark rounded-pill mt-2 panier-btn"><i class="bi bi-cart me-2"></i>Panier</button>
+                    <div class="d-flex box-card-btn">
+                        <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0"><i class="bi bi-cart me-2"></i>Panier</button>
+                        <button class="btn flex-grow-1 btn-sm btn-primary-custom rounded-pill m-0"><i class="bi bi-check-circle me-2"></i>Acheter</button>
+                    </div>
                 </div>
             </a>    
             `;
@@ -170,7 +182,10 @@ function afficheproduit_nouveaute(produits){
                                     <div class="product-price ms-auto">FCFA ${prixActuel}<span class="text-decoration-line-through text-muted">FCFA ${prixAvant}</span></div>
                                 </div>
                             </div>
-                            <button class="btn btn-sm btn-outline-dark rounded-pill m-0 mt-auto"><i class="bi bi-cart me-2"></i>Panier</button>
+                            <div class="d-flex box-card-btn">
+                                <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0"><i class="bi bi-cart me-2"></i>Panier</button>
+                                <button class="btn flex-grow-1 btn-sm btn-primary-custom rounded-pill m-0"><i class="bi bi-check-circle me-2"></i>Acheter</button>
+                            </div>
                         </div>
                     </a>
             `;

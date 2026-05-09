@@ -1,16 +1,18 @@
-    <!-- Header -->
-    {% include 'header.html' %}
+<!-- Header -->
+{% include 'header.html' %}
 
-    <!-- Navbar -->
-    {% include 'navbar.html' %}
+    <div class="container-fluid p-0 m-0" style="overflow-x:hidden;">
+        <!-- Navbar -->
+        {% include 'navbar.html' %}
+        
+        <!-- Mobile Navigation Offcanvas -->
+        {% include 'navbarmobile.html' %}
+        <!-- Page Content -->
+        {% block content %}{% endblock %}
+        <!-- Footer -->
+        {% include 'footer.html' %}
     
-    <!-- Mobile Navigation Offcanvas -->
-    {% include 'navbarmobile.html' %}
-    
-    <!-- Page Content -->
-    {% block content %}{% endblock %}
-    
-    <!-- Footer -->
-    {% include 'footer.html' %}
+    </div>
+{% include 'scripts.html' %}
 
    

@@ -95,7 +95,7 @@ a {
     border-color: var(--secondary);
 }
 
-.product-card .btn-primary-custom {
+/* .product-card .btn-primary-custom {
     color: var(--white);
     background: var(--dark);
     border-color: var(--dark);
@@ -106,7 +106,7 @@ a {
     color: var(--dark);
     background: var(--primary);
     border-color: var(--primary);
-}
+} */
 
 /* ========================
    NAVBAR — DESKTOP
@@ -128,6 +128,7 @@ a {
 img.logo{
     object-fit: cover;
     height: 40px;
+    margin-right: auto;
 }
 img.logo.other{
     object-fit: cover;
@@ -617,8 +618,8 @@ img.logo.other{
     width: 100%;
     height: 100%;
     padding: 120px 60px 60px;
-    background-color: rgba(0, 0, 0, 0.56);
-    backdrop-filter: blur(5px);
+    /* background-color: rgba(0, 0, 0, 0.56);
+    backdrop-filter: blur(5px); */
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
@@ -828,7 +829,7 @@ img.logo.other{
 
 .product-price {
     font-size: 10px;
-    font-weight: 500;
+    font-weight: 800;
     margin-bottom: auto !important;
 }
 
@@ -852,8 +853,12 @@ img.logo.other{
 .product-card .btn-sm {
     padding: 4px 8px;
     font-size: 10px !important;
-    margin: 15px !important;
     margin-top: auto !important;
+}
+.box-card-btn{
+    margin: 15px 15px ;
+    margin-top: auto !important;
+    gap: 8px;
 }
 
 /* ========================
@@ -1467,6 +1472,11 @@ img.logo.other{
     .navbar .brand{
         font-size: 45px !important;
     }
+    img.logo{
+        object-fit: cover;
+        height: 40px;
+        margin-right: 0;
+    }
     .banner {
         position: relative;
         color: var(--white);
@@ -1708,6 +1718,11 @@ img.logo.other{
     }
     
     /* Réduire le bouton panier */
+    .box-card-btn{
+        margin: 10px 10px ;
+        margin-top: auto !important;
+        gap: 3px;
+    }
     .product-card .btn-sm {
         padding: 4px 8px;
         font-size: 10px !important;
@@ -1858,12 +1873,22 @@ img.logo.other{
         padding: 8px;
     }
     
-    .product-card .btn-sm {
+    /* .product-card .btn-sm {
         margin: 0 8px !important;
         margin-bottom: 8px !important;
         margin-top: auto !important;
         padding: 3px 6px;
         font-size: 9px !important;
+    } */
+    /* Réduire le bouton panier */
+    .box-card-btn{
+        margin: 8px 8px ;
+        margin-top: auto !important;
+        gap: 3px;
+    }
+    .col-12.col-sm-6.col-md-4.col-lg-3{
+        margin: 5px 0 !important;
+        padding: 0 3px !important;
     }
 }
 

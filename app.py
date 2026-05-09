@@ -92,7 +92,7 @@ def banner():
             information={
                 "id":i[0],
                 "titre":i[1],
-                "descriptin":i[2],
+                "description":i[2],
                 "img":i[3],
             }
             table.append(information)

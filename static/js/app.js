@@ -8,6 +8,8 @@ AOS.init({
 
 document.addEventListener('DOMContentLoaded', function () {
 
+    window.urlProduitImage = "https://divix.alwaysdata.net/ecommerce/uploads/produits/";
+
     /* ========================
        PRODUCT PAGE — SWITCH IMAGE
        ======================== */
@@ -29,11 +31,16 @@ document.addEventListener('DOMContentLoaded', function () {
     /* ========================
        PANIER — STOP PROPAGATION
        ======================== */
-    document.querySelectorAll('.product-card .btn').forEach(button => {
-        button.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        });
+    document.addEventListener('click', function (e) {
+        const button = e.target.closest('.product-card .box-card-btn .btn');
+        if (!button) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+
+        // Optional: handle cart/button click logic here.
+        // Example: open modal, add to cart, etc.
     });
 
     /* ========================
