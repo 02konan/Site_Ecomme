@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
         showGridSkeletons(8);
         showCarouselSkeletons(document.querySelector('.products-carousel-track'), 4);
+        showCarouselSkeletons(document.getElementById('productsTrackNouveaute'), 4);
         Produits();
         Produits_la_une();
         produit_nouveaute();
@@ -210,6 +211,9 @@ function afficheproduits(produits) {
 
 
 function produit_nouveaute() {
+    const container = document.getElementById("productsTrackNouveaute");
+    showCarouselSkeletons(container, 4);
+
     fetch("/produit_nouveaute/list")
         .then(res => res.json())
         .then(response => {
@@ -220,7 +224,7 @@ function produit_nouveaute() {
         });
 }
 function afficheproduit_nouveaute(produits){
-    const container = document.getElementById("productsTrack");
+    const container = document.getElementById("productsTrackNouveaute");
     if (!container) return;
     container.innerHTML = "";
 
