@@ -1,11 +1,82 @@
 document.addEventListener("DOMContentLoaded", () => {
+        showGridSkeletons(8);
+        showCarouselSkeletons(document.querySelector('.products-carousel-track'), 4);
         Produits();
         Produits_la_une();
-        afficheproduit_nouveaute();
+        produit_nouveaute();
 });
 
+function showGridSkeletons(count = 8) {
+    const container = document.getElementById("NosProduits");
+    if (!container) return;
+
+    let html = '';
+    for (let i = 0; i < count; i += 1) {
+        html += createGridSkeletonCard();
+    }
+    container.innerHTML = html;
+}
+
+function createGridSkeletonCard() {
+    return `
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="product-card skeleton-card">
+                <div class="skeleton skeleton-image"></div>
+                <div class="product-body">
+                    <div class="col-8">
+                        <div class="skeleton skeleton-line"></div>
+                        <div class="skeleton skeleton-line short"></div>
+                        <div class="skeleton skeleton-line xshort"></div>
+                    </div>
+                    <div class="col-4">
+                        <div class="skeleton skeleton-line short"></div>
+                        <div class="skeleton skeleton-line xshort"></div>
+                    </div>
+                </div>
+                <div class="d-flex box-card-btn">
+                    <div class="skeleton skeleton-button"></div>
+                    <div class="skeleton skeleton-button"></div>
+                </div>
+            </div>
+        </div>`;
+}
+
+function showCarouselSkeletons(container, count = 4) {
+    if (!container) return;
+
+    let html = '';
+    for (let i = 0; i < count; i += 1) {
+        html += createCarouselSkeletonSlide();
+    }
+    container.innerHTML = html;
+}
+
+function createCarouselSkeletonSlide() {
+    return `
+        <div class="products-carousel-slide">
+            <div class="product-card skeleton-card">
+                <div class="skeleton skeleton-image"></div>
+                <div class="product-body">
+                    <div class="col-8">
+                        <div class="skeleton skeleton-line"></div>
+                        <div class="skeleton skeleton-line short"></div>
+                    </div>
+                    <div class="col-4">
+                        <div class="skeleton skeleton-line short"></div>
+                    </div>
+                </div>
+                <div class="d-flex box-card-btn">
+                    <div class="skeleton skeleton-button"></div>
+                    <div class="skeleton skeleton-button"></div>
+                </div>
+            </div>
+        </div>`;
+}
 
 function Produits_la_une() {
+    const carousel = document.querySelector('.products-carousel-track');
+    showCarouselSkeletons(carousel, 4);
+
     fetch("/produit_une/list")
         .then(res => res.json())
         .then(response => {

@@ -861,6 +861,155 @@ img.logo.other{
     gap: 8px;
 }
 
+.skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--light-gray);
+}
+
+.skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.7), rgba(255,255,255,0));
+    transform: translateX(-100%);
+    animation: skeleton-shimmer 1.2s infinite ease-in-out;
+}
+
+@keyframes skeleton-shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.skeleton-card {
+    width: 100%;
+    min-height: 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-radius: 12px;
+    background: var(--white);
+    padding: 0;
+}
+
+.skeleton-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 0;
+}
+
+.skeleton-line {
+    height: 12px;
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.skeleton-line.short {
+    width: 60%;
+}
+
+.skeleton-line.xshort {
+    width: 40%;
+}
+
+.skeleton-button {
+    width: calc(50% - 6px);
+    height: 34px;
+    border-radius: 999px;
+}
+
+.skeleton-card .product-body {
+    padding: 15px;
+    display: flex;
+    gap: 12px;
+}
+
+.skeleton-card .product-body .col-8,
+.skeleton-card .product-body .col-4 {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 8px;
+}
+
+.skeleton-card .box-card-btn {
+    margin: 15px;
+    gap: 8px;
+    min-height: 40px;
+}
+
+#heroCarousel.loading .carousel-control-prev,
+#heroCarousel.loading .carousel-control-next {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.carousel-hero-skeleton {
+    min-height: 700px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background: #1e1e24;
+}
+
+.carousel-hero-skeleton.skeleton {
+    background: #2b2b35;
+}
+
+.carousel-hero-skeleton.skeleton::after {
+    background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.18), rgba(255,255,255,0));
+}
+
+.hero-skeleton-content {
+    width: min(720px, 90%);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.hero-skeleton-title,
+.hero-skeleton-subtitle,
+.hero-skeleton-button {
+    background: rgba(255,255,255,0.12);
+}
+
+.hero-skeleton-title {
+    height: 42px;
+    width: 70%;
+}
+
+.hero-skeleton-subtitle {
+    height: 18px;
+    width: 55%;
+}
+
+.hero-skeleton-button {
+    width: 180px;
+    height: 42px;
+}
+
+@media (max-width: 768px) {
+    .carousel-hero-skeleton {
+        min-height: 520px;
+        padding: 32px 16px;
+    }
+
+    .hero-skeleton-title {
+        width: 90%;
+    }
+
+    .hero-skeleton-subtitle {
+        width: 75%;
+    }
+
+    .hero-skeleton-button {
+        width: 140px;
+    }
+}
+
 /* ========================
    CAROUSEL "À LA UNE"
    ======================== */

@@ -11,6 +11,8 @@ function initBanner() {
         return ''
     }
 
+    showBannerSkeletons(3);
+
     fetch("/banner/list")
     .then(res => res.json())
     .then(response => {
@@ -19,6 +21,45 @@ function initBanner() {
     .catch(err => {
         console.error("Erreur produits:", err);
     });
+}
+
+function showBannerSkeletons(count = 3) {
+    const container = document.getElementById('heroCarousel');
+    if (!container) return;
+
+    const indicatorsContainer = container.querySelector('.carousel-indicators');
+    const innerContainer = container.querySelector('.carousel-inner');
+    if (!indicatorsContainer || !innerContainer) return;
+
+    indicatorsContainer.innerHTML = '';
+    innerContainer.innerHTML = '';
+    container.classList.add('loading');
+
+    for (let i = 0; i < count; i += 1) {
+        const indicator = document.createElement('button');
+        indicator.type = 'button';
+        indicator.setAttribute('aria-label', `Slide ${i + 1}`);
+        if (i === 0) {
+            indicator.classList.add('active');
+            indicator.setAttribute('aria-current', 'true');
+        }
+        indicatorsContainer.appendChild(indicator);
+
+        const slide = document.createElement('div');
+        slide.classList.add('carousel-item');
+        if (i === 0) slide.classList.add('active');
+
+        slide.innerHTML = `
+            <div class="carousel-hero-skeleton skeleton">
+                <div class="hero-skeleton-content">
+                    <div class="skeleton skeleton-line hero-skeleton-title"></div>
+                    <div class="skeleton skeleton-line hero-skeleton-subtitle"></div>
+                    <div class="skeleton skeleton-button hero-skeleton-button"></div>
+                </div>
+            </div>`;
+
+        innerContainer.appendChild(slide);
+    }
 }
 
 function afficheBanner(banners) {
@@ -34,6 +75,7 @@ function afficheBanner(banners) {
 
     indicatorsContainer.innerHTML = '';
     innerContainer.innerHTML = '';
+    container.classList.remove('loading');
 
     banners.forEach((banner, index) => {
         const indicator = document.createElement('button');
