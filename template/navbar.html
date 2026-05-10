@@ -1,43 +1,28 @@
- <!-- Navbar fixe -->
+<!-- Navbar fixe -->
 <nav class="navbar">
     <div class="container-fluid px-3 px-lg-4 d-flex align-items-center justify-content-between">
 
-        <!-- Gauche : burger (mobile) + logo -->
+        <!-- Gauche : burger (mobile) -->
         <div class="d-flex align-items-center gap-3">
-            <!-- Burger → ouvre l'offcanvas (visible seulement mobile/tablette) -->
             <button class="navbar-burger" type="button" data-bs-toggle="offcanvas" data-bs-target="#navOffcanvas" aria-controls="navOffcanvas">
                 <i class="bi bi-list"></i>
             </button>
-            <!-- Logo -->
         </div>
 
+        <!-- Logo -->
         <img class="logo" src="{{ url_for('static', filename='back/logo.jpeg') }}" alt="Logo TouAchat">
 
-
-        <!-- Droite : panier + profil -->
+        <!-- Droite : panier -->
         <div class="d-flex align-items-center gap-2">
-            <a href="./cart.html" class="btn btn-sm btn-primary-custom rounded-circle position-relative cart">
+            <button onclick="ouvrirDrawer()" class="btn btn-sm btn-primary-custom rounded-circle position-relative cart">
                 <i class="bi bi-bag-fill"></i>
-                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger rounded-circle">
-                    <span class="visually-hidden">New alerts</span>
-                </span>
-            </a>
-            <!-- <div class="vr mx-1"></div>
-            <div class="dropdown">
-                <div class="d-flex align-items-center dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
-                    <img src="https://i.pravatar.cc/40" alt="Profil" width="36" height="36" class="rounded-circle">
-                </div>
-                <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="profileDropdown">
-                    <li><a class="dropdown-item" href="#">Mon profil</a></li>
-                    <li><a class="dropdown-item" href="#">Paramètres</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#" id="logoutBtn">Déconnexion</a></li>
-                </ul>
-            </div> -->
+                <span id="panier-compteur"
+                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                      style="display:none;font-size:10px;">0</span>
+            </button>
         </div>
     </div>
 </nav>
-
 
 <!-- Barre de recherche sticky -->
 <div class="search-sticky-wrapper">
@@ -48,27 +33,142 @@
                     <span class="search-icon">
                         <i class="bi bi-search"></i>
                     </span>
-                    <input type="text" 
-                        class="search-input" 
-                        placeholder="Rechercher un produit, une marque..." 
+                    <input type="text"
+                        class="search-input"
+                        placeholder="Rechercher un produit, une marque..."
                         id="searchInput">
-                    <button class="search-clear" id="searchClear" style="display: none;">
+                    <button class="search-clear" id="searchClear" style="display:none;">
                         <i class="bi bi-x-lg"></i>
                     </button>
-                    <button class="btn btn-sm btn-primary-custom rounded-circle me-2"><i class="bi bi-arrow-right"></i></button>
+                    <button class="btn btn-sm btn-primary-custom rounded-circle me-2">
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
                 </div>
-                
-                <!-- Suggestions de recherche -->
-                <div class="search-suggestions" id="searchSuggestions" style="display: none;">
+
+                <!-- Suggestions -->
+                <div class="search-suggestions" id="searchSuggestions" style="display:none;">
                     <div class="suggestions-header">
                         <span>Suggestions récentes</span>
                         <button class="clear-all">Tout effacer</button>
                     </div>
-                    <div class="suggestions-list">
-                        <!-- Suggestions dynamiques -->
-                    </div>
+                    <div class="suggestions-list"></div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<!-- ===== DRAWER PANIER ===== -->
+
+<!-- Overlay -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+
+<!-- Drawer -->
+<div class="drawer-panier" id="drawerPanier">
+
+    <!-- Header -->
+    <div class="drawer-header">
+        <h2 style="font-size:16px;font-weight:500;margin:0;">
+            Mon panier
+            <span id="drawer-count" 
+                  style="color:var(--text-secondary);font-weight:400;font-size:13px;">
+                (0 article)
+            </span>
+        </h2>
+        <button id="closeDrawer" class="btn btn-sm" aria-label="Fermer le panier">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+
+    <!-- Body — articles -->
+    <div class="drawer-body" id="drawerBody">
+        <div class="text-center py-5 text-muted">
+            <i class="bi bi-cart-x fs-1"></i>
+            <p class="mt-2">Votre panier est vide</p>
+        </div>
+    </div>
+
+    <!-- Footer — total + boutons -->
+    <div class="drawer-footer">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted">Total</span>
+            <span class="fw-bold fs-6" id="drawerTotal">FCFA 0</span>
+        </div>
+        <!-- Remplace le <a href="/panier"> par : -->
+        <button onclick="fermerDrawer(); ouvrirModal();" 
+                class="btn btn-dark w-100 rounded-pill mb-2">
+            <i class="bi bi-bag-check me-2"></i>Commander
+        </button>
+        <button id="continueBtn" class="btn btn-outline-secondary w-100 rounded-pill">
+            Continuer mes achats
+        </button>
+    </div>
+
+</div>
+
+<!-- MODALE COMMANDE -->
+<div class="modal-overlay" id="modalOverlay"></div>
+
+<div class="modal-commande" id="modalCommande">
+
+    <!-- Étape 1 : Formulaire livraison -->
+    <div class="modal-step" id="step1">
+        <div class="modal-header-cmd">
+            <h2>Informations de livraison</h2>
+            <button onclick="fermerModal()" class="btn btn-sm"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="modal-body-cmd">
+            <div class="mb-3">
+                <label class="form-label">Nom complet</label>
+                <input type="text" class="form-control rounded-pill" id="cmd-nom" placeholder="Ex: Kouassi Jean">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Téléphone</label>
+                <input type="tel" class="form-control rounded-pill" id="cmd-tel" placeholder="Ex: 07 00 00 00 00">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Adresse de livraison</label>
+                <textarea class="form-control" id="cmd-adresse" rows="3" 
+                          placeholder="Quartier, rue, repère..."></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Ville</label>
+                <input type="text" class="form-control rounded-pill" id="cmd-ville" placeholder="Ex: Abidjan">
+            </div>
+        </div>
+        <div class="modal-footer-cmd">
+            <button onclick="allerStep2()" class="btn btn-dark rounded-pill w-100">
+                Continuer →
+            </button>
+            <button onclick="fermerModal()" class="btn btn-outline-secondary rounded-pill w-100 mb-2">
+                Annuler
+            </button>
+        </div>
+    </div>
+
+    <!-- Étape 2 : Récapitulatif -->
+    <div class="modal-step" id="step2" style="display:none;">
+        <div class="modal-header-cmd">
+            <button onclick="allerStep1()" class="btn btn-sm"><i class="bi bi-arrow-left"></i></button>
+            <h2>Récapitulatif</h2>
+            <button onclick="fermerModal()" class="btn btn-sm"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="modal-body-cmd" id="recapBody"></div>
+        <div class="modal-footer-cmd">
+            <button onclick="confirmerCommande()" class="btn btn-primary-custom rounded-pill w-100">
+                <i class="bi bi-check-circle me-2"></i>Confirmer la commande
+            </button>
+        </div>
+    </div>
+
+    <!-- Étape 3 : Succès -->
+    <div class="modal-step text-center py-5" id="step3" style="display:none;">
+        <i class="bi bi-check-circle-fill text-success" style="font-size:56px;"></i>
+        <h2 class="mt-3">Commande confirmée !</h2>
+        <p class="text-muted">Nous vous contacterons au <span id="recap-tel-confirm"></span></p>
+        <button onclick="fermerModal()" class="btn btn-dark rounded-pill px-4 mt-2">
+            Fermer
+        </button>
+    </div>
+
 </div>

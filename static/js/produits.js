@@ -15,6 +15,11 @@ let carouselPrevBtn = null;
 let carouselNextBtn = null;
 let carouselDotsContainer = null;
 
+
+
+
+
+
 function showGridSkeletons(count = 8) {
     const container = document.getElementById("NosProduits");
     if (!container) return;
@@ -117,7 +122,7 @@ function afficheproduit_la_une(produits) {
             item.className = "products-carousel-slide";
 
             item.innerHTML = `
-                <a href="/detail_produit/${pdt.id_produits}" class="text-decoration-none">
+                <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
                     <div class="product-card">
                         <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction"> -${reduction}%</span>
                         <div class="like"><i class="bi bi-heart"></i></div>
@@ -189,32 +194,58 @@ function afficheproduits(produits) {
             item.className = "col-12 col-sm-6 col-md-4 col-lg-3";
 
             item.innerHTML = `
-                <a href="/detail_produit/${pdt.id_produits}" class="text-decoration-none">
-                    <div class="product-card">
-                        <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction"> -${reduction}%</span>
-                        <div class="like"><i class="bi bi-heart"></i></div>
-                        <img src="${imageSrc}" class="product-img" loading="lazy">
-                        <div class="product-body d-flex">
-                            <div class="col-8">
-                                <div class="product-title">${escapeHtml(pdt.nom_produits)}</div>
-                                <p class="small product-desc text-muted">${escapeHtml(pdt.descriptin_produits || '')}</p>
-                                <div class="product-star d-flex gap-1">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
-                                    <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.7</span>
+                    <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
+                        <div class="product-card">
+                            <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction"> -${reduction}%</span>
+                            <div class="like"><i class="bi bi-heart"></i></div>
+                            <img src="${imageSrc}" class="product-img" loading="lazy">
+                            <div class="product-body d-flex">
+                                <div class="col-8">
+                                    <div class="product-title">${escapeHtml(pdt.nom_produits)}</div>
+                                    <p class="small product-desc text-muted">${escapeHtml(pdt.descriptin_produits || '')}</p>
+                                    <div class="product-star d-flex gap-1">
+                                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+                                        <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.7</span>
+                                    </div>
+                                </div>
+                                <div class="col-4 d-flex flex-column ps-1">
+                                    <div class="product-price ms-auto">FCFA ${prixActuel} <br/> <span class="text-decoration-line-through text-muted">FCFA ${prixAvant}</span></div>
                                 </div>
                             </div>
-                            <div class="col-4 d-flex flex-column ps-1">
-                                <div class="product-price ms-auto">FCFA ${prixActuel} <br/> <span class="text-decoration-line-through text-muted">FCFA ${prixAvant}</span></div>
+                            <div class="d-flex box-card-btn">
+                                <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Panier</button>
+                                <button class="btn flex-grow-1 btn-sm btn-primary-custom rounded-pill m-0 buy-now" data-id="${pdt.id_produits}"><i class="bi bi-check-circle me-2"></i>Acheter</button>
                             </div>
                         </div>
-                        <div class="d-flex box-card-btn">
-                            <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Panier</button>
-                            <button class="btn flex-grow-1 btn-sm btn-primary-custom rounded-pill m-0 buy-now" data-id="${pdt.id_produits}"><i class="bi bi-check-circle me-2"></i>Acheter</button>
-                        </div>
-                    </div>
-                </a>
-            `;
-            container.appendChild(item);
+                    </a>
+                `;
+
+                container.appendChild(item);
+
+                // Bouton Panier
+                item.querySelector('.add-to-cart').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    ajouterAuPanier({
+                        id:   pdt.id_produits,
+                        nom:  pdt.nom_produits,
+                        prix: pdt.prix_produits,
+                        img:  imageSrc
+                    });
+                });
+
+                // Bouton Acheter
+                item.querySelector('.buy-now').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    ajouterAuPanier({
+                        id:   pdt.id_produits,
+                        nom:  pdt.nom_produits,
+                        prix: pdt.prix_produits,
+                        img:  imageSrc
+                    });
+                    window.location.href = "/panier";
+                });
         });
     } else {
         container.innerHTML = `
@@ -224,6 +255,7 @@ function afficheproduits(produits) {
             </div>
         `;
     }
+    
 }
 
 function produit_nouveaute() {
@@ -260,7 +292,7 @@ function afficheproduit_nouveaute(produits) {
             item.className = "products-carousel-slide";
 
             item.innerHTML = `
-                <a href="/detail_produit/${pdt.id_produits}" class="text-decoration-none">
+                <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
                     <div class="product-card">
                         <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction"> -${reduction}%</span>
                         <div class="like"><i class="bi bi-heart"></i></div>
@@ -278,12 +310,12 @@ function afficheproduit_nouveaute(produits) {
                                 <div class="product-price ms-auto">FCFA ${prixActuel}<br/><span class="text-decoration-line-through text-muted">FCFA ${prixAvant}</span></div>
                             </div>
                         </div>
-                        <div class="d-flex box-card-btn">
-                            <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Panier</button>
-                            <button class="btn flex-grow-1 btn-sm btn-primary-custom rounded-pill m-0 buy-now" data-id="${pdt.id_produits}"><i class="bi bi-check-circle me-2"></i>Acheter</button>
-                        </div>
                     </div>
                 </a>
+                <div class="d-flex box-card-btn">
+                    <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Panier</button>
+                    <button class="btn flex-grow-1 btn-sm btn-primary-custom rounded-pill m-0 buy-now" data-id="${pdt.id_produits}"><i class="bi bi-check-circle me-2"></i>Acheter</button>
+                </div>
             `;
             container.appendChild(item);
         });

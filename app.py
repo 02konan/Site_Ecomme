@@ -115,7 +115,7 @@ def banner():
                 "id":i[0],
                 "titre":i[1],
                 "description":i[2],
-                "img":i[3],
+                "img":i[3]
             }
             table.append(information)
     return jsonify({"data":table})
@@ -124,30 +124,42 @@ def banner():
 def produits():
     return render_template('produits_list.html')
 
-@app.route('/detail_produit/<id_produits>')
+@app.route('/detail_produit/<int:id_produits>')
 def produits_details(id_produits):
-    data=details_produits(id_produits)
-    table=[]
-    if data:
-        for i in data:
-            information={
-                "id_produits":i[0],
-                "nom_produits":i[0],
-                "prix_produits":i[0],
-                "descriptin_produits":i[0],
-                "pourcentage_produits":i[0],
-                "pourcentage_produits":i[0],
-                "img_produits":i[0],
-            }
-            table.append(information)
-    
-    return jsonify({"data":table})
+    data = details_produits(id_produits)
+
+    if not data:
+        return jsonify({"error": "Produit introuvable"}), 404
+
+    produit, images = data
+
+
+    img_principale = None
+    img_secondaires = []
+
+    for img in images:
+        if img[1] == 1 and img_principale is None:
+            img_principale = img[0]
+        else:
+            img_secondaires.append(img[0])
+
+    information = {
+        "id":            produit[0],
+        "nom":           produit[1],
+        "description":   produit[2],
+        "prix":          produit[3],
+        "img_principale": img_principale,
+        "img_secondaires": img_secondaires[:3]  # max 3 images secondaires
+    }
+
+    return jsonify({"data": information})
 
 
 
 @app.route('/produit/<int:product_id>')
 def product(product_id):
     """Page détail d'un produit"""
+    return render_template('product_detail.html')
  
 
 @app.route('/categories')

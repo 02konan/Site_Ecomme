@@ -63,25 +63,40 @@ def liste_banners():
                 banners = cursor.fetchall()
                 return banners
     except Exception as e:
-        return (f"Erreur lors de la récupération des produits: {e}")        
+        print(f"Erreur lors de la récupération des produits: {e}") 
+        return []       
 
 def details_produits(id):
     try:
         with connexion() as conn:
             with conn.cursor() as cursor:
-                sql = """
-                SELECT p.id, p.nom, p.description, p.prix, pi.url_image AS img_produits
-                FROM produits p
-                LEFT JOIN produit_images pi on p.id = pi.id_produit
-                WHERE p.id =%s
-                ORDER BY p.id DESC;
-                """
-                cursor.execute(sql, (id,))
-                row = cursor.fetchall()
-            return row    
+                cursor.execute("""
+                    SELECT p.id, p.nom, p.description, p.prix
+                    FROM produits p
+                    WHERE p.id = %s
+                """, (id,))
+                produit = cursor.fetchone()
+
+                if not produit:
+                    return None
+
+                cursor.execute("""
+                    SELECT url_image, est_principale
+                    FROM produit_images
+                    WHERE id_produit = %s
+                    ORDER BY est_principale DESC
+                    LIMIT 4
+                """, (id,))
+                images = cursor.fetchall()
+
+                return produit, images
+    except Exception as e:
+        print(f"Erreur details_produits: {e}")
+        return None
                
     except Exception as e:
-        return f"erreur get_user_id: {e}"
+        print(f"erreur get_user_id: {e}")
+        return None
 
 def get_user_id(user_id):
     try:
