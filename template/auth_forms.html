@@ -1,0 +1,168 @@
+
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.auth-wrap{display:flex;flex-direction:column;align-items:center;gap:0;padding:1rem 0}
+.tabs{display:flex;width:100%;max-width:440px;border-bottom:1px solid #E0E0E0;margin-bottom:1.5rem}
+.tab-btn{flex:1;background:none;border:none;padding:14px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#A1A1A1;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
+.tab-btn.active{color:#12130F;border-bottom-color:#e8af01}
+.form-box{width:100%;max-width:440px;background:#fff;border:1px solid #E0E0E0;border-radius:16px;padding:1.75rem}
+.form-title{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:#12130F;margin-bottom:4px}
+.form-sub{font-size:12px;color:#A1A1A1;margin-bottom:1.5rem}
+.field{margin-bottom:1rem}
+.field label{display:block;font-size:12px;font-weight:600;color:#12130F;margin-bottom:6px;font-family:'Montserrat',sans-serif}
+.field-wrap{display:flex;align-items:center;background:#F5F5F5;border-radius:50px;border:1.5px solid transparent;transition:all .2s;padding:0 16px;gap:10px}
+.field-wrap:focus-within{border-color:#e8af01;background:#fff}
+.field-wrap i{font-size:16px;color:#A1A1A1}
+.field-wrap input{flex:1;border:none;background:transparent;outline:none;padding:13px 0;font-size:13px;font-family:'Montserrat',sans-serif;color:#12130F}
+.field-wrap input::placeholder{color:#A1A1A1}
+.eye-btn{background:none;border:none;cursor:pointer;color:#A1A1A1;display:flex;align-items:center;padding:0}
+.btn-submit{width:100%;padding:14px;border-radius:50px;border:none;background:#e8af01;color:#12130F;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;margin-top:0.5rem}
+.btn-submit:hover{background:#f2d649}
+.divider{display:flex;align-items:center;gap:12px;margin:1.25rem 0;font-size:12px;color:#A1A1A1}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:#E0E0E0}
+.btn-social{width:100%;padding:12px;border-radius:50px;border:1.5px solid #E0E0E0;background:#fff;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#12130F;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s}
+.btn-social:hover{border-color:#e8af01;background:#F5F5F5}
+.forgot{text-align:right;margin-top:-6px;margin-bottom:12px}
+.forgot a{font-size:12px;color:#e8af01;text-decoration:none;font-weight:600}
+.switch-txt{text-align:center;font-size:12px;color:#A1A1A1;margin-top:1.25rem}
+.switch-txt a{color:#e8af01;font-weight:600;text-decoration:none;cursor:pointer}
+.terms{font-size:11px;color:#A1A1A1;text-align:center;margin-top:1rem;line-height:1.6}
+.terms a{color:#e8af01}
+.form-panel{display:none}
+.form-panel.active{display:block}
+</style>
+
+<div class="auth-wrap">
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('login')">Se connecter</button>
+        <button class="tab-btn" onclick="switchTab('register')">S'inscrire</button>
+    </div>
+
+    <div class="form-box">
+
+        <!-- CONNEXION -->
+<div class="form-panel active" id="panel-login">
+
+    <div class="field">
+        <label>Adresse email</label>
+        <div class="field-wrap">
+            <i class="ti ti-mail" aria-hidden="true"></i>
+            <input type="email" id="login-email" placeholder="exemple@email.com" value="{{ prefill_email or '' }}">
+        </div>
+    </div>
+
+    <div class="field">
+        <label>Mot de passe</label>
+        <div class="field-wrap">
+            <i class="ti ti-lock" aria-hidden="true"></i>
+            <input type="password" id="login-pwd" placeholder="••••••••" value="{{ prefill_pwd or '' }}">
+            <button class="eye-btn" onclick="togglePwd('login-pwd', this)">
+                <i class="ti ti-eye" style="font-size:16px"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="forgot"><a href="#">Mot de passe oublié ?</a></div>
+
+    <!-- ← onclick ajouté -->
+    <button class="btn-submit" onclick="connexion()">Se connecter</button>
+
+    <div class="divider">ou</div>
+
+    <button class="btn-social">
+        <svg width="18" height="18" viewBox="0 0 24 24">...</svg>
+        Continuer avec Google
+    </button>
+
+    <div class="switch-txt">
+        Pas encore de compte ? <a onclick="switchTab('register')">S'inscrire</a>
+    </div>
+</div>
+
+<!-- INSCRIPTION -->
+<div class="form-panel" id="panel-register">
+
+    <div class="field">
+        <label>Nom complet</label>
+        <div class="field-wrap">
+            <i class="ti ti-user" aria-hidden="true"></i>
+            <input type="text" id="reg-nom" placeholder="Kouassi Jean"> <!-- ← id ajouté -->
+        </div>
+    </div>
+
+    <div class="field">
+        <label>Adresse email</label>
+        <div class="field-wrap">
+            <i class="ti ti-mail" aria-hidden="true"></i>
+            <input type="email" id="reg-email" placeholder="exemple@email.com"> <!-- ← id ajouté -->
+        </div>
+    </div>
+
+    <div class="field">
+        <label>Téléphone</label>
+        <div class="field-wrap">
+            <i class="ti ti-phone" aria-hidden="true"></i>
+            <input type="tel" id="reg-tel" placeholder="07 00 00 00 00"> <!-- ← id ajouté -->
+        </div>
+    </div>
+
+    <div class="field">
+        <label>Mot de passe</label>
+        <div class="field-wrap">
+            <i class="ti ti-lock" aria-hidden="true"></i>
+            <input type="password" id="pwd-register" placeholder="••••••••">
+            <button class="eye-btn" onclick="togglePwd('pwd-register', this)">
+                <i class="ti ti-eye" style="font-size:16px"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="field">
+        <label>Confirmer le mot de passe</label>
+        <div class="field-wrap">
+            <i class="ti ti-lock-check" aria-hidden="true"></i>
+            <input type="password" id="pwd-confirm" placeholder="••••••••">
+            <button class="eye-btn" onclick="togglePwd('pwd-confirm', this)">
+                <i class="ti ti-eye" style="font-size:16px"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ← onclick ajouté -->
+    <button class="btn-submit" onclick="inscription()">Créer mon compte</button>
+
+    <div class="terms">
+        En vous inscrivant, vous acceptez nos <a href="#">CGU</a> et notre <a href="#">politique de confidentialité</a>
+    </div>
+
+    <div class="switch-txt">
+        Déjà un compte ? <a onclick="switchTab('login')">Se connecter</a>
+    </div>
+</div>
+
+    </div>
+</div>
+<script>
+function switchTab(tab){
+    document.querySelectorAll('.tab-btn').forEach((b,i)=>{
+        b.classList.toggle('active',(tab==='login'&&i===0)||(tab==='register'&&i===1));
+    });
+    document.getElementById('panel-login').classList.toggle('active',tab==='login');
+    document.getElementById('panel-register').classList.toggle('active',tab==='register');
+}
+function togglePwd(id,btn){
+    const input=document.getElementById(id);
+    const isText=input.type==='text';
+    input.type=isText?'password':'text';
+    btn.querySelector('i').className=isText?'ti ti-eye':'ti ti-eye-off';
+}
+document.addEventListener("DOMContentLoaded", () => {
+        const email = document.getElementById('login-email').value;
+        if (email) {
+            switchTab('login');
+        }
+    });
+</script>
+<script src="{{ url_for('static', filename='js/authentification.js') }}"></script>

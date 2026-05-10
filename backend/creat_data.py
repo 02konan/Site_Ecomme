@@ -1,26 +1,21 @@
-from Site_Ecomme.backend.data_base import connexion
+from backend.data_base import connexion
+import bcrypt
 
-def create_produits(nom, telephone,Numcode ,code, statut,commune,prix_unitaire,quantite, total):
+def create_client(role, nom, adress, telephone, password):
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     try:
         with connexion() as conn:
             with conn.cursor() as cursor:
-                sql_client = "INSERT INTO `clients`( `nom`, `telephone`) VALUES (%s, %s)"
-                cursor.execute(sql_client, (nom, telephone))
-                id_client = cursor.lastrowid
-                
-                sql_commande = "INSERT INTO `commandes`(`id_client`, `Numcode`,`code`,`Commune`, `statut`) VALUES (%s, %s, %s, %s, %s)"
-                cursor.execute(sql_commande, (id_client, Numcode, code, commune, statut))
-                id_commande = cursor.lastrowid
-
-                sql_details = "INSERT INTO `ligne_commandes`(`id_commande`, `id_produit`, `quantite`, `prix_unitaire`, `Total`) VALUES (%s, %s, %s, %s, %s)"
-                cursor.execute(sql_details, (id_commande, 1, quantite, prix_unitaire, total))
-
+                sql_client = """
+                    INSERT INTO Client (role, nom, adresse, telephone, estconnecter, mot_pass)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                """
+                cursor.execute(sql_client, (role, nom, adress, telephone, 0, hashed_password))
             conn.commit()
-            return {"success": True, "id_commande": id_commande}
+            return True  # ← retourne True si succès
     except Exception as e:
-        error_message = str(e)
-        print(f"An error occurred: {error_message}")
-        return {"success": False, "error": error_message}
+        print(f"Erreur create_client: {e}")
+        return False  # ← retourne False si échec
     
 def update_commande(id_commande, status, id_utilisateur, active):
     try:

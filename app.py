@@ -1,4 +1,6 @@
 from dotenv import load_dotenv
+from backend.creat_data import create_client
+from backend.Auth import Authentification
 from backend.read_data import details_produits,liste_produits,liste_banners,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
 import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
@@ -29,6 +31,63 @@ app.permanent_session_lifetime= timedelta(minutes=5)
 #     tab_route = ["home","formcommande","login","login_maquis","api_commandes","livreur","static", "adminHome", "adminPayment"] 
 #     if not (current_user.is_authenticated or session.get('connecter')) and request.endpoint not in tab_route:
 #         return redirect(url_for("login"))
+@app.route('/authentification', methods=['GET'])
+def auth():
+    prefill_email = session.pop('prefill_email', None)  # ← pop = supprime après lecture
+    prefill_pwd   = session.pop('prefill_pwd', None)
+    return render_template('auth_forms.html', prefill_email=prefill_email, prefill_pwd=prefill_pwd)
+
+@app.route('/auth/register', methods=['POST'])
+def register():
+    try:
+        data     = request.get_json()
+        nom      = data.get('nom')
+        email    = data.get('email')
+        tel      = data.get('tel')
+        password = data.get('password')
+
+        if not all([nom, email, tel, password]):
+            return jsonify({"success": False, "error": "Champs manquants"}), 400
+        
+        result = create_client(2, nom, email, tel, password)
+
+        if result:
+                session['prefill_email'] = email
+                session['prefill_pwd']   = password
+                return jsonify({"success": True})
+        else:
+            return jsonify({"success": False, "error": "Erreur lors de la création du compte"}), 500
+        
+    except Exception as e:
+        print(f"Erreur register: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route('/auth/login', methods=['POST'])
+def login():
+    try:
+        data     = request.get_json()
+        email    = data.get('email')
+        password = data.get('password')
+
+        if not all([email, password]):
+            return jsonify({"success": False, "error": "Champs manquants"}), 400
+
+        result = Authentification(email, password)
+        if result:
+            session['user_id']    = result['id']
+            session['user_nom']   = result['nom']
+            session['user_email'] = result['email']
+            session['user_role']  = result['nom_roles']
+        else:
+            return jsonify({"success": False, "error": "Email ou mot de passe incorrect"}), 401
+
+        return jsonify({"success": True})
+
+    except Exception as e:
+        print(f"Erreur login: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
 
 @app.route('/')
 def index():
@@ -166,13 +225,7 @@ def product(product_id):
 def categories():
     """Page des catégories"""
 
-@app.route('/categorie/<slug>')
-def categorie(slug):
-   return 0
-@app.route('/marques')
-def marques():
-    """Page des marques"""
-    return render_template('')
+
 
 @app.route('/api/cart/add', methods=['POST'])
 def add_to_cart():
@@ -182,6 +235,13 @@ def add_to_cart():
 def search():
     """API pour rechercher des produits"""
     return 0
+
+
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    """Déconnexion de l'utilisateur"""
+    return render_template('auth_forms.html')
 
 # Error handlers
 @app.errorhandler(404)
