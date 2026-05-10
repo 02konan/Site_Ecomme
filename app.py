@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 from backend.creat_data import create_client
 from backend.Auth import Authentification
-from backend.read_data import details_produits,liste_produits,liste_banners,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
+from backend.read_data import get_user_id,details_produits,liste_produits,liste_banners,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
 import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
 from flask_cors import CORS
@@ -17,20 +17,21 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 app.permanent_session_lifetime= timedelta(minutes=5)
 
-# login_manager = LoginManager()
-# login_manager.init_app(app)
-# login_manager.login_view = "login"
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "auth"
 
-# @login_manager.user_loader
-# def load_user(id_user):
-#     user = get_user_id(int(id_user))
-#     return user
+@login_manager.user_loader
+def load_user(id_user):
+    user = get_user_id(int(id_user))
+    return user
 
-# @app.before_request
-# def restriction():
-#     tab_route = ["home","formcommande","login","login_maquis","api_commandes","livreur","static", "adminHome", "adminPayment"] 
-#     if not (current_user.is_authenticated or session.get('connecter')) and request.endpoint not in tab_route:
-#         return redirect(url_for("login"))
+@app.before_request
+def restriction():
+    tab_route = [ "login", "auth", "register", "index", "menu", "produits_list", "produit_une", "produits_produit_nouveaute", "banner","static"] 
+    if not (current_user.is_authenticated or session.get('connecter')) and request.endpoint not in tab_route:
+        return redirect(url_for("auth"))
+    
 @app.route('/authentification', methods=['GET'])
 def auth():
     prefill_email = session.pop('prefill_email', None)  # ← pop = supprime après lecture
@@ -241,6 +242,7 @@ def search():
 @app.route('/logout', methods=['GET'])
 def logout():
     """Déconnexion de l'utilisateur"""
+    session.clear()
     return render_template('auth_forms.html')
 
 # Error handlers

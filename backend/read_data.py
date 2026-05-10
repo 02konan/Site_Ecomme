@@ -103,10 +103,10 @@ def get_user_id(user_id):
         with connexion() as conn:
             with conn.cursor() as cursor:
                 sql = """
-                SELECT utilisateurs.id, id_role, nom, email, nom_roles
-                FROM utilisateurs 
-                JOIN role ON utilisateurs.id_role = role.id
-                WHERE utilisateurs.id = %s;
+                SELECT id, role, nom, email, nom_roles
+                FROM Client 
+                JOIN role ON Client.role = role.id
+                WHERE Client.id = %s;
                 """
                 cursor.execute(sql, (user_id,))
                 row = cursor.fetchone()

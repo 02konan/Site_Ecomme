@@ -1,6 +1,3 @@
-// =====================
-//  UTILITAIRES PANIER
-// =====================
 
 function getPanier() {
     return JSON.parse(localStorage.getItem("panier")) || [];
