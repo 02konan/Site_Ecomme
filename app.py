@@ -11,7 +11,7 @@ from datetime import timedelta,datetime
 import random
 load_dotenv()
 
-app = Flask(__name__, template_folder="template")
+app = Flask(__name__, template_folder="template", static_folder="static")
 CORS(app)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
