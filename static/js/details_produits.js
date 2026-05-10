@@ -3,12 +3,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const parts = window.location.pathname.split("/").filter(Boolean);
     const id = parts[parts.length - 1];
 
-    if (!id || isNaN(id)) {
-        console.error("ID produit manquant dans l'URL");
-        return;
+   
+
+    if (document.getElementById("details-produits")) {
+        details_produits(id);
     }
 
-    details_produits(id);
+    
 });
 
 function details_produits(id) {

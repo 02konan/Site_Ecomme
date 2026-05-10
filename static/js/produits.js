@@ -148,6 +148,30 @@ function afficheproduit_la_une(produits) {
                 </a>
             `;
             container.appendChild(item);
+            // Bouton Panier
+                item.querySelector('.add-to-cart').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    ajouterAuPanier({
+                        id:   pdt.id_produits,
+                        nom:  pdt.nom_produits,
+                        prix: pdt.prix_produits,
+                        img:  imageSrc
+                    });
+                });
+
+                // Bouton Acheter
+                item.querySelector('.buy-now').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    ajouterAuPanier({
+                        id:   pdt.id_produits,
+                        nom:  pdt.nom_produits,
+                        prix: pdt.prix_produits,
+                        img:  imageSrc
+                    });
+                    window.location.href = "/panier";
+                });
         });
         
         // Initialiser le carrousel après l'ajout des produits
@@ -318,6 +342,30 @@ function afficheproduit_nouveaute(produits) {
                 </div>
             `;
             container.appendChild(item);
+            // Bouton Panier
+                item.querySelector('.add-to-cart').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    ajouterAuPanier({
+                        id:   pdt.id_produits,
+                        nom:  pdt.nom_produits,
+                        prix: pdt.prix_produits,
+                        img:  imageSrc
+                    });
+                });
+
+                // Bouton Acheter
+                item.querySelector('.buy-now').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    ajouterAuPanier({
+                        id:   pdt.id_produits,
+                        nom:  pdt.nom_produits,
+                        prix: pdt.prix_produits,
+                        img:  imageSrc
+                    });
+                    window.location.href = "/panier";
+                });
         });
         
         // Initialiser le carrousel pour les nouveautés

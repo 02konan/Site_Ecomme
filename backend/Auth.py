@@ -22,7 +22,7 @@ def Authentification(email, pwd):
                 if not row:
                     return None  
 
-                if not verifier_password(pwd, row[4]):
+                if not verifier_password(pwd, row[5]):
                     return None  
 
                 return {
