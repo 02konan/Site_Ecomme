@@ -19,7 +19,14 @@ function connexion() {
     const pwd   = document.getElementById('login-pwd').value.trim();
 
     if (!email || !pwd) {
-        alert("Veuillez remplir tous les champs.");
+        Swal.fire({
+            icon: 'warning',
+            title: 'Champs requis',
+            text: "Veuillez remplir tous les champs s'il vous plaît",
+            confirmButtonColor: '#f30707',
+            timer: 2000,
+            timerProgressBar: true
+        });
         return;
     }
 
@@ -37,13 +44,28 @@ function connexion() {
         if (data.success) {
             window.location.href = '/';
         } else {
-            alert(data.error || "Email ou mot de passe incorrect.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Échec de connexion',
+                text: data.error || "Email ou mot de passe incorrect",
+                confirmButtonColor: '#f30707',
+                timer: 2000,
+                timerProgressBar: true
+            });
             btn.disabled = false;
             btn.textContent = "Se connecter";
         }
     })
     .catch(err => {
         console.error("Erreur connexion:", err);
+        Swal.fire({
+            icon: 'error',
+            title: 'Erreur réseau',
+            text: "Une erreur est survenue, veuillez réessayer",
+            confirmButtonColor: '#f30707',
+            timer: 2000,
+            timerProgressBar: true
+        });
         btn.disabled = false;
         btn.textContent = "Se connecter";
     });
@@ -57,11 +79,23 @@ function inscription() {
     const confirm = document.getElementById('pwd-confirm').value.trim();
 
     if (!nom || !email || !tel || !pwd || !confirm) {
-        alert("Veuillez remplir tous les champs.");
+        Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: "Veuillez remplir tous les champs.",
+                    confirmButtonColor: '#f30707',
+                    timer: 1000
+                });
         return;
     }
     if (pwd !== confirm) {
-        alert("Les mots de passe ne correspondent pas.");
+        Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: "Les mots de passe ne correspondent pas.",
+                    confirmButtonColor: '#f30707',
+                    timer: 1000
+                });
         return;
     }
 
@@ -79,7 +113,13 @@ function inscription() {
         if (data.success) {
             window.location.href = '/authentification';
         } else {
-            alert(data.error || "Une erreur est survenue.");
+            Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: "Une erreur est survenue.",
+                    confirmButtonColor: '#f30707',
+                    timer: 1000
+                });
             btn.disabled = false;
             btn.textContent = "Créer mon compte";
         }

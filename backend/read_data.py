@@ -148,11 +148,7 @@ def get_user_id(user_id):
         return (f"Erreur lors de la lecture des commissions: {e}")
 
 def get_categories_with_subcategories():
-    """
-    Récupère toutes les catégories avec leurs sous-catégories (2 niveaux)
-    Returns:
-        dict: Structure hiérarchique des catégories
-    """
+   
     try:
         with connexion() as conn:
             with conn.cursor() as cursor:

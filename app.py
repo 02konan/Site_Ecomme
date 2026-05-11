@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 from backend.creat_data import create_client,creat_commande
 from backend.Auth import Authentification
+from backend.MessageApi import Message
 from backend.read_data import get_user_id,details_produits,liste_produits,liste_banners,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
 import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
@@ -28,18 +29,31 @@ def load_user(id_user):
 
 @app.before_request
 def restriction():
-    tab_route = [ "login", "auth", "register", "commande", "index", "menu", "produits_list", "verifcation_auth", "produit_une", "produits_produit_nouveaute", "banner","static"] 
+    tab_route = [ 
+                 "login", 
+                 "auth", 
+                 "register", 
+                 "commande", 
+                 "index", 
+                 "menu", 
+                 "produits_list",
+                 "verifcation_auth", 
+                 "produit_une",
+                 "product",
+                 "produits_details", 
+                 "produits_produit_nouveaute", 
+                 "banner",
+                 "static"   
+                ] 
     if not (current_user.is_authenticated or session.get('connecter')) and request.endpoint not in tab_route:
         return redirect(url_for("auth"))
     
-
+#-----------------INDEX---------------------
 @app.route('/')
 def index():
-    """Page d'accueil"""
-    prefill_nom = session['nom'] if 'nom' in session else None
-    prefill_tel   = session['tel'] if 'tel' in session else None
     return render_template('index.html')
 
+#-----------------AUTHENTIFICATION---------------------
 @app.route('/authentification/verifier')
 def verifcation_auth():
     if 'user_id' in session:
@@ -55,7 +69,7 @@ def verifcation_auth():
     
 @app.route('/authentification', methods=['GET'])
 def auth():
-    prefill_email = session.pop('prefill_email', None)  # ← pop = supprime après lecture
+    prefill_email = session.pop('prefill_email', None)  
     prefill_pwd   = session.pop('prefill_pwd', None)
     return render_template('auth_forms.html', prefill_email=prefill_email, prefill_pwd=prefill_pwd)
 
@@ -96,6 +110,7 @@ def login():
             return jsonify({"success": False, "error": "Champs manquants"}), 400
 
         result = Authentification(email, password)
+        
         if result:
             session['user_id']    = result['id']
             session['user_nom']   = result['nom']
@@ -134,6 +149,22 @@ def menu():
     # Si le format est différent
     return jsonify({"error": "Format de données inattendu"}), 500
 
+@app.route('/banner/list')
+def banner():
+    data=liste_banners()
+    table=[]
+    if data:
+        for i in data:
+            information={
+                "id":i[0],
+                "titre":i[1],
+                "description":i[2],
+                "img":i[3]
+            }
+            table.append(information)
+    return jsonify({"data":table})
+
+#-----------------PRODUITS---------------------
 @app.route('/produit/list')
 def produits_list():
     data=liste_produits()
@@ -181,21 +212,6 @@ def produits_produit_nouveaute():
             }
             table.append(information)
     return jsonify({"data":table})
-  
-@app.route('/banner/list')
-def banner():
-    data=liste_banners()
-    table=[]
-    if data:
-        for i in data:
-            information={
-                "id":i[0],
-                "titre":i[1],
-                "description":i[2],
-                "img":i[3]
-            }
-            table.append(information)
-    return jsonify({"data":table})
 
 @app.route('/produits')
 def produits():
@@ -231,15 +247,13 @@ def produits_details(id_produits):
 
     return jsonify({"data": information})
 
-
-
 @app.route('/produit/<int:product_id>')
 def product(product_id):
     """Page détail d'un produit"""
     return render_template('product_detail.html')
- 
 
-@app.route('/commande/create', methods=['POST'])  # ← espace supprimé
+#-----------------COMMANDE---------------------
+@app.route('/commande/create', methods=['POST']) 
 def commande():
     try:
         data      = request.get_json()
@@ -247,7 +261,6 @@ def commande():
         client    = data.get("client")
         panier    = data.get("panier")
         total     = data.get("total")
-
         if not id_client:
             return jsonify({"success": False, "error": "Non connecté"}), 401
 
@@ -256,39 +269,27 @@ def commande():
 
         adresse = client.get("adresse")
         ville   = client.get("ville")
-
-        # Boucle sur chaque produit du panier
-        for item in panier:
-            creat_commande(
+        creat_commande(
                 id_client,
                 adresse,
                 ville,
-                item['id_produit'],
-                item['prix'],
-                item['quantite']
+                panier,
+               total
             )
-
+        # Message(client,tel,total,adresse,ville)
         return jsonify({"success": True})
 
     except Exception as e:
         print(f"Erreur commande/create: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
-
-@app.route('/api/cart/add', methods=['POST'])
-def add_to_cart():
-    return 0
-
 @app.route('/api/search', methods=['GET'])
 def search():
     """API pour rechercher des produits"""
     return 0
 
-
-
 @app.route('/logout', methods=['GET'])
 def logout():
-    """Déconnexion de l'utilisateur"""
     session.clear()
     return render_template('auth_forms.html')
 

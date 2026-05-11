@@ -100,7 +100,6 @@ function Produits_la_une() {
             console.error("Erreur produits:", err);
         });
 }
-
 function afficheproduit_la_une(produits) {
     const container = document.getElementById("productsTrack");
     if (!container) return;
@@ -197,7 +196,6 @@ function Produits() {
             console.error("Erreur produits:", err);
         });
 }
-
 function afficheproduits(produits) {
     const container = document.getElementById("NosProduits");
     if (!container) return;
@@ -283,7 +281,7 @@ function afficheproduits(produits) {
 }
 
 function produit_nouveaute() {
-    const container = document.getElementById("productsTrackNouveaute");
+    const container = document.getElementById("productsTrack");
     showCarouselSkeletons(container, 4);
 
     fetch("/produit_nouveaute/list")
@@ -334,12 +332,13 @@ function afficheproduit_nouveaute(produits) {
                                 <div class="product-price ms-auto">FCFA ${prixActuel}<br/><span class="text-decoration-line-through text-muted">FCFA ${prixAvant}</span></div>
                             </div>
                         </div>
+                        <div class="d-flex box-card-btn">
+                            <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Panier</button>
+                            <button class="btn flex-grow-1 btn-sm btn-primary-custom rounded-pill m-0 buy-now" data-id="${pdt.id_produits}"><i class="bi bi-check-circle me-2"></i>Acheter</button>
+                        </div>
                     </div>
                 </a>
-                <div class="d-flex box-card-btn">
-                    <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Panier</button>
-                    <button class="btn flex-grow-1 btn-sm btn-primary-custom rounded-pill m-0 buy-now" data-id="${pdt.id_produits}"><i class="bi bi-check-circle me-2"></i>Acheter</button>
-                </div>
+                    
             `;
             container.appendChild(item);
             // Bouton Panier

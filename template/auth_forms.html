@@ -144,25 +144,5 @@
 
     </div>
 </div>
-<script>
-function switchTab(tab){
-    document.querySelectorAll('.tab-btn').forEach((b,i)=>{
-        b.classList.toggle('active',(tab==='login'&&i===0)||(tab==='register'&&i===1));
-    });
-    document.getElementById('panel-login').classList.toggle('active',tab==='login');
-    document.getElementById('panel-register').classList.toggle('active',tab==='register');
-}
-function togglePwd(id,btn){
-    const input=document.getElementById(id);
-    const isText=input.type==='text';
-    input.type=isText?'password':'text';
-    btn.querySelector('i').className=isText?'ti ti-eye':'ti ti-eye-off';
-}
-document.addEventListener("DOMContentLoaded", () => {
-        const email = document.getElementById('login-email').value;
-        if (email) {
-            switchTab('login');
-        }
-    });
-</script>
-<script src="{{ url_for('static', filename='js/authentification.js') }}"></script>
+
+{%include "scripts.html"%}
