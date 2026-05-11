@@ -30,6 +30,7 @@ def Authentification(email, pwd):
                     "id_role":  row[1],
                     "nom":      row[2],
                     "email":    row[3],
+                    "tel":      row[4],
                     "nom_roles": row[5]
                 }
 

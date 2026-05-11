@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from backend.creat_data import create_client
+from backend.creat_data import create_client,creat_commande
 from backend.Auth import Authentification
 from backend.read_data import get_user_id,details_produits,liste_produits,liste_banners,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
 import os
@@ -28,9 +28,30 @@ def load_user(id_user):
 
 @app.before_request
 def restriction():
-    tab_route = [ "login", "auth", "register", "index", "menu", "produits_list", "produit_une", "produits_produit_nouveaute", "banner","static"] 
+    tab_route = [ "login", "auth", "register", "commande", "index", "menu", "produits_list", "verifcation_auth", "produit_une", "produits_produit_nouveaute", "banner","static"] 
     if not (current_user.is_authenticated or session.get('connecter')) and request.endpoint not in tab_route:
         return redirect(url_for("auth"))
+    
+
+@app.route('/')
+def index():
+    """Page d'accueil"""
+    prefill_nom = session['nom'] if 'nom' in session else None
+    prefill_tel   = session['tel'] if 'tel' in session else None
+    return render_template('index.html')
+
+@app.route('/authentification/verifier')
+def verifcation_auth():
+    if 'user_id' in session:
+        return jsonify({"connected": True,
+                        "user": {
+                            "id": session['user_id'],
+                            "nom": session['user_nom'],
+                            "email": session['user_email'],
+                            "tel": session['user_tel'],
+                            "role": session['user_role']
+                        }})
+    return jsonify({"connected": False})
     
 @app.route('/authentification', methods=['GET'])
 def auth():
@@ -79,6 +100,7 @@ def login():
             session['user_id']    = result['id']
             session['user_nom']   = result['nom']
             session['user_email'] = result['email']
+            session['user_tel']   = result['tel']
             session['user_role']  = result['nom_roles']
         else:
             return jsonify({"success": False, "error": "Email ou mot de passe incorrect"}), 401
@@ -89,11 +111,6 @@ def login():
         print(f"Erreur login: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
-
-@app.route('/')
-def index():
-    """Page d'accueil"""
-    return render_template('index.html')
 
 @app.route('/menu')
 def menu():
@@ -222,10 +239,40 @@ def product(product_id):
     return render_template('product_detail.html')
  
 
-@app.route('/categories')
-def categories():
-    """Page des catégories"""
+@app.route('/commande/create', methods=['POST'])  # ← espace supprimé
+def commande():
+    try:
+        data      = request.get_json()
+        id_client = session.get("user_id")
+        client    = data.get("client")
+        panier    = data.get("panier")
+        total     = data.get("total")
 
+        if not id_client:
+            return jsonify({"success": False, "error": "Non connecté"}), 401
+
+        if not panier:
+            return jsonify({"success": False, "error": "Panier vide"}), 400
+
+        adresse = client.get("adresse")
+        ville   = client.get("ville")
+
+        # Boucle sur chaque produit du panier
+        for item in panier:
+            creat_commande(
+                id_client,
+                adresse,
+                ville,
+                item['id_produit'],
+                item['prix'],
+                item['quantite']
+            )
+
+        return jsonify({"success": True})
+
+    except Exception as e:
+        print(f"Erreur commande/create: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 @app.route('/api/cart/add', methods=['POST'])

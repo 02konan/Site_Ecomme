@@ -1,12 +1,27 @@
 // =====================
 //  MODALE COMMANDE
 // =====================
-
 function ouvrirModal() {
-    document.getElementById("modalCommande").classList.add("open");
-    document.getElementById("modalOverlay").classList.add("open");
-    allerStep1();
+    fetch('/authentification/verifier')
+        .then(res => res.json())
+        .then(data => {
+            if (data.connected) {
+                console.log("auth check:", data)
+
+                const user = data.user;
+                document.getElementById("cmd-nom").value     = user.nom   || '';
+                document.getElementById("cmd-tel").value     = user.tel   || '';
+
+                document.getElementById("modalCommande").classList.add("open");
+                document.getElementById("modalOverlay").classList.add("open");
+                allerStep1();
+            } else {
+                window.location.href = '/auth';
+            }
+        })
+        .catch(err => console.error("Erreur check auth:", err));
 }
+
 
 function fermerModal() {
     document.getElementById("modalCommande").classList.remove("open");
@@ -90,30 +105,35 @@ function confirmerCommande() {
     btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Envoi...`;
 
     fetch("/commande/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(response => {
-        if (response.success) {
-            // Succès
-            document.getElementById("recap-tel-confirm").textContent = tel;
-            document.getElementById("step2").style.display = "none";
-            document.getElementById("step3").style.display = "block";
-            viderPanier(); // vide le localStorage
-        } else {
-            alert("Erreur : " + (response.error || "Réessayez."));
-            btn.disabled = false;
-            btn.innerHTML = `<i class="bi bi-check-circle me-2"></i>Confirmer la commande`;
-        }
-    })
-    .catch(err => {
-        console.error("Erreur commande:", err);
-        alert("Une erreur est survenue. Réessayez.");
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+})
+.then(res => {
+    console.log("status:", res.status); // ← vérifie le status
+    return res.text(); // ← lis le texte brut d'abord
+})
+.then(text => {
+    console.log("réponse brute:", text); // ← vois ce que Flask retourne
+    const response = JSON.parse(text); // ← puis parse
+    if (response.success) {
+        document.getElementById("recap-tel-confirm").textContent = tel;
+        document.getElementById("step2").style.display = "none";
+        document.getElementById("step3").style.display = "block";
+        localStorage.removeItem("panier");
+        updateCompteurPanier(); 
+    } else {
+        alert("Erreur : " + (response.error || "Réessayez."));
         btn.disabled = false;
         btn.innerHTML = `<i class="bi bi-check-circle me-2"></i>Confirmer la commande`;
-    });
+    }
+})
+.catch(err => {
+    console.error("Erreur commande:", err);
+    alert("Une erreur est survenue. Réessayez.");
+    btn.disabled = false;
+    btn.innerHTML = `<i class="bi bi-check-circle me-2"></i>Confirmer la commande`;
+});
 }
 
 // Ferme la modale en cliquant sur l'overlay

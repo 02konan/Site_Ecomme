@@ -1,6 +1,58 @@
 from backend.data_base import connexion
 import bcrypt
+def generer_c_commande():
+    try:
+        with connexion() as conn:
+            with conn.cursor() as cursor:
+                sql = "SELECT id FROM commandes ORDER BY id DESC LIMIT 1"
+                cursor.execute(sql)
+                result = cursor.fetchone()
+                if result:
+                    dernier_id = result[0]
+                    nouveau_id = f"C{dernier_id + 1:04d}"
+                else:
+                    nouveau_id = "C0001"
+            return nouveau_id
+    except Exception as e:
+        print(f"Erreur generer_c_commande: {e}")
+        return None
 
+def creat_commande(id_client, adresse, ville, id_produit, prix, quantite):  # ← sans accent
+    try:
+        with connexion() as conn:
+            with conn.cursor() as cursor:
+                code_commande = generer_c_commande()
+                montant_total = float(prix) * int(quantite)  # ← cast pour éviter les erreurs de type
+
+                # Commande principale
+                sql_commande = """
+                    INSERT INTO commandes (code_commande, id_client, total, statut)
+                    VALUES (%s, %s, %s, %s)
+                """
+                cursor.execute(sql_commande, (code_commande, id_client, montant_total, "en_attente"))
+                id_commande = cursor.lastrowid
+
+                # Ligne commande
+                sql_ligne = """
+                    INSERT INTO ligne_commandes (id_commande, id_produit, prix_unitaire, quantite)
+                    VALUES (%s, %s, %s, %s)
+                """
+                cursor.execute(sql_ligne, (id_commande, id_produit, float(prix), int(quantite)))
+
+                # Livraison
+                sql_livraison = """
+                    INSERT INTO livraisons (id_commande, adresse, commune, statut)
+                    VALUES (%s, %s, %s, %s)
+                """
+                cursor.execute(sql_livraison, (id_commande, adresse, ville, "en_preparation"))
+
+            conn.commit()
+            return True
+
+    except Exception as e:
+        print(f"Erreur creat_commande: {e}")
+        return False
+    
 def create_client(role, nom, adress, telephone, password):
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     try:

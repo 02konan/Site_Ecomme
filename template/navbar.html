@@ -119,11 +119,11 @@
         <div class="modal-body-cmd">
             <div class="mb-3">
                 <label class="form-label">Nom complet</label>
-                <input type="text" class="form-control rounded-pill" id="cmd-nom" placeholder="Ex: Kouassi Jean">
+                <input type="text" class="form-control rounded-pill" id="cmd-nom" placeholder="Ex: Kouassi Jean" value="{{ prefill_nom or '' }}">
             </div>
             <div class="mb-3">
                 <label class="form-label">Téléphone</label>
-                <input type="tel" class="form-control rounded-pill" id="cmd-tel" placeholder="Ex: 07 00 00 00 00">
+                <input type="tel" class="form-control rounded-pill" id="cmd-tel" placeholder="Ex: 07 00 00 00 00" value="{{ prefill_tel or '' }}">
             </div>
             <div class="mb-3">
                 <label class="form-label">Adresse de livraison</label>
