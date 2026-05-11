@@ -48,7 +48,23 @@ def liste_Nouveaute():
                 return commandes
     except Exception as e:
         return (f"Erreur lors de la récupération des produits: {e}")       
- 
+
+def liste_recents():
+    try:
+        with connexion() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute("""
+                SELECT p.id, p.nom, p.description, p.prix, pi.url_image AS img_produits
+                FROM produits p
+                LEFT JOIN produit_images pi on p.id = pi.id_produit
+                WHERE pi.est_principale = 1
+                ORDER BY p.id DESC;
+                               """)
+                commandes = cursor.fetchall()
+                return commandes
+    except Exception as e:
+        return (f"Erreur lors de la récupération des produits: {e}")   
+  
 def liste_banners():
     try:
         with connexion() as conn:

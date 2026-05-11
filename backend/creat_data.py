@@ -1,4 +1,5 @@
 from backend.data_base import connexion
+from backend.Auth import verifie_mail
 import bcrypt
 
 
@@ -63,9 +64,15 @@ def create_client(role, nom, adress, telephone, password):
                     INSERT INTO Client (role, nom, adresse, telephone, estconnecter, mot_pass)
                     VALUES (%s, %s, %s, %s, %s, %s)
                 """
-                cursor.execute(sql_client, (role, nom, adress, telephone, 0, hashed_password))
+                nouveau_mail=verifie_mail(adress)
+                print(nouveau_mail)
+                if nouveau_mail is False:
+                    return f"Desole, un compte exixte deja avec se Email"
+                else:
+                    cursor.execute(sql_client, (role, nom, adress, telephone, 0, hashed_password))
+                    
             conn.commit()
-            return True 
+            return True
     except Exception as e:
         print(f"Erreur create_client: {e}")
         return False  

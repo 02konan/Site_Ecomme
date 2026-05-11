@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from backend.creat_data import create_client,creat_commande
 from backend.Auth import Authentification
 from backend.MessageApi import Message
-from backend.read_data import get_user_id,details_produits,liste_produits,liste_banners,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
+from backend.read_data import get_user_id,details_produits,liste_produits,liste_banners,liste_recents,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
 import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
 from flask_cors import CORS
@@ -41,8 +41,10 @@ def restriction():
                  "produit_une",
                  "product",
                  "produits_details", 
+                 "produit_recents", 
                  "produits_produit_nouveaute", 
                  "banner",
+                 "https://divix.alwaysdata.net/ecommerce/uploads/produits/",
                  "static"   
                 ] 
     if not (current_user.is_authenticated or session.get('connecter')) and request.endpoint not in tab_route:
@@ -87,17 +89,16 @@ def register():
         
         result = create_client(2, nom, email, tel, password)
 
-        if result:
+        if result is True:
                 session['prefill_email'] = email
                 session['prefill_pwd']   = password
                 return jsonify({"success": True})
         else:
-            return jsonify({"success": False, "error": "Erreur lors de la création du compte"}), 500
+            return jsonify({"success": False, "error": str(result) or "Erreur lors de la création du compte"}), 500
         
     except Exception as e:
         print(f"Erreur register: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
-
 
 @app.route('/auth/login', methods=['POST'])
 def login():
@@ -111,21 +112,20 @@ def login():
 
         result = Authentification(email, password)
         
-        if result:
+        if result is True :
             session['user_id']    = result['id']
             session['user_nom']   = result['nom']
             session['user_email'] = result['email']
             session['user_tel']   = result['tel']
             session['user_role']  = result['nom_roles']
         else:
-            return jsonify({"success": False, "error": "Email ou mot de passe incorrect"}), 401
+            return jsonify({"success": False, "error": str(result) or "Email ou mot de passe incorrect"}), 401
 
         return jsonify({"success": True})
 
     except Exception as e:
         print(f"Erreur login: {e}")
-        return jsonify({"success": False, "error": str(e)}), 500
-
+        return jsonify({"success": False, "error": str(e)}), 500 
 
 @app.route('/menu')
 def menu():
@@ -213,6 +213,22 @@ def produits_produit_nouveaute():
             table.append(information)
     return jsonify({"data":table})
 
+@app.route('/produit_recents/list')
+def produit_recents():
+    data=liste_recents()
+    table=[]
+    if data:
+        for i in data:
+            information={
+                "id_produits":i[0],
+                "nom_produits":i[1],
+                "descriptin_produits":i[2],
+                "prix_produits":i[3],
+                "img_produits": i[4]
+            }
+            table.append(information)
+    return jsonify({"data":table})
+
 @app.route('/produits')
 def produits():
     return render_template('produits_list.html')
@@ -251,6 +267,7 @@ def produits_details(id_produits):
 def product(product_id):
     """Page détail d'un produit"""
     return render_template('product_detail.html')
+
 
 #-----------------COMMANDE---------------------
 @app.route('/commande/create', methods=['POST']) 

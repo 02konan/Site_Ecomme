@@ -116,7 +116,7 @@ function inscription() {
             Swal.fire({
                     icon: 'error',
                     title: 'Erreur',
-                    text: "Une erreur est survenue.",
+                    text: data.error||"Une erreur est survenue.",
                     confirmButtonColor: '#f30707',
                     timer: 1000
                 });

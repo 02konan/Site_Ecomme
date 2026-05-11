@@ -6,20 +6,21 @@ def verifier_password(password, hash_bdd):
     hash_bytes = hash_bdd.encode('utf-8')
     return bcrypt.checkpw(password_bytes, hash_bytes)
 
-# def verifie_mail(BD_mail):
-#     try:
-#         with connexion() as conn:
-#             with conn.cursor() as cursor:
-#                 sql = "SELECT adresse FROM Client WHERE adresse=%s"
-#                 cursor.execute(sql,BD_mail)
-#                 result = cursor.fetchone()
-#                 existe_mail=result[0]
-#                 if existe_mail :
-                    
+def verifie_mail(BD_mail):
+    try:
+        with connexion() as conn:
+            with conn.cursor() as cursor:
+                sql = "SELECT adresse FROM Client WHERE adresse=%s"
+                cursor.execute(sql,BD_mail)
+                result = cursor.fetchone()
+                existe_mail=result[0]
+                if existe_mail:
+                    return False
+            return True        
                
-#     except Exception as e:
-#         print(f"Erreur : {e}")
-#         return None
+    except Exception as e:
+        print(f"Erreur : {e}")
+        return None
 
 def Authentification(email, pwd):
     try:
@@ -35,10 +36,10 @@ def Authentification(email, pwd):
                 row = cursor.fetchone()
 
                 if not row:
-                    return None  
+                    return f"Desole, le compte n'existe pas"  
 
                 if not verifier_password(pwd, row[5]):
-                    return None  
+                    return f"mot de passe incorrect"  
 
                 return {
                     "id":       row[0],

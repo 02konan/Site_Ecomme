@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     Produits();
     Produits_la_une();
     produit_nouveaute();
+    produit_recents();
 });
 
 // Variables globales pour le carrousel
@@ -14,7 +15,7 @@ let carouselTrack = null;
 let carouselPrevBtn = null;
 let carouselNextBtn = null;
 let carouselDotsContainer = null;
-
+window.urlProduitImage = "https://divix.alwaysdata.net/ecommerce/uploads/produits/";
 
 
 
@@ -64,7 +65,6 @@ function showCarouselSkeletons(container, count = 4) {
     }
     container.innerHTML = html;
 }
-
 function createCarouselSkeletonSlide() {
     return `
         <div class="products-carousel-slide">
@@ -115,7 +115,7 @@ function afficheproduit_la_une(produits) {
             const reduction = Math.round(((prixAvant - prixActuel) / prixAvant) * 100);
             const imageSrc = pdt.img_produits
                 ? (/^https?:\/\//i.test(pdt.img_produits) ? pdt.img_produits : `${window.urlProduitImage}${pdt.img_produits}`)
-                : `${window.urlProduitImage}default_1.png`;
+                : `/static/img/default_1.png`;
 
             const item = document.createElement("div");
             item.className = "products-carousel-slide";
@@ -210,7 +210,7 @@ function afficheproduits(produits) {
             const reduction = Math.round(((prixAvant - prixActuel) / prixAvant) * 100);
             const imageSrc = pdt.img_produits
                 ? (/^https?:\/\//i.test(pdt.img_produits) ? pdt.img_produits : `${window.urlProduitImage}${pdt.img_produits}`)
-                : `${window.urlProduitImage}default_1.png`;
+                : `/static/img/default_1.png`;
 
             const item = document.createElement("div");
             item.className = "col-12 col-sm-6 col-md-4 col-lg-3";
@@ -293,7 +293,6 @@ function produit_nouveaute() {
             console.error("Erreur produits:", err);
         });
 }
-
 function afficheproduit_nouveaute(produits) {
     const container = document.getElementById("productsTrackNouveaute");
     if (!container) return;
@@ -308,7 +307,7 @@ function afficheproduit_nouveaute(produits) {
             const reduction = Math.round(((prixAvant - prixActuel) / prixAvant) * 100);
             const imageSrc = pdt.img_produits
                 ? (/^https?:\/\//i.test(pdt.img_produits) ? pdt.img_produits : `${window.urlProduitImage}${pdt.img_produits}`)
-                : `${window.urlProduitImage}default_1.png`;
+                : `/static/img/default_1.png`;
 
             const item = document.createElement("div");
             item.className = "products-carousel-slide";
@@ -380,9 +379,106 @@ function afficheproduit_nouveaute(produits) {
     }
 }
 
-/**
- * Initialise le carrousel des produits à la une
- */
+function produit_recents() {
+    const container = document.getElementById("productsTrack");
+    showCarouselSkeletons(container, 4);
+
+    fetch("/produit_recents/list")
+        .then(res => res.json())
+        .then(response => {
+            if (response.data) afficheproduit_recents(response.data);
+        })
+        .catch(err => {
+            console.error("Erreur produits:", err);
+        });
+}
+function afficheproduit_recents(produits) {
+    const container = document.getElementById("productsTrackRecents");
+    if (!container) return;
+    container.innerHTML = "";
+
+    const produitsLimit = produits.slice(0, 12);
+
+    if (produitsLimit && produitsLimit.length > 0) {
+        produitsLimit.forEach(pdt => {
+            const prixActuel = pdt.prix_produits;
+            const prixAvant = Math.round(prixActuel * 1.25);
+            const reduction = Math.round(((prixAvant - prixActuel) / prixAvant) * 100);
+            const imageSrc = pdt.img_produits
+                ? (/^https?:\/\//i.test(pdt.img_produits) ? pdt.img_produits : `${window.urlProduitImage}${pdt.img_produits}`)
+                : `/static/img/default_1.png`;
+
+            const item = document.createElement("div");
+            item.className = "products-carousel-slide";
+
+            item.innerHTML = `
+                <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
+                    <div class="product-card">
+                        <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction"> -${reduction}%</span>
+                        <div class="like"><i class="bi bi-heart"></i></div>
+                        <img src="${imageSrc}" class="product-img" loading="lazy">
+                        <div class="product-body d-flex">
+                            <div class="col-8">
+                                <div class="product-title">${escapeHtml(pdt.nom_produits)}</div>
+                                <p class="small product-desc text-muted">${escapeHtml(pdt.descriptin_produits || '')}</p>
+                                <div class="product-star d-flex gap-1">
+                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i><i class="bi bi-star"></i>
+                                    <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">3.2</span>
+                                </div>
+                            </div>
+                            <div class="col-4 d-flex flex-column">
+                                <div class="product-price ms-auto">FCFA ${prixActuel}<br/><span class="text-decoration-line-through text-muted">FCFA ${prixAvant}</span></div>
+                            </div>
+                        </div>
+                        <div class="d-flex box-card-btn">
+                            <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Panier</button>
+                            <button class="btn flex-grow-1 btn-sm btn-primary-custom rounded-pill m-0 buy-now" data-id="${pdt.id_produits}"><i class="bi bi-check-circle me-2"></i>Acheter</button>
+                        </div>
+                    </div>
+                </a>
+                    
+            `;
+            container.appendChild(item);
+            // Bouton Panier
+                item.querySelector('.add-to-cart').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    ajouterAuPanier({
+                        id:   pdt.id_produits,
+                        nom:  pdt.nom_produits,
+                        prix: pdt.prix_produits,
+                        img:  imageSrc
+                    });
+                });
+
+                // Bouton Acheter
+                item.querySelector('.buy-now').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    ajouterAuPanier({
+                        id:   pdt.id_produits,
+                        nom:  pdt.nom_produits,
+                        prix: pdt.prix_produits,
+                        img:  imageSrc
+                    });
+                    window.location.href = "/panier";
+                });
+        });
+        
+        // Initialiser le carrousel pour les nouveautés
+        initCarouselNouveaute();
+        
+    } else {
+        container.innerHTML = `
+            <div class="text-center py-5 nothing">
+                <i class="bi bi-inbox fs-1 text-muted"></i>
+                <p class="text-muted mt-2 mb-0">Aucun produit trouvé</p>
+            </div>
+        `;
+    }
+}
+
+
 function initCarousel() {
     carouselTrack = document.getElementById('productsTrack');
     carouselPrevBtn = document.getElementById('productsPrev');
@@ -435,10 +531,6 @@ function initCarousel() {
         }, 150);
     });
 }
-
-/**
- * Initialise le carrousel des nouveautés
- */
 function initCarouselNouveaute() {
     const track = document.getElementById('productsTrackNouveaute');
     const prevBtn = document.getElementById('productsPrevNouveaute');
@@ -528,9 +620,7 @@ function initCarouselNouveaute() {
     goTo(0);
 }
 
-/**
- * Construit les dots du carrousel
- */
+
 function buildCarouselDots() {
     if (!carouselDotsContainer) return;
     carouselDotsContainer.innerHTML = '';
@@ -543,10 +633,6 @@ function buildCarouselDots() {
         carouselDotsContainer.appendChild(dot);
     }
 }
-
-/**
- * Met à jour les dots actifs
- */
 function updateCarouselDots() {
     if (!carouselDotsContainer) return;
     const dots = carouselDotsContainer.querySelectorAll('.dot');
