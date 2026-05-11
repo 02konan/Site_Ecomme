@@ -97,17 +97,23 @@ function afficheBanner(banners) {
         const description = banner.description  || 'Profitez de nos meilleures offres du moment';
         const buttonText = banner.bouton_texte || 'Achetez maintenant';
         const buttonLink = banner.bouton_lien || banner.button_link || '#';
-        const backgroundImage = banner.img  || '/static/back/back_banner.jpg';
+        const backgroundImage = banner.img
+                ? (/^https?:\/\//i.test(banner.img) ? banner.img : `${window.urlBanniereImage}${banner.img}`)
+                : '/static/img/default_1.png';
+
+        console.log('backgroundImage:', backgroundImage);
+        console.log('banner.img:', banner.img);
+        console.log('url complète:', `${window.urlBanniereImage}${banner.img}`);
 
         slide.innerHTML = `
             <div class="content">
-                <h1 class="title">${escapeHtml(title)}</h1>
-                <p class="desc">${escapeHtml(description)}</p>
-                <div class="">
+                <h1 class="w-100 title text-center">${escapeHtml(title)}</h1>
+                <p class="w-100 desc text-center">${escapeHtml(description)}</p>
+                <div class="w-100 d-flex justify-content-center">
                     <a href="${escapeHtml(buttonLink)}" class="btn btn-sm btn-primary-custom rounded-pill px-4 py-2">${escapeHtml(buttonText)}</a>
                 </div>
             </div>
-            <div class="carousel-background" style="background: url(${escapeHtml(backgroundImage)}) no-repeat center/cover;"></div>
+            <div class="carousel-background" style="background: url('${escapeHtml(backgroundImage)}') no-repeat center/cover;"></div>
         `;
 
         innerContainer.appendChild(slide);

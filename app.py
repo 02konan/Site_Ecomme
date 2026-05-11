@@ -45,6 +45,7 @@ def restriction():
                  "produits_produit_nouveaute", 
                  "banner",
                  "https://divix.alwaysdata.net/ecommerce/uploads/produits/",
+                 "https://divix.alwaysdata.net/ecommerce/uploads/bannieres/",
                  "static"   
                 ] 
     if not (current_user.is_authenticated or session.get('connecter')) and request.endpoint not in tab_route:

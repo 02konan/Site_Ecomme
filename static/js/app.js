@@ -8,8 +8,6 @@ AOS.init({
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    window.urlProduitImage = "https://divix.alwaysdata.net/ecommerce/uploads/produits/";
-
     /* ========================
        PRODUCT PAGE — SWITCH IMAGE
        ======================== */
