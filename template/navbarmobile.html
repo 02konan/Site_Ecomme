@@ -15,8 +15,8 @@
         <div class="oc-profile">
             <img src="https://i.pravatar.cc/42" alt="Profil" width="42" height="42" class="rounded-circle">
             <div class="profile-info">
-                <div class="profile-name">Mon compte</div>
-                <div class="profile-email">client@eshop.ci</div>
+                <div class="profile-name">{{ session.get('user_nom') or 'Invité' }}</div>
+                <div class="profile-email">{{ session.get('user_email') or 'Email non disponible' }}</div>
             </div>
             <a href="/logout" class="profile-icon-btn"><i class="bi bi-box-arrow-right"></i></a>
         </div>

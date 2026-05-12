@@ -36,10 +36,10 @@ def Authentification(email, pwd):
                 row = cursor.fetchone()
 
                 if not row:
-                    return f"Desole, le compte n'existe pas"  
+                    return False 
 
                 if not verifier_password(pwd, row[5]):
-                    return f"mot de passe incorrect"  
+                    return False  
 
                 return {
                     "id":       row[0],

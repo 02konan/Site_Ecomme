@@ -113,14 +113,14 @@ def login():
 
         result = Authentification(email, password)
         
-        if result is True :
+        if result :
             session['user_id']    = result['id']
             session['user_nom']   = result['nom']
             session['user_email'] = result['email']
             session['user_tel']   = result['tel']
             session['user_role']  = result['nom_roles']
         else:
-            return jsonify({"success": False, "error": str(result) or "Email ou mot de passe incorrect"}), 401
+            return jsonify({"success": False, "error": "Email ou mot de passe incorrect"}), 401
 
         return jsonify({"success": True})
 
