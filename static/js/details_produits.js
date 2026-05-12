@@ -41,7 +41,7 @@ function affichedetails_produits(pdt) {
         <div class="box-item">
             ${img
                 ? `<img src="${window.urlProduitImage}${img}" alt="" class="image-item">`
-                : `<div class="image-item placeholder-img"><i class="bi bi-image text-muted"></i></div>`
+                : `<img src="${window.urlProduitImage}default_1.png" alt="" class="image-item">`
             }
         </div>
     `).join('');
@@ -61,7 +61,7 @@ function affichedetails_produits(pdt) {
                          class="main-image" 
                          id="mainImage">
                 </div>
-                <div class="slide-image d-flex justify-content-between gap-2 mt-3">
+                <div class="slide-image d-flex justify-content-center gap-2 mt-3">
                     <!-- Image principale en miniature -->
                     <div class="box-item">
                         <img src="${window.urlProduitImage}${pdt.img_principale}" 
