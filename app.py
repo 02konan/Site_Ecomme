@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from backend.creat_data import create_client,creat_commande
 from backend.Auth import Authentification
 from backend.MessageApi import Message
-from backend.read_data import get_user_id,details_produits,liste_produits,liste_banners,liste_recents,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
+from backend.read_data import get_user_id,liste_Nos_produits,details_produits,liste_produits,liste_banners,liste_recents,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
 import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
 from flask_cors import CORS
@@ -16,7 +16,7 @@ app = Flask(__name__, template_folder="template", static_folder="static")
 CORS(app)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
-app.permanent_session_lifetime= timedelta(minutes=5)
+app.permanent_session_lifetime= timedelta(minutes=30)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -43,6 +43,7 @@ def restriction():
                  "produits_details", 
                  "produit_recents", 
                  "produits_produit_nouveaute", 
+                 "tous_list",
                  "banner",
                  "https://divix.alwaysdata.net/ecommerce/uploads/produits/",
                  "https://divix.alwaysdata.net/ecommerce/uploads/bannieres/",
@@ -131,11 +132,9 @@ def login():
 @app.route('/menu')
 def menu():
     data = get_categories_with_subcategories()
-    # Vérifier si c'est une erreur
     if isinstance(data, dict) and not data.get('success', True):
         return jsonify({"error": data.get('error', 'Erreur inconnue')}), 500
     
-    # Si data est une liste (cas de succès)
     if isinstance(data, list):
         table = []
         for category in data:
@@ -147,7 +146,6 @@ def menu():
             table.append(information)
         return jsonify({"data": table, "success": True})
     
-    # Si le format est différent
     return jsonify({"error": "Format de données inattendu"}), 500
 
 @app.route('/banner/list')
@@ -166,9 +164,13 @@ def banner():
     return jsonify({"data":table})
 
 #-----------------PRODUITS---------------------
+@app.route('/produit_list')
+def tous_list():
+    return render_template("produits_list.html")
+
 @app.route('/produit/list')
 def produits_list():
-    data=liste_produits()
+    data=liste_Nos_produits()
     table=[]
     if data:
         for i in data:
@@ -177,7 +179,8 @@ def produits_list():
                 "nom_produits":i[1],
                 "descriptin_produits":i[2],
                 "prix_produits":i[3],
-                "img_produits": i[4]
+                "img_produits": i[4],
+                "categories": i[5],
             }
             table.append(information)
     return jsonify({"data":table})

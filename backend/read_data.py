@@ -15,7 +15,34 @@ def liste_produits():
                 commandes = cursor.fetchall()
                 return commandes
     except Exception as e:
-        return (f"Erreur lors de la récupération des produits: {e}") 
+        return (f"Erreur lors de la récupération des produits: {e}")
+    
+def liste_Nos_produits():
+    try:
+        with connexion() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute("""
+                SELECT 
+                    p.id, 
+                    p.nom, 
+                    p.description, 
+                    p.prix, 
+                    pi.url_image AS img_produits,
+                    categories.nom AS categorie
+                FROM produits p
+                JOIN produit_images pi 
+                    ON p.id = pi.id_produit
+                JOIN sous_categories  
+                    ON p.id_sous_categorie = sous_categories.id
+                LEFT JOIN categories 
+                    ON sous_categories.id_categorie = categories.id
+                WHERE pi.est_principale = 1
+                ORDER BY categories.nom ASC, RAND();
+                               """)
+                commandes = cursor.fetchall()
+                return commandes
+    except Exception as e:
+        return (f"Erreur lors de la récupération des produits: {e}")     
     
 def liste_produits_une():
     try:
@@ -131,38 +158,7 @@ def get_user_id(user_id):
                 return None
     except Exception as e:
         return f"erreur get_user_id: {e}"
-
-    try:
-        with connexion() as conn:
-            with conn.cursor() as cursor:
-                sql="""
-                 SELECT 
-                commandes.id AS id_commande,
-                produits.nom AS nom_produit,
-                300 * ligne_commandes.quantite AS commission,
-                commandes.date_commande,
-                ligne_commandes.quantite
-            FROM 
-                commandes 
-            JOIN 
-                ligne_commandes ON commandes.id = ligne_commandes.id_commande 
-            JOIN 
-                produits ON ligne_commandes.id_produit = produits.id
-            JOIN 
-                maquis ON commandes.code = maquis.code
-            WHERE 
-                maquis.code = %s
-            ORDER BY 
-                commandes.date_commande DESC
-                """
-                
-                cursor.execute(sql, (maquis_id,))
-                rows = cursor.fetchall()
-        return rows
-        
-    except Exception as e:
-        return (f"Erreur lors de la lecture des commissions: {e}")
-
+    
 def get_categories_with_subcategories():
    
     try:

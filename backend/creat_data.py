@@ -20,28 +20,30 @@ def generer_code_comande():
         print(f"Erreur generer_code_comande: {e}")
         return None
 
-def creat_commande(id_client, adresse, ville,panier,montant_total):
+def creat_commande(id_client, adresse, ville, panier, montant_total):
     try:
         with connexion() as conn:
             with conn.cursor() as cursor:
                 code_commande = generer_code_comande()
-                
+
                 sql_commande = """
                     INSERT INTO commandes (code_commande, id_client, total, statut)
                     VALUES (%s, %s, %s, %s)
                 """
                 cursor.execute(sql_commande, (code_commande, id_client, montant_total, "en_attente"))
                 id_commande = cursor.lastrowid
-                
-                
-                    
+
                 sql_ligne = """
-                        INSERT INTO ligne_commandes (id_commande, id_produit, prix_unitaire, quantite)
-                        VALUES (%s, %s, %s, %s)
-                    """
+                    INSERT INTO ligne_commandes (id_commande, id_produit, prix_unitaire, quantite)
+                    VALUES (%s, %s, %s, %s)
+                """
+                sql_stock = """
+                    UPDATE produits SET stock = stock - %s WHERE id = %s AND stock >= %s
+                """
                 for item in panier:
                     cursor.execute(sql_ligne, (id_commande, item["id_produit"], item["prix"], item["quantite"]))
-
+                    cursor.execute(sql_stock, (item["quantite"], item["id_produit"], item["quantite"]))
+                   
                 sql_livraison = """
                     INSERT INTO livraisons (id_commande, adresse, commune, statut)
                     VALUES (%s, %s, %s, %s)
@@ -54,7 +56,7 @@ def creat_commande(id_client, adresse, ville,panier,montant_total):
     except Exception as e:
         print(f"Erreur creat_commande: {e}")
         return False
-    
+  
 def create_client(role, nom, adress, telephone, password):
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     try:
@@ -91,4 +93,3 @@ def estactif(actif):
     except Exception as e:
         print(f"Erreur create_client: {e}")
         return False  
-    
