@@ -144,12 +144,12 @@ document.addEventListener('DOMContentLoaded', function () {
     /* ========================
        CAROUSEL PRODUITS Nouveaute
        ======================== */
-    const track = document.getElementById('productsTrackNouveaute');
+    const trackNouveaute = document.getElementById('productsTrackNouveaute');
     const prevBtn = document.getElementById('productsPrevNouveaute');
     const nextBtn = document.getElementById('productsNextNouveaute');
     const dotsContainer = document.getElementById('productsDotsNouveaute');
 
-    if (track) {
+    if (trackNouveaute) {
         
         const slides = Array.from(track.querySelectorAll('.products-carousel-slide'));
         let current = 0;
@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function () {
     /* ========================
        CAROUSEL PRODUITS RECENTS
        ======================== */
-    const track = document.getElementById('productsTrackRecents');
+    const trackRecents = document.getElementById('productsTrackRecents');
     const prevBtn = document.getElementById('productsPrevRecents');
     const nextBtn = document.getElementById('productsNextRecents');
     const dotsContainer = document.getElementById('productsDotsRecents');

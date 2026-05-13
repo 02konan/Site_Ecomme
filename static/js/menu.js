@@ -161,7 +161,7 @@ function renderCategoriesMenu(categories) {
                 } else {
                     // Pas de niveau 3, créer un lien direct vers la sous-catégorie
                     const directLink = document.createElement('a');
-                    directLink.href = `/categorie/${escapeHtmlSafe(category.id)}/${escapeHtmlSafe(subcategory.id)}`;
+                    directLink.href = `/categorie/${escapeHtmlSafe(subcategory.id)}`;
                     directLink.className = 'level2-link';
                     directLink.style.display = 'flex';
                     directLink.style.alignItems = 'center';

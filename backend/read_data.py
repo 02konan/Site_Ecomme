@@ -22,22 +22,39 @@ def liste_Nos_produits():
         with connexion() as conn:
             with conn.cursor() as cursor:
                 cursor.execute("""
-                SELECT 
-                    p.id, 
-                    p.nom, 
-                    p.description, 
-                    p.prix, 
-                    pi.url_image AS img_produits,
-                    categories.nom AS categorie
-                FROM produits p
-                JOIN produit_images pi 
-                    ON p.id = pi.id_produit
-                JOIN sous_categories  
-                    ON p.id_sous_categorie = sous_categories.id
-                LEFT JOIN categories 
-                    ON sous_categories.id_categorie = categories.id
-                WHERE pi.est_principale = 1
-                ORDER BY categories.nom ASC, RAND();
+                SELECT *
+                    FROM (
+                        SELECT 
+                            p.id, 
+                            p.nom, 
+                            p.description, 
+                            p.prix, 
+                            pi.url_image AS img_produits,
+                            categories.nom AS categorie,
+
+                            ROW_NUMBER() OVER (
+                                PARTITION BY categories.id
+                                ORDER BY RAND()
+                            ) AS rn
+
+                        FROM produits p
+
+                        JOIN produit_images pi 
+                            ON p.id = pi.id_produit
+
+                        JOIN sous_categories  
+                            ON p.id_sous_categorie = sous_categories.id
+
+                        LEFT JOIN categories 
+                            ON sous_categories.id_categorie = categories.id
+
+                        WHERE pi.est_principale = 1
+
+                    ) AS t
+
+                    WHERE t.rn <= 4
+
+                    ORDER BY t.categorie ASC;
                                """)
                 commandes = cursor.fetchall()
                 return commandes
@@ -108,6 +125,28 @@ def liste_banners():
     except Exception as e:
         print(f"Erreur lors de la récupération des produits: {e}") 
         return []       
+
+
+def liste_produits_categorie(id_categorie):
+    try:
+        with connexion() as conn:
+            with conn.cursor() as cursor:
+                sql="""
+                    SELECT p.id, p.nom, p.description, p.prix, pi.url_image AS img_produits,sc.nom
+                    FROM produits p
+
+                    JOIN produit_images pi on p.id = pi.id_produit
+                    JOIN sous_categories sc on p.id_sous_categorie = sc.id
+                    JOIN categories c on sc.id_categorie = c.id
+                    WHERE pi.est_principale = 1 and p.id_sous_categorie=%s
+                    ORDER BY RAND();
+                """
+                cursor.execute(sql,(id_categorie,))
+                resultat = cursor.fetchall()
+                return resultat
+    except Exception as e:
+        return (f"Erreur lors de la récupération des produits: {e}")
+    
 
 def details_produits(id):
     try:

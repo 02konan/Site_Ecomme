@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from backend.creat_data import create_client,creat_commande
 from backend.Auth import Authentification
 from backend.MessageApi import Message
-from backend.read_data import get_user_id,liste_Nos_produits,details_produits,liste_produits,liste_banners,liste_recents,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
+from backend.read_data import get_user_id,liste_Nos_produits,details_produits,liste_produits,liste_produits_categorie,liste_banners,liste_recents,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
 import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
 from flask_cors import CORS
@@ -45,6 +45,8 @@ def restriction():
                  "produits_produit_nouveaute", 
                  "tous_list",
                  "banner",
+                 "categorie_produits",
+                 "categorie",
                  "https://divix.alwaysdata.net/ecommerce/uploads/produits/",
                  "https://divix.alwaysdata.net/ecommerce/uploads/bannieres/",
                  "static"   
@@ -183,6 +185,8 @@ def produits_list():
                 "categories": i[5],
             }
             table.append(information)
+            
+            
     return jsonify({"data":table})
 
 @app.route('/produit_une/list')
@@ -262,7 +266,7 @@ def produits_details(id_produits):
         "description":   produit[2],
         "prix":          produit[3],
         "img_principale": img_principale,
-        "img_secondaires": img_secondaires[:3]  # max 3 images secondaires
+        "img_secondaires": img_secondaires[:3]  
     }
 
     return jsonify({"data": information})
@@ -303,6 +307,31 @@ def commande():
     except Exception as e:
         print(f"Erreur commande/create: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
+
+@app.route('/categorie_produits/<int:id_categorie>')
+def categorie_produits(id_categorie):
+    try:
+        data = liste_produits_categorie(id_categorie)
+        table = []
+        if data:
+            for i in data:
+                table.append({
+                    "id_produits":          i[0],
+                    "nom_produits":         i[1],
+                    "description_produits": i[2],  
+                    "prix_produits":        i[3],
+                    "img_produits":         i[4],
+                    "sous_categorie":       i[5],
+                })
+        return jsonify({"data": table})  
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/categorie/<int:id_categorie>')
+def categorie(id_categorie):
+    return render_template("categorie_list.html")
+    
+
 
 @app.route('/api/search', methods=['GET'])
 def search():

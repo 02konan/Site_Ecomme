@@ -202,7 +202,7 @@ function afficheproduits(produits) {
     if (!container) return;
     container.innerHTML = "";
 
-    const produitsLimit = produits.slice(0, 8);
+    const produitsLimit = produits;
 
     if (produitsLimit && produitsLimit.length > 0) {
         
@@ -226,11 +226,19 @@ function afficheproduits(produits) {
 
                 const separateur = document.createElement("div");
                 separateur.className = "col-12 categorie-separateur";
+               
                 separateur.innerHTML = `
-                    <h6 class="categorie-titre text-muted fw-semibold mt-3 mb-2">
-                        <span>${escapeHtml(categorieActuelle || '')}</span>
-                    </h6>
-                    <hr class="mt-0 mb-3">
+                   <div class="w-100">
+                        <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
+                            <h6 class="categorie-titre text-muted fw-semibold m-0">
+                                <span>${escapeHtml(categorieActuelle || '')}</span>
+                            </h6>
+                            <a href="/categorie/${pdt.id_categorie}" class="text-decoration-none">
+                                <div class="d-flex align-items-center gap-1">Voir Plus...</i></div>
+                            </a>
+                        </div>
+                        <hr class="mt-0 mb-3">
+                    </div>
                 `;
                 container.appendChild(separateur);
             }
@@ -402,7 +410,7 @@ function afficheproduit_nouveaute(produits) {
 }
 
 function produit_recents() {
-    const container = document.getElementById("productsTrack");
+    const container = document.getElementById("productsTrackRecents");
     showCarouselSkeletons(container, 4);
 
     fetch("/produit_recents/list")

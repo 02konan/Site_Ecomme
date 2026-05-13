@@ -1,55 +1,211 @@
 {% extends "base.html" %}
-
-{% block title %}Catégories - eShop{% endblock %}
-
 {% block content %}
-    <div class="container py-5">
-        <!-- Header -->
-        <div class="row mb-5">
-            <div class="col-12 text-center">
-                <h1 class="subtitle" data-aos="fade-up">Nos Catégories</h1>
-                <p class="text-muted" data-aos="zoom-out" data-aos-delay="200">Explorez nos différentes catégories de produits</p>
-            </div>
-        </div>
-
-        <!-- Categories Grid -->
-        <div class="row g-4">
-            {% for category in categories %}
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
-                <a href="{{ url_for('categorie', slug=category.slug) }}" class="text-decoration-none">
-                    <div class="category-card" style="border-radius: 10px; overflow: hidden; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;">
-                        <div style="height: 250px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; position: relative;">
-                            {% if loop.index0 % 4 == 0 %}
-                                <i class="bi bi-camera" style="font-size: 60px; color: white;"></i>
-                            {% elif loop.index0 % 4 == 1 %}
-                                <i class="bi bi-camera-video" style="font-size: 60px; color: white;"></i>
-                            {% elif loop.index0 % 4 == 2 %}
-                                <i class="bi bi-diagram-3" style="font-size: 60px; color: white;"></i>
-                            {% else %}
-                                <i class="bi bi-palette" style="font-size: 60px; color: white;"></i>
-                            {% endif %}
-                        </div>
-                        <div class="p-4 text-center">
-                            <h5 class="mb-2">{{ category.name }}</h5>
-                            <p class="text-muted small mb-0">Découvrir</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- Featured Promotion -->
-        <div class="row mt-5 pt-5">
-            <div class="col-12" data-aos="fade-up">
-                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; padding: 60px 30px; color: white; text-align: center;">
-                    <h2 class="mb-3">Promotions spéciales</h2>
-                    <p class="mb-4">Découvrez nos offres exclusives et économisez jusqu'à 50% sur les produits sélectionnés</p>
-                    <a href="{{ url_for('produits') }}" class="btn btn-light">
-                        Voir les promotions
-                    </a>
+    {% include 'banner.html' %}
+<div class="container pb-5">
+    <div class="" id>
+            <div class="row g-4 mt-4" id="categorie-produits" data-aos="fade-up" data-aos-delay="0">
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                 </div>
             </div>
-        </div>
     </div>
+</div>
+
+<div class="container py-5 mt-4">
+            <p class="text-muted fs-5" data-aos="fade-up" data-aos-delay="0">Produits similaires</p>
+            <div class="products-carousel-wrapper position-relative mt-4" data-aos="fade-up" data-aos-delay="0">
+
+                <!-- Flèche gauche -->
+                <button class="products-carousel-btn prev" id="productsPrev">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+
+                <!-- Track -->
+                <div class="products-carousel-track-outer">
+                    <div class="products-carousel-track" id="productsTrack">
+
+                        <!-- Produit 1 -->
+                        <div class="products-carousel-slide">
+                            <a href="product.html" class="text-decoration-none">
+                                <div class="product-card">
+                                    <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
+                                    <div class="like"><i class="bi bi-heart"></i></div>
+                                    <img src="https://www.eas.ci/wp-content/uploads/2025/04/Airpods_Max_Bleu_Ciel_MGYL3AM_A-1.webp" class="product-img">
+                                    <div class="product-body d-flex">
+                                        <div class="col-8">
+                                            <div class="product-title">Apple Airpods Max</div>
+                                            <p class="small product-desc text-muted">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</p>
+                                            <div class="product-star d-flex gap-1">
+                                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i><i class="bi bi-star"></i>
+                                                <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">3.2</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 d-flex flex-column">
+                                            <div class="product-price ms-auto">FCFA 365,000 <span class="text-decoration-line-through text-muted">FCFA 650,000</span></div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-dark rounded-pill m-0 mt-auto"><i class="bi bi-cart me-2"></i>Panier</button>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Produit 2 -->
+                        <div class="products-carousel-slide">
+                            <a href="product.html" class="text-decoration-none">
+                                <div class="product-card">
+                                    <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
+                                    <div class="like"><i class="bi bi-heart"></i></div>
+                                    <img src="https://www.cboutiq.ci/wp-content/uploads/2024/07/you-did-it-1-1.jpeg" class="product-img">
+                                    <div class="product-body d-flex">
+                                        <div class="col-8">
+                                            <div class="product-title">Casque supra JBL</div>
+                                            <p class="small product-desc text-muted">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</p>
+                                            <div class="product-star d-flex gap-1">
+                                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+                                                <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.5</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 d-flex flex-column">
+                                            <div class="product-price ms-auto">FCFA 99,000 <span class="text-decoration-line-through text-muted">FCFA 650,000</span></div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-dark rounded-pill m-0 mt-auto"><i class="bi bi-cart me-2"></i>Panier</button>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Produit 3 -->
+                        <div class="products-carousel-slide">
+                            <a href="product.html" class="text-decoration-none">
+                                <div class="product-card">
+                                    <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
+                                    <div class="like"><i class="bi bi-heart"></i></div>
+                                    <img src="https://www.cboutiq.ci/wp-content/uploads/2023/12/img_4031.jpeg" class="product-img">
+                                    <div class="product-body d-flex">
+                                        <div class="col-8">
+                                            <div class="product-title">Sony WH-1000XM5</div>
+                                            <p class="small product-desc text-muted">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</p>
+                                            <div class="product-star d-flex gap-1">
+                                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                                                <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.8</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 d-flex flex-column">
+                                            <div class="product-price ms-auto">FCFA 230,000 <span class="text-decoration-line-through text-muted">FCFA 650,000</span></div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-dark rounded-pill m-0 mt-auto"><i class="bi bi-cart me-2"></i>Panier</button>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Produit 4 -->
+                        <div class="products-carousel-slide">
+                            <a href="product.html" class="text-decoration-none">
+                                <div class="product-card">
+                                    <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
+                                    <div class="like"><i class="bi bi-heart"></i></div>
+                                    <img src="https://m.media-amazon.com/images/I/51B23bqfcnL._AC_SL1500_.jpg" class="product-img">
+                                    <div class="product-body d-flex">
+                                        <div class="col-8">
+                                            <div class="product-title">Casque Bose Ultra</div>
+                                            <p class="small product-desc text-muted">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</p>
+                                            <div class="product-star d-flex gap-1">
+                                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i><i class="bi bi-star"></i>
+                                                <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">3.3</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 d-flex flex-column">
+                                            <div class="product-price ms-auto">FCFA 230,500 <span class="text-decoration-line-through text-muted">FCFA 650,000</span></div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-dark rounded-pill m-0 mt-auto"><i class="bi bi-cart me-2"></i>Panier</button>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- Produit 4 -->
+                        <div class="products-carousel-slide">
+                            <a href="product.html" class="text-decoration-none">
+                                <div class="product-card">
+                                    <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
+                                    <div class="like"><i class="bi bi-heart"></i></div>
+                                    <img src="https://mrsmart.ci/wp-content/uploads/2025/02/Image-15-300x300.jpeg" class="product-img">
+                                    <div class="product-body d-flex">
+                                        <div class="col-8">
+                                            <div class="product-title">Macbook Pro</div>
+                                            <p class="small product-desc text-muted">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</p>
+                                            <div class="product-star d-flex gap-1">
+                                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i><i class="bi bi-star"></i>
+                                                <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">3.3</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 d-flex flex-column">
+                                            <div class="product-price ms-auto">FCFA 1,030,500 <span class="text-decoration-line-through text-muted">FCFA 650,000</span></div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-dark rounded-pill m-0 mt-auto"><i class="bi bi-cart me-2"></i>Panier</button>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- Produit 1 -->
+                        <div class="products-carousel-slide">
+                            <a href="product.html" class="text-decoration-none">
+                                <div class="product-card">
+                                    <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
+                                    <div class="like"><i class="bi bi-heart"></i></div>
+                                    <img src="https://www.eas.ci/wp-content/uploads/2025/04/Airpods_Max_Bleu_Ciel_MGYL3AM_A-1.webp" class="product-img">
+                                    <div class="product-body d-flex">
+                                        <div class="col-8">
+                                            <div class="product-title">Apple Airpods Max</div>
+                                            <p class="small product-desc text-muted">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</p>
+                                            <div class="product-star d-flex gap-1">
+                                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i><i class="bi bi-star"></i>
+                                                <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">3.2</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 d-flex flex-column">
+                                            <div class="product-price ms-auto">FCFA 365,000 <span class="text-decoration-line-through text-muted">FCFA 650,000</span></div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-dark rounded-pill m-0 mt-auto"><i class="bi bi-cart me-2"></i>Panier</button>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Produit 2 -->
+                        <div class="products-carousel-slide">
+                            <a href="product.html" class="text-decoration-none">
+                                <div class="product-card">
+                                    <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">-20%</span>
+                                    <div class="like"><i class="bi bi-heart"></i></div>
+                                    <img src="https://www.cboutiq.ci/wp-content/uploads/2024/07/you-did-it-1-1.jpeg" class="product-img">
+                                    <div class="product-body d-flex">
+                                        <div class="col-8">
+                                            <div class="product-title">Casque supra JBL</div>
+                                            <p class="small product-desc text-muted">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</p>
+                                            <div class="product-star d-flex gap-1">
+                                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+                                                <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.5</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 d-flex flex-column">
+                                            <div class="product-price ms-auto">FCFA 99,000 <span class="text-decoration-line-through text-muted">FCFA 650,000</span></div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-dark rounded-pill m-0 mt-auto"><i class="bi bi-cart me-2"></i>Panier</button>
+                                </div>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Flèche droite -->
+                <button class="products-carousel-btn next" id="productsNext">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+
+                <!-- Dots -->
+                <div class="products-carousel-dots" id="productsDots"></div>
+            </div>
+</div>
 {% endblock %}
