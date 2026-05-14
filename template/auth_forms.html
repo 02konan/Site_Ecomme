@@ -1,37 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <title>Authentification</title>
+</head>
+<body>
 
-
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-.auth-wrap{display:flex;flex-direction:column;align-items:center;gap:0;padding:1rem 0}
-.tabs{display:flex;width:100%;max-width:440px;border-bottom:1px solid #E0E0E0;margin-bottom:1.5rem}
-.tab-btn{flex:1;background:none;border:none;padding:14px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#A1A1A1;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
-.tab-btn.active{color:#12130F;border-bottom-color:#e8af01}
-.form-box{width:100%;max-width:440px;background:#fff;border:1px solid #E0E0E0;border-radius:16px;padding:1.75rem}
-.form-title{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:#12130F;margin-bottom:4px}
-.form-sub{font-size:12px;color:#A1A1A1;margin-bottom:1.5rem}
-.field{margin-bottom:1rem}
-.field label{display:block;font-size:12px;font-weight:600;color:#12130F;margin-bottom:6px;font-family:'Montserrat',sans-serif}
-.field-wrap{display:flex;align-items:center;background:#F5F5F5;border-radius:50px;border:1.5px solid transparent;transition:all .2s;padding:0 16px;gap:10px}
-.field-wrap:focus-within{border-color:#e8af01;background:#fff}
-.field-wrap i{font-size:16px;color:#A1A1A1}
-.field-wrap input{flex:1;border:none;background:transparent;outline:none;padding:13px 0;font-size:13px;font-family:'Montserrat',sans-serif;color:#12130F}
-.field-wrap input::placeholder{color:#A1A1A1}
-.eye-btn{background:none;border:none;cursor:pointer;color:#A1A1A1;display:flex;align-items:center;padding:0}
-.btn-submit{width:100%;padding:14px;border-radius:50px;border:none;background:#e8af01;color:#12130F;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;margin-top:0.5rem}
-.btn-submit:hover{background:#f2d649}
-.divider{display:flex;align-items:center;gap:12px;margin:1.25rem 0;font-size:12px;color:#A1A1A1}
-.divider::before,.divider::after{content:'';flex:1;height:1px;background:#E0E0E0}
-.btn-social{width:100%;padding:12px;border-radius:50px;border:1.5px solid #E0E0E0;background:#fff;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#12130F;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s}
-.btn-social:hover{border-color:#e8af01;background:#F5F5F5}
-.forgot{text-align:right;margin-top:-6px;margin-bottom:12px}
-.forgot a{font-size:12px;color:#e8af01;text-decoration:none;font-weight:600}
-.switch-txt{text-align:center;font-size:12px;color:#A1A1A1;margin-top:1.25rem}
-.switch-txt a{color:#e8af01;font-weight:600;text-decoration:none;cursor:pointer}
-.terms{font-size:11px;color:#A1A1A1;text-align:center;margin-top:1rem;line-height:1.6}
-.terms a{color:#e8af01}
-.form-panel{display:none}
-.form-panel.active{display:block}
-</style>
 
 <div class="auth-wrap">
 
@@ -72,7 +48,13 @@
     <div class="divider">ou</div>
 
     <button class="btn-social">
-        <svg width="18" height="18" viewBox="0 0 24 24">...</svg>
+        <svg width="18" height="18" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M21.805 10.023h-9.806v3.954h5.654c-.245 1.318-.982 2.436-2.09 3.188v2.654h3.384c1.984-1.826 3.128-4.518 3.128-7.792 0-.528-.047-1.042-.166-1.95z"/>
+            <path fill="#34A853" d="M11.999 21c2.835 0 5.218-.938 6.958-2.54l-3.384-2.654c-.94.63-2.144 1-3.574 1-2.747 0-5.074-1.856-5.906-4.354H2.11v2.73C3.846 19.856 7.256 21 11.999 21z"/>
+            <path fill="#FBBC05" d="M6.093 12c-.213-.63-.335-1.305-.335-1.995s.122-1.365 .335-1.995V5H2.11C1.39 6.856 .999 9 .999 12s .391 5.144 1.111 7z"/>
+            <path fill="#EA4335" d="M11.999 4c1.544 0 2.918 .53 4 .156l3-2C17.214 .938 14.83 .001 11.999 .001c -4 .001 -7 .856 -7 .856v3h6z"/>
+            
+        </svg>
         Continuer avec Google
     </button>
 
@@ -146,3 +128,5 @@
 </div>
 
 {%include "scripts.html"%}
+</body>
+</html>
