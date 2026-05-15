@@ -12,13 +12,21 @@
         <!-- Logo -->
         <img class="logo" src="{{ url_for('static', filename='back/logo.jpeg') }}" alt="Logo TouAchat">
 
-        <!-- Droite : panier -->
+        <!-- Droite : panier + favoris -->
         <div class="d-flex align-items-center gap-2">
             <button onclick="ouvrirDrawer()" class="btn btn-sm btn-primary-custom rounded-circle position-relative cart">
                 <i class="bi bi-bag-fill"></i>
                 <span id="panier-compteur"
-                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                      style="display:none;font-size:10px;">0</span>
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                    style="display:none;font-size:10px;">0</span>
+            </button>
+
+            <!-- Bouton favoris -->
+            <button onclick="ouvrirDrawerFavoris()" class="btn btn-sm btn-primary-custom rounded-circle position-relative">
+                <i class="bi bi-heart-fill"></i>
+                <span id="favoris-compteur"
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                    style="display:none;font-size:10px;">0</span>
             </button>
         </div>
     </div>
@@ -57,6 +65,38 @@
         </div>
     </div>
 </div>
+
+<!-- ===== DRAWER FAVORIS ===== -->
+<div class="drawer-favoris" id="drawerFavoris">
+    <div class="drawer-header">
+        <h2 style="font-size:16px;font-weight:500;margin:0;">Mes favoris</h2>
+        <button id="closeFavoris" class="btn btn-sm" aria-label="Fermer les favoris">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+    <div class="drawer-body" id="drawerFavorisBody">
+        <div class="text-center py-5 text-muted">
+            <i class="bi bi-heartbreak fs-1"></i>
+            <p class="mt-2">Vous n'avez pas encore de favoris</p>
+        </div>
+    </div>
+    <!-- Footer — total + boutons -->
+    <div class="drawer-footer">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted">Total</span>
+            <span class="fw-bold fs-6" id="drawerTotal">FCFA 0</span>
+        </div>
+        <button onclick="fermerDrawer(); ouvrirModal();" 
+                class="btn btn-dark w-100 rounded-pill mb-2">
+            <i class="bi bi-bag-check me-2"></i>Commander
+        </button>
+        <button id="continueBtn" class="btn btn-outline-secondary w-100 rounded-pill">
+            Continuer mes achats
+        </button>
+    </div>
+
+</div>  
+
 
 <!-- ===== DRAWER PANIER ===== -->
 

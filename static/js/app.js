@@ -1,10 +1,3 @@
-/* ========================
-   AOS INIT
-   ======================== */
-AOS.init({
-    once: true,
-    duration: 800,
-});
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -57,266 +50,98 @@ document.addEventListener('DOMContentLoaded', function () {
     /* ========================
        CAROUSEL PRODUITS LES PLUS VENDUS
        ======================== */
-    const track = document.getElementById('productsTrack');
-    const prevBtn = document.getElementById('productsPrev');
-    const nextBtn = document.getElementById('productsNext');
-    const dotsContainer = document.getElementById('productsDots');
-
-    if (track) {
-        const slides = Array.from(track.querySelectorAll('.products-carousel-slide'));
-        let current = 0;
-
-        /* Nombre de slides visibles selon breakpoint */
-        function getVisible() {
-            if (window.innerWidth < 576) return 1;
-            if (window.innerWidth < 992) return 2;
-            return 4;
-        }
-
-        /* Gap entre les slides selon breakpoint */
-        function getGap() {
-            return window.innerWidth < 576 ? 0 : 16;
-        }
-
-        /* Nombre total de positions */
-        function getTotal() {
-            return slides.length - getVisible() + 1;
-        }
-
-        /* Construction des dots */
-        function buildDots() {
-            dotsContainer.innerHTML = '';
-            const total = getTotal();
-            for (let i = 0; i < total; i++) {
-                const dot = document.createElement('button');
-                dot.classList.add('dot');
-                if (i === current) dot.classList.add('active');
-                dot.addEventListener('click', () => goTo(i));
-                dotsContainer.appendChild(dot);
-            }
-        }
-
-        /* Mise à jour visuelle des dots */
-        function updateDots() {
-            dotsContainer.querySelectorAll('.dot').forEach((d, i) => {
-                d.classList.toggle('active', i === current);
-            });
-        }
-
-        /* Mise à jour des boutons prev/next */
-        function updateBtns() {
-            prevBtn.disabled = current === 0;
-            nextBtn.disabled = current >= getTotal() - 1;
-        }
-
-        /* Déplacement vers une position */
-        function goTo(index) {
-            current = Math.max(0, Math.min(index, getTotal() - 1));
-
-            /* Largeur d'une slide + gap pour calculer le décalage */
-            const slideWidth = slides[0].offsetWidth + getGap();
-            track.style.transform = `translateX(-${current * slideWidth}px)`;
-
-            updateDots();
-            updateBtns();
-        }
-
-        /* Événements boutons */
-        prevBtn.addEventListener('click', () => goTo(current - 1));
-        nextBtn.addEventListener('click', () => goTo(current + 1));
-
-        /* Resize : recalcul complet */
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => {
-                current = 0;
-                buildDots();
-                goTo(0);
-            }, 150);
-        });
-
-        /* Init */
-        buildDots();
-        goTo(0);
-    }
-
     /* ========================
-       CAROUSEL PRODUITS Nouveaute
-       ======================== */
-    const trackNouveaute = document.getElementById('productsTrackNouveaute');
-    const prevBtn = document.getElementById('productsPrevNouveaute');
-    const nextBtn = document.getElementById('productsNextNouveaute');
-    const dotsContainer = document.getElementById('productsDotsNouveaute');
+   FONCTION CAROUSEL GÉNÉRIQUE
+   ======================== */
+function initCarousel(trackId, prevBtnId, nextBtnId, dotsContainerId) {
+    const track = document.getElementById(trackId);
+    const prevBtn = document.getElementById(prevBtnId);
+    const nextBtn = document.getElementById(nextBtnId);
+    const dotsContainer = document.getElementById(dotsContainerId);
 
-    if (trackNouveaute) {
-        
-        const slides = Array.from(track.querySelectorAll('.products-carousel-slide'));
-        let current = 0;
+    if (!track || !prevBtn || !nextBtn || !dotsContainer) return;
 
-        /* Nombre de slides visibles selon breakpoint */
-        function getVisible() {
-            if (window.innerWidth < 576) return 1;
-            if (window.innerWidth < 992) return 2;
-            return 4;
-        }
+    const slides = Array.from(track.querySelectorAll('.products-carousel-slide'));
 
-        /* Gap entre les slides selon breakpoint */
-        function getGap() {
-            return window.innerWidth < 576 ? 0 : 16;
-        }
-
-        /* Nombre total de positions */
-        function getTotal() {
-            return slides.length - getVisible() + 1;
-        }
-
-        /* Construction des dots */
-        function buildDots() {
-            dotsContainer.innerHTML = '';
-            const total = getTotal();
-            for (let i = 0; i < total; i++) {
-                const dot = document.createElement('button');
-                dot.classList.add('dot');
-                if (i === current) dot.classList.add('active');
-                dot.addEventListener('click', () => goTo(i));
-                dotsContainer.appendChild(dot);
-            }
-        }
-
-        /* Mise à jour visuelle des dots */
-        function updateDots() {
-            dotsContainer.querySelectorAll('.dot').forEach((d, i) => {
-                d.classList.toggle('active', i === current);
-            });
-        }
-
-        /* Mise à jour des boutons prev/next */
-        function updateBtns() {
-            prevBtn.disabled = current === 0;
-            nextBtn.disabled = current >= getTotal() - 1;
-        }
-
-        /* Déplacement vers une position */
-        function goTo(index) {
-            current = Math.max(0, Math.min(index, getTotal() - 1));
-
-            /* Largeur d'une slide + gap pour calculer le décalage */
-            const slideWidth = slides[0].offsetWidth + getGap();
-            track.style.transform = `translateX(-${current * slideWidth}px)`;
-
-            updateDots();
-            updateBtns();
-        }
-
-        /* Événements boutons */
-        prevBtn.addEventListener('click', () => goTo(current - 1));
-        nextBtn.addEventListener('click', () => goTo(current + 1));
-
-        /* Resize : recalcul complet */
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => {
-                current = 0;
-                buildDots();
-                goTo(0);
-            }, 150);
-        });
-
-        /* Init */
-        buildDots();
-        goTo(0);
+    // Pas assez de slides → on masque les contrôles et on sort
+    if (!slides.length) {
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+        return;
     }
 
-    /* ========================
-       CAROUSEL PRODUITS RECENTS
-       ======================== */
-    const trackRecents = document.getElementById('productsTrackRecents');
-    const prevBtn = document.getElementById('productsPrevRecents');
-    const nextBtn = document.getElementById('productsNextRecents');
-    const dotsContainer = document.getElementById('productsDotsRecents');
+    let current = 0;
 
-    if (track) {
-        
-        const slides = Array.from(track.querySelectorAll('.products-carousel-slide'));
-        let current = 0;
-
-        /* Nombre de slides visibles selon breakpoint */
-        function getVisible() {
-            if (window.innerWidth < 576) return 1;
-            if (window.innerWidth < 992) return 2;
-            return 4;
-        }
-
-        /* Gap entre les slides selon breakpoint */
-        function getGap() {
-            return window.innerWidth < 576 ? 0 : 16;
-        }
-
-        /* Nombre total de positions */
-        function getTotal() {
-            return slides.length - getVisible() + 1;
-        }
-
-        /* Construction des dots */
-        function buildDots() {
-            dotsContainer.innerHTML = '';
-            const total = getTotal();
-            for (let i = 0; i < total; i++) {
-                const dot = document.createElement('button');
-                dot.classList.add('dot');
-                if (i === current) dot.classList.add('active');
-                dot.addEventListener('click', () => goTo(i));
-                dotsContainer.appendChild(dot);
-            }
-        }
-
-        /* Mise à jour visuelle des dots */
-        function updateDots() {
-            dotsContainer.querySelectorAll('.dot').forEach((d, i) => {
-                d.classList.toggle('active', i === current);
-            });
-        }
-
-        /* Mise à jour des boutons prev/next */
-        function updateBtns() {
-            prevBtn.disabled = current === 0;
-            nextBtn.disabled = current >= getTotal() - 1;
-        }
-
-        /* Déplacement vers une position */
-        function goTo(index) {
-            current = Math.max(0, Math.min(index, getTotal() - 1));
-
-            /* Largeur d'une slide + gap pour calculer le décalage */
-            const slideWidth = slides[0].offsetWidth + getGap();
-            track.style.transform = `translateX(-${current * slideWidth}px)`;
-
-            updateDots();
-            updateBtns();
-        }
-
-        /* Événements boutons */
-        prevBtn.addEventListener('click', () => goTo(current - 1));
-        nextBtn.addEventListener('click', () => goTo(current + 1));
-
-        /* Resize : recalcul complet */
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => {
-                current = 0;
-                buildDots();
-                goTo(0);
-            }, 150);
-        });
-
-        /* Init */
-        buildDots();
-        goTo(0);
+    function getVisible() {
+        if (window.innerWidth < 576) return 1;
+        if (window.innerWidth < 992) return 2;
+        return 4;
     }
 
+    function getGap() {
+        return window.innerWidth < 576 ? 0 : 16;
+    }
+
+    function getTotal() {
+        // Minimum 1 pour éviter les valeurs négatives ou nulles
+        return Math.max(1, slides.length - getVisible() + 1);
+    }
+
+    function buildDots() {
+        dotsContainer.innerHTML = '';
+        const total = getTotal();
+        // On n'affiche les dots que s'il y a plus d'une position
+        if (total <= 1) return;
+        for (let i = 0; i < total; i++) {
+            const dot = document.createElement('button');
+            dot.classList.add('dot');
+            if (i === current) dot.classList.add('active');
+            dot.addEventListener('click', () => goTo(i));
+            dotsContainer.appendChild(dot);
+        }
+    }
+
+    function updateDots() {
+        dotsContainer.querySelectorAll('.dot').forEach((d, i) => {
+            d.classList.toggle('active', i === current);
+        });
+    }
+
+    function updateBtns() {
+        prevBtn.disabled = current === 0;
+        nextBtn.disabled = current >= getTotal() - 1;
+    }
+
+    function goTo(index) {
+        current = Math.max(0, Math.min(index, getTotal() - 1));
+        const slideWidth = slides[0].offsetWidth + getGap();
+        track.style.transform = `translateX(-${current * slideWidth}px)`;
+        updateDots();
+        updateBtns();
+    }
+
+    prevBtn.addEventListener('click', () => goTo(current - 1));
+    nextBtn.addEventListener('click', () => goTo(current + 1));
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            current = 0;
+            buildDots();
+            goTo(0);
+        }, 150);
+    });
+
+    buildDots();
+    goTo(0);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initCarousel('productsTrack',         'productsPrev',         'productsNext',         'productsDots');
+    initCarousel('productsTrackNouveaute','productsPrevNouveaute','productsNextNouveaute','productsDotsNouveaute');
+    initCarousel('productsTrackRecents',  'productsPrevRecents',  'productsNextRecents',  'productsDotsRecents');
+});
     /* ========================
        QUANTITY INPUT HANDLER
        ======================== */

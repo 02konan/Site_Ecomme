@@ -124,7 +124,17 @@ function afficheproduit_la_une(produits) {
                 <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
                     <div class="product-card">
                         <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction"> -${reduction}%</span>
-                        <div class="like"><i class="bi bi-heart"></i></div>
+                        <button class="like" 
+                                data-favori-id="${pdt.id_produits}"
+                                onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
+                                    id: ${pdt.id_produits},
+                                    nom: '${escapeHtml(pdt.nom_produits)}',
+                                    prix: ${prixActuel},
+                                    image: '${imageSrc}'
+                                })">
+                                <i class="${favoris.some(f => f.id === pdt.id_produits) ? 'bi bi-heart-fill' : 'bi bi-heart'}" 
+                                style="${favoris.some(f => f.id === pdt.id_produits) ? 'color: gold;' : ''}"></i>            
+                        </button>
                         <img src="${imageSrc}" class="product-img" loading="lazy">
                         <div class="product-body d-flex">
                             <div class="col-8">
@@ -196,7 +206,6 @@ function Produits() {
             console.error("Erreur produits:", err);
         });
 }
-
 function afficheproduits(produits) {
     const container = document.getElementById("NosProduits");
     if (!container) return;
@@ -246,32 +255,43 @@ function afficheproduits(produits) {
             const item = document.createElement("div");
             item.className = "col-12 col-sm-6 col-md-4 col-lg-3";
 
+
             item.innerHTML = `
-                    <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
-                        <div class="product-card">
-                            <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction"> -${reduction}%</span>
-                            <div class="like"><i class="bi bi-heart"></i></div>
-                            <img src="${imageSrc}" class="product-img" loading="lazy">
-                            <div class="product-body d-flex">
-                                <div class="col-8">
-                                    <div class="product-title">${escapeHtml(pdt.nom_produits)}</div>
-                                    <p class="small product-desc text-muted">${escapeHtml(pdt.descriptin_produits || '')}</p>
-                                    <div class="product-star d-flex gap-1">
-                                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
-                                        <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.7</span>
-                                    </div>
-                                </div>
-                                <div class="col-4 d-flex flex-column ps-1">
-                                    <div class="product-price ms-auto">FCFA ${prixActuel} <br/> <span class="text-decoration-line-through text-muted">FCFA ${prixAvant}</span></div>
-                                </div>
-                            </div>
-                            <div class="d-flex box-card-btn">
-                                <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Panier</button>
-                                <button class="btn flex-grow-1 btn-sm btn-primary-custom rounded-pill m-0 buy-now" data-id="${pdt.id_produits}"><i class="bi bi-check-circle me-2"></i>Acheter</button>
-                            </div>
-                        </div>
-                    </a>
-                `;
+    <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
+        <div class="product-card">
+            <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction"> -${reduction}%</span>
+            <button class="like" 
+                    data-favori-id="${pdt.id_produits}"
+                    onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
+                        id: ${pdt.id_produits},
+                        nom: '${escapeHtml(pdt.nom_produits)}',
+                        prix: ${prixActuel},
+                        image: '${imageSrc}'
+                    })">
+                    <i class="${favoris.some(f => f.id === pdt.id_produits) ? 'bi bi-heart-fill' : 'bi bi-heart'}" 
+                    style="${favoris.some(f => f.id === pdt.id_produits) ? 'color: gold;' : ''}"></i>            
+            </button>
+            <img src="${imageSrc}" class="product-img" loading="lazy">
+            <div class="product-body d-flex">
+                <div class="col-8">
+                    <div class="product-title">${escapeHtml(pdt.nom_produits)}</div>
+                    <p class="small product-desc text-muted">${escapeHtml(pdt.descriptin_produits || '')}</p>
+                    <div class="product-star d-flex gap-1">
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+                        <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.7</span>
+                    </div>
+                </div>
+                <div class="col-4 d-flex flex-column ps-1">
+                    <div class="product-price ms-auto">FCFA ${prixActuel} <br/> <span class="text-decoration-line-through text-muted">FCFA ${prixAvant}</span></div>
+                </div>
+            </div>
+            <div class="d-flex box-card-btn">
+                <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Panier</button>
+                <button class="btn flex-grow-1 btn-sm btn-primary-custom rounded-pill m-0 buy-now" data-id="${pdt.id_produits}"><i class="bi bi-check-circle me-2"></i>Acheter</button>
+            </div>
+        </div>
+    </a>
+`;
 
             container.appendChild(item);
 
@@ -346,7 +366,17 @@ function afficheproduit_nouveaute(produits) {
                 <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
                     <div class="product-card">
                         <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction"> -${reduction}%</span>
-                        <div class="like"><i class="bi bi-heart"></i></div>
+                        <button class="like" 
+                                data-favori-id="${pdt.id_produits}"
+                                onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
+                                    id: ${pdt.id_produits},
+                                    nom: '${escapeHtml(pdt.nom_produits)}',
+                                    prix: ${prixActuel},
+                                    image: '${imageSrc}'
+                                })">
+                                <i class="${favoris.some(f => f.id === pdt.id_produits) ? 'bi bi-heart-fill' : 'bi bi-heart'}" 
+                                style="${favoris.some(f => f.id === pdt.id_produits) ? 'color: gold;' : ''}"></i>            
+                        </button>
                         <img src="${imageSrc}" class="product-img" loading="lazy">
                         <div class="product-body d-flex">
                             <div class="col-8">
@@ -445,7 +475,17 @@ function afficheproduit_recents(produits) {
                 <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
                     <div class="product-card">
                         <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction"> -${reduction}%</span>
-                        <div class="like"><i class="bi bi-heart"></i></div>
+                        <button class="like" 
+                                data-favori-id="${pdt.id_produits}"
+                                onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
+                                    id: ${pdt.id_produits},
+                                    nom: '${escapeHtml(pdt.nom_produits)}',
+                                    prix: ${prixActuel},
+                                    image: '${imageSrc}'
+                                })">
+                                <i class="${favoris.some(f => f.id === pdt.id_produits) ? 'bi bi-heart-fill' : 'bi bi-heart'}" 
+                                style="${favoris.some(f => f.id === pdt.id_produits) ? 'color: gold;' : ''}"></i>            
+                        </button>
                         <img src="${imageSrc}" class="product-img" loading="lazy">
                         <div class="product-body d-flex">
                             <div class="col-8">
@@ -561,6 +601,7 @@ function initCarousel() {
         }, 150);
     });
 }
+
 function initCarouselNouveaute() {
     const track = document.getElementById('productsTrackNouveaute');
     const prevBtn = document.getElementById('productsPrevNouveaute');
