@@ -277,7 +277,6 @@ def product(product_id):
     """Page détail d'un produit"""
     return render_template('product_detail.html')
 
-
 #-----------------COMMANDE---------------------
 @app.route('/commande/create', methods=['POST']) 
 def commande():
@@ -332,7 +331,6 @@ def categorie_produits(id_categorie):
 def categorie(id_categorie):
     return render_template("categorie_list.html")
     
-
 
 @app.route('/api/search', methods=['GET'])
 def search():

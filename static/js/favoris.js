@@ -67,7 +67,7 @@ function syncBoutonsFavoris() {
 /* Afficher les favoris dans le drawer */
 function renderFavoris() {
     const body = document.getElementById('drawerFavorisBody');
-    const favoris = getpanier(); // Récupérer les favoris à jour
+    const favoris = favoris; 
 
     if (favoris.length === 0) {
         body.innerHTML = `

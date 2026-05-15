@@ -126,7 +126,6 @@ def liste_banners():
         print(f"Erreur lors de la récupération des produits: {e}") 
         return []       
 
-
 def liste_produits_categorie(id_categorie):
     try:
         with connexion() as conn:
@@ -140,14 +139,14 @@ def liste_produits_categorie(id_categorie):
                     JOIN categories c on sc.id_categorie = c.id
                     WHERE pi.est_principale = 1 and p.id_sous_categorie=%s
                     ORDER BY RAND();
+                    
                 """
                 cursor.execute(sql,(id_categorie,))
                 resultat = cursor.fetchall()
                 return resultat
     except Exception as e:
         return (f"Erreur lors de la récupération des produits: {e}")
-    
-
+ 
 def details_produits(id):
     try:
         with connexion() as conn:
