@@ -40,6 +40,7 @@ def restriction():
                  "verifcation_auth", 
                  "produit_une",
                  "product",
+                 "produits",
                  "produits_details", 
                  "produit_recents", 
                  "produits_produit_nouveaute", 
