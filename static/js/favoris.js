@@ -4,6 +4,13 @@
 
 let favoris = JSON.parse(localStorage.getItem('favoris')) || [];
 
+function getfavoris() {
+    return favoris;
+}
+function saveFavoris(favoris) {
+    localStorage.setItem("favoris", JSON.stringify(favoris));
+    updateCompteurFavoris();
+}
 /* Ouvrir / Fermer le drawer favoris */
 function ouvrirDrawerFavoris() {
     document.getElementById('drawerFavoris').classList.add('open');
@@ -19,7 +26,7 @@ function fermerDrawerFavoris() {
 /* Ajouter ou retirer un produit des favoris */
 function toggleFavori(produit) {
     // produit = { id, nom, prix, image }
-    const index = favoris.findIndex(f => f.id === produit.id);
+    const index = favoris.findIndex(p => p.id === produit.id);
 
     if (index === -1) {
         favoris.push(produit);
@@ -27,23 +34,45 @@ function toggleFavori(produit) {
         favoris.splice(index, 1);
     }
 
-    localStorage.setItem('favoris', JSON.stringify(favoris));
-    updateCompteurFavoris();
-    syncBoutonsFavoris();
+    saveFavoris(favoris);
 }
 
 /* Supprimer un favori depuis le drawer */
 function supprimerFavori(id) {
-    favoris = favoris.filter(f => f.id !== id);
-    localStorage.setItem('favoris', JSON.stringify(favoris));
+    favoris = favoris.filter(p => p.id !== id);
+    saveFavoris(favoris);
+    renderFavoris();
+}
+function modifierQuantite(id, quantite) {
+    const fav = getfavoris();
+    const index = fav.findIndex(p => p.id === id);
+    if (index !== -1) {
+        if (quantite <= 0) {
+            supprimerFavori(id);
+        } else {
+            fav[index].quantite = quantite;
+            saveFavoris(fav);
+        }
+    }
+}
+
+function clearFavoris() {
+    favoris = [];
+    localStorage.removeItem('favoris');
     updateCompteurFavoris();
     syncBoutonsFavoris();
     renderFavoris();
 }
 
+function totalFavoris() {
+    return favoris.reduce((acc, p) => acc + parseFloat(p.prix), 0);
+}
 /* Mettre à jour le badge compteur */
 function updateCompteurFavoris() {
+    const total = getPanier().reduce((acc, p) => acc + p.quantite, 0);
     const badge = document.getElementById('favoris-compteur');
+    if (!badge) return; 
+
     if (favoris.length > 0) {
         badge.textContent = favoris.length;
         badge.style.display = 'inline-block';
@@ -56,9 +85,10 @@ function updateCompteurFavoris() {
 function syncBoutonsFavoris() {
     document.querySelectorAll('[data-favori-id]').forEach(btn => {
         const id = parseInt(btn.dataset.favoriId);
-        const estFavori = favoris.some(f => f.id === id);
+        const estFavori = favoris.some(p => p.id === id);
         btn.classList.toggle('actif', estFavori);
         const icon = btn.querySelector('i');
+        if (!icon) return;
         icon.className = estFavori ? 'bi bi-heart-fill' : 'bi bi-heart';
         icon.style.color = estFavori ? 'gold' : '';
     });
@@ -67,7 +97,12 @@ function syncBoutonsFavoris() {
 /* Afficher les favoris dans le drawer */
 function renderFavoris() {
     const body = document.getElementById('drawerFavorisBody');
-    const favoris = favoris; 
+    if (!body) return;
+
+    const badge = document.getElementById('favoris-compteur');
+    const total = document.getElementById('favoris-total');
+    if (total) total.textContent = `FCFA ${totalFavoris().toLocaleString("fr-FR")}`;
+
 
     if (favoris.length === 0) {
         body.innerHTML = `
@@ -78,15 +113,28 @@ function renderFavoris() {
         return;
     }
 
-    body.innerHTML = favoris.map(f => `
-        <div class="d-flex align-items-center gap-3 mb-3 p-2 border rounded">
-            <img src="${f.image}" alt="${f.nom}" 
-                 style="width:60px;height:60px;object-fit:cover;border-radius:8px;">
+    body.innerHTML = favoris.map(p => `
+        <div class="d-flex gap-3 align-items-center border rounded-3 p-2">
+            <img src="${p.img}" 
+                 style="width:56px;height:56px;object-fit:cover;border-radius:8px;"
+                 onerror="this.src='/static/img/default_1.png'">
             <div class="flex-grow-1">
-                <div style="font-size:14px;font-weight:500;">${f.nom}</div>
-                <div style="font-size:13px;color:#888;">${f.prix} FCFA</div>
+                <div class="small fw-500">${escapeHtml(p.nom)}</div>
+                <div class="text-muted" style="font-size:12px;">
+                    FCFA ${parseFloat(p.prix).toLocaleString("fr-FR")}
+                </div>
+                <div class="d-flex align-items-center gap-2 mt-1">
+                    <button class="btn btn-sm btn-outline-secondary rounded-circle p-0"
+                            style="width:24px;height:24px;line-height:1;"
+                            onclick="modifierQuantite(${p.id}, ${p.quantite - 1}); renderDrawer();">−</button>
+                    <span class="small fw-500">${p.quantite}</span>
+                    <button class="btn btn-sm btn-outline-secondary rounded-circle p-0"
+                            style="width:24px;height:24px;line-height:1;"
+                            onclick="modifierQuantite(${p.id}, ${p.quantite + 1}); renderDrawer();">+</button>
+                </div>
             </div>
-            <button onclick="supprimerFavori(${f.id})" class="btn btn-sm text-danger">
+            <button class="btn btn-sm text-danger"
+                    onclick="supprimerFavori(${p.id}); renderDrawer();">
                 <i class="bi bi-trash"></i>
             </button>
         </div>
@@ -95,11 +143,11 @@ function renderFavoris() {
 
 /* Fermer le drawer via le bouton X */
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('closeFavoris')
-        .addEventListener('click', fermerDrawerFavoris);
+    const closeFavoris = document.getElementById('closeFavoris');
+    if (closeFavoris) closeFavoris.addEventListener('click', fermerDrawerFavoris);
 
-    document.getElementById('continueBtn')
-        .addEventListener('click', fermerDrawerFavoris);
+    const continueBtn = document.getElementById('continueBtn');
+    if (continueBtn) continueBtn.addEventListener('click', fermerDrawerFavoris);
 
     updateCompteurFavoris();
     syncBoutonsFavoris();

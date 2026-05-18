@@ -41,10 +41,10 @@ def restriction():
                  "produit_une",
                  "product",
                  "produits",
+                 "nos_produits",
                  "produits_details", 
                  "produit_recents", 
-                 "produits_produit_nouveaute", 
-                 "tous_list",
+                 "produits_nouveaute", 
                  "banner",
                  "categorie_produits",
                  "categorie",
@@ -167,9 +167,27 @@ def banner():
     return jsonify({"data":table})
 
 #-----------------PRODUITS---------------------
-@app.route('/produit_list')
-def tous_list():
-    return render_template("produits_list.html")
+@app.route('/produits')
+def produits():
+    return render_template('produits_list.html')
+
+@app.route('/nos_produits')
+def nos_produits():
+    data=liste_produits()
+    table=[]
+    if data:
+            for i in data:
+                information={
+                "id_produits":i[0],
+                "nom_produits":i[1],
+                "descriptin_produits":i[2],
+                "prix_produits":i[3],
+                "img_produits": i[4]
+                }
+                table.append(information)
+            
+            
+    return jsonify({"data":table})
 
 @app.route('/produit/list')
 def produits_list():
@@ -207,7 +225,7 @@ def produit_une():
     return jsonify({"data":table})
 
 @app.route('/produit_nouveaute/list')
-def produits_produit_nouveaute():
+def produits_nouveaute():
     data=liste_Nouveaute()
     table=[]
     if data:
@@ -238,9 +256,6 @@ def produit_recents():
             table.append(information)
     return jsonify({"data":table})
 
-@app.route('/produits')
-def produits():
-    return render_template('produits_list.html')
 
 @app.route('/detail_produit/<int:id_produits>')
 def produits_details(id_produits):

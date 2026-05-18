@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function details_produits(id) {
+     const carousel = document.querySelector('.products-carousel-track');
+     showCarouselSkeletons(carousel, 4);
     fetch(`/detail_produit/${id}`)
         .then(res => {
             if (!res.ok) throw new Error("Produit introuvable");
