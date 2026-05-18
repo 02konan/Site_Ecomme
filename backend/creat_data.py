@@ -20,12 +20,19 @@ def generer_code_comande():
         print(f"Erreur generer_code_comande: {e}")
         return None
 
-def creat_commande(id_client, adresse, ville, panier, montant_total):
+def creat_commande(client, adresse, ville, panier, montant_total):
     try:
         with connexion() as conn:
             with conn.cursor() as cursor:
                 code_commande = generer_code_comande()
 
+                sql_client = """
+                    INSERT INTO Client (role, nom, adresse, telephone,ville)
+                    VALUES (%s, %s, %s, %s, %s)
+                """
+                cursor.execute(sql_client, (2, client['nom'],client['adresse'],client['tel'],client['ville'],))
+
+                id_client = cursor.lastrowid
                 sql_commande = """
                     INSERT INTO commandes (code_commande, id_client, total, statut)
                     VALUES (%s, %s, %s, %s)
@@ -63,7 +70,7 @@ def create_client(role, nom, adress, telephone, password):
         with connexion() as conn:
             with conn.cursor() as cursor:
                 sql_client = """
-                    INSERT INTO Client (role, nom, adresse, telephone, estconnecter, mot_pass)
+                    INSERT INTO Client (role, nom, email,telephone, estconnecter, mot_pass)
                     VALUES (%s, %s, %s, %s, %s, %s)
                 """
                 nouveau_mail=verifie_mail(adress)

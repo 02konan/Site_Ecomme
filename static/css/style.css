@@ -370,7 +370,7 @@ img.logo.other{
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: 'Inter', sans-serif;
-    text-transform: uppercase;
+    text-transform: none;
 }
 
 .offcanvas-link-level1:hover {

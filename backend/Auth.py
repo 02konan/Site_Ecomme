@@ -10,7 +10,7 @@ def verifie_mail(BD_mail):
     try:
         with connexion() as conn:
             with conn.cursor() as cursor:
-                sql = "SELECT adresse FROM Client WHERE adresse=%s"
+                sql = "SELECT email FROM Client WHERE email=%s"
                 cursor.execute(sql,BD_mail)
                 result = cursor.fetchone()
                 existe_mail=result[0]
@@ -27,10 +27,10 @@ def Authentification(email, pwd):
         with connexion() as conn:
             with conn.cursor() as cursor:
                 sql = """
-                SELECT Client.id, role, nom, adresse, telephone,mot_pass
+                SELECT Client.id, role, nom, email, telephone,mot_pass
                 FROM Client
                 JOIN role ON Client.role = role.id
-                WHERE adresse = %s
+                WHERE email = %s
                 """
                 cursor.execute(sql, (email,))
                 row = cursor.fetchone()

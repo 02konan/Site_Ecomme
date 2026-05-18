@@ -31,6 +31,7 @@ def liste_Nos_produits():
                             p.prix, 
                             pi.url_image AS img_produits,
                             categories.nom AS categorie,
+                            categories.id AS IDCategorie,
 
                             ROW_NUMBER() OVER (
                                 PARTITION BY categories.id
@@ -131,14 +132,35 @@ def liste_produits_categorie(id_categorie):
         with connexion() as conn:
             with conn.cursor() as cursor:
                 sql="""
-                    SELECT p.id, p.nom, p.description, p.prix, pi.url_image AS img_produits,sc.nom
-                    FROM produits p
+                  SELECT *
+                    FROM (
+                        SELECT 
+                            p.id, 
+                            p.nom, 
+                            p.description, 
+                            p.prix, 
+                            pi.url_image AS img_produits,
+                            sous_categories.nom AS sous_categories,
+                            ROW_NUMBER() OVER (
+                                PARTITION BY categories.id
+                                ORDER BY RAND()
+                            ) AS rn
 
-                    JOIN produit_images pi on p.id = pi.id_produit
-                    JOIN sous_categories sc on p.id_sous_categorie = sc.id
-                    JOIN categories c on sc.id_categorie = c.id
-                    WHERE pi.est_principale = 1 and p.id_sous_categorie=%s
-                    ORDER BY RAND();
+                        FROM produits p
+
+                        JOIN produit_images pi 
+                            ON p.id = pi.id_produit
+
+                        JOIN sous_categories  
+                            ON p.id_sous_categorie = sous_categories.id
+
+                        LEFT JOIN categories 
+                            ON sous_categories.id_categorie = categories.id
+
+                        WHERE pi.est_principale = 1 AND categories.id = %s
+
+                    ) AS t
+                    ORDER BY t.sous_categories ASC;
                     
                 """
                 cursor.execute(sql,(id_categorie,))

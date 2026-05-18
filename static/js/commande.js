@@ -2,26 +2,37 @@
 //  MODALE COMMANDE
 // =====================
 function ouvrirModal() {
-    fetch('/authentification/verifier')
-        .then(res => res.json())
-        .then(data => {
-            if (data.connected) {
-                console.log("auth check:", data)
+    // fetch('/authentification/verifier')
+    //     .then(res => res.json())
+    //     .then(data => {
+    //         if (data.connected) {
+    //             console.log("auth check:", data)
 
-                const user = data.user;
-                document.getElementById("cmd-nom").value     = user.nom   || '';
-                document.getElementById("cmd-tel").value     = user.tel   || '';
+    //             const user = data.user;
+    //             document.getElementById("cmd-nom").value     = user.nom   || '';
+    //             document.getElementById("cmd-tel").value     = user.tel   || '';
+    //         } else {
+    //             window.location.href = '/auth';
+    //         }
+    //     })
+    //     .catch(err => console.error("Erreur check auth:", err));
 
-                document.getElementById("modalCommande").classList.add("open");
-                document.getElementById("modalOverlay").classList.add("open");
+     document.getElementById("modalCommande").classList.add("open");
+      document.getElementById("modalOverlay").classList.add("open");
                 allerStep1();
-            } else {
-                window.location.href = '/auth';
-            }
-        })
-        .catch(err => console.error("Erreur check auth:", err));
+    
 }
-
+function afficherVille() {
+    const adresse = document.getElementById('cmd-adresse').value;
+    const divVille = document.getElementById('div-ville');
+    
+    if (adresse === 'autre') {
+        divVille.style.display = 'block';
+    } else {
+        divVille.style.display = 'none';
+        document.getElementById('cmd-ville').value = '';
+    }
+}
 
 function fermerModal() {
     document.getElementById("modalCommande").classList.remove("open");
@@ -92,42 +103,42 @@ function allerStep2() {
     // document.getElementById("step2").style.display = "block";
 }
 
-function getrecap(valeurfunc,recapid,totalvaleur,nom,tel,adresse,ville) {
-     const valeuriteme = valeurfunc;
-    const recapiteme  = recapid;
+// function getrecap(valeurfunc,recapid,totalvaleur,nom,tel,adresse,ville) {
+//      const valeuriteme = valeurfunc;
+//     const recapiteme  = recapid;
 
-    const itemsHtml = valeuriteme.map(p => `
-        <div class="recap-item">
-            <img src="${p.img}" onerror="this.src='/static/img/default_1.png'">
-            <div class="flex-grow-1">
-                <div class="small fw-500">${escapeHtml(p.nom)}</div>
-                <div class="text-muted" style="font-size:12px;">
-                    ${p.quantite} × FCFA ${parseFloat(p.prix).toLocaleString("fr-FR")}
-                </div>
-            </div>
-            <div class="small fw-500">
-                FCFA ${(p.quantite * parseFloat(p.prix)).toLocaleString("fr-FR")}
-            </div>
-        </div>
-    `).join("");
+//     const itemsHtml = valeuriteme.map(p => `
+//         <div class="recap-item">
+//             <img src="${p.img}" onerror="this.src='/static/img/default_1.png'">
+//             <div class="flex-grow-1">
+//                 <div class="small fw-500">${escapeHtml(p.nom)}</div>
+//                 <div class="text-muted" style="font-size:12px;">
+//                     ${p.quantite} × FCFA ${parseFloat(p.prix).toLocaleString("fr-FR")}
+//                 </div>
+//             </div>
+//             <div class="small fw-500">
+//                 FCFA ${(p.quantite * parseFloat(p.prix)).toLocaleString("fr-FR")}
+//             </div>
+//         </div>
+//     `).join("");
 
-    recapiteme.innerHTML = `
-        ${itemsHtml}
-        <div class="d-flex justify-content-between mt-3 fw-500">
-            <span>Total</span>
-            <span>FCFA ${totalvaleur().toLocaleString("fr-FR")}</span>
-        </div>
-        <div style="background:#f8f8f8;border-radius:12px;padding:12px;margin-top:12px;font-size:13px;">
-            <div><i class="bi bi-person me-2"></i>${escapeHtml(nom)}</div>
-            <div class="mt-1"><i class="bi bi-telephone me-2"></i>${escapeHtml(tel)}</div>
-            <div class="mt-1"><i class="bi bi-geo-alt me-2"></i>${escapeHtml(adresse)}, ${escapeHtml(ville)}</div>
-        </div>
-    `;
+//     recapiteme.innerHTML = `
+//         ${itemsHtml}
+//         <div class="d-flex justify-content-between mt-3 fw-500">
+//             <span>Total</span>
+//             <span>FCFA ${totalvaleur().toLocaleString("fr-FR")}</span>
+//         </div>
+//         <div style="background:#f8f8f8;border-radius:12px;padding:12px;margin-top:12px;font-size:13px;">
+//             <div><i class="bi bi-person me-2"></i>${escapeHtml(nom)}</div>
+//             <div class="mt-1"><i class="bi bi-telephone me-2"></i>${escapeHtml(tel)}</div>
+//             <div class="mt-1"><i class="bi bi-geo-alt me-2"></i>${escapeHtml(adresse)}, ${escapeHtml(ville)}</div>
+//         </div>
+//     `;
 
-    document.getElementById("step1").style.display = "none";
-    document.getElementById("step2").style.display = "block";
+//     document.getElementById("step1").style.display = "none";
+//     document.getElementById("step2").style.display = "block";
     
-}
+// }
 
 function confirmerCommande() {
     const nom     = document.getElementById("cmd-nom").value.trim();

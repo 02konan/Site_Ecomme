@@ -134,7 +134,7 @@ function renderCategoriesMenu(categories) {
                     level2Button.className = 'offcanvas-link-level2';
                     level2Button.setAttribute('data-level2', subId);
                     level2Button.innerHTML = `
-                        <span class="text-upper">${escapeHtmlSafe(subcategory.nom)}</span>
+                        <span >${escapeHtmlSafe(subcategory.nom)}</span>
                     `;
                     level2Item.appendChild(level2Button);
 
@@ -170,7 +170,7 @@ function renderCategoriesMenu(categories) {
                     directLink.style.textDecoration = 'none';
                     directLink.style.color = 'var(--text-secondary)';
                     directLink.innerHTML = `
-                        <span class="text-uppercase">${escapeHtmlSafe(subcategory.nom)}</span>
+                        <span >${escapeHtmlSafe(subcategory.nom)}</span>
                     `;
                     level2Item.appendChild(directLink);
                 }

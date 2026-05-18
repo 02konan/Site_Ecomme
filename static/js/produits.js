@@ -456,7 +456,6 @@ function afficheNosProduits(produits) {
                     prix: pdt.prix_produits,
                     img:  imageSrc
                 });
-                window.location.href = "/panier";
             });
         });
     } else {

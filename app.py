@@ -202,6 +202,7 @@ def produits_list():
                 "prix_produits":i[3],
                 "img_produits": i[4],
                 "categories": i[5],
+                "id_categorie": i[6]
             }
             table.append(information)
             
@@ -297,12 +298,12 @@ def product(product_id):
 def commande():
     try:
         data      = request.get_json()
-        id_client = session.get("user_id")
+        # id_client = session.get("user_id")
         client    = data.get("client")
         panier    = data.get("panier")
         total     = data.get("total")
-        if not id_client:
-            return jsonify({"success": False, "error": "Non connecté"}), 401
+        # if not id_client:
+        #     return jsonify({"success": False, "error": "Non connecté"}), 401
 
         if not panier:
             return jsonify({"success": False, "error": "Panier vide"}), 400
@@ -310,13 +311,12 @@ def commande():
         adresse = client.get("adresse")
         ville   = client.get("ville")
         creat_commande(
-                id_client,
+             client,
                 adresse,
                 ville,
                 panier,
                total
             )
-        # Message(client,tel,total,adresse,ville)
         return jsonify({"success": True})
 
     except Exception as e:
@@ -366,4 +366,4 @@ def not_found(error):
 def server_error(error):
     return render_template('500.html'), 500
 if __name__ == "__main__":
-    app.run(port=5000,debug=True)
+    app.run(port=5000,debug=False)
