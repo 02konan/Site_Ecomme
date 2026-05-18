@@ -85,7 +85,7 @@ function updateCompteurFavoris() {
 function syncBoutonsFavoris() {
     document.querySelectorAll('[data-favori-id]').forEach(btn => {
         const id = parseInt(btn.dataset.favoriId);
-        const estFavori = favoris.some(p => p.id === id);
+        const estFavori = favoris.some(f => f.id === id);
         btn.classList.toggle('actif', estFavori);
         const icon = btn.querySelector('i');
         if (!icon) return;
@@ -115,22 +115,13 @@ function renderFavoris() {
 
     body.innerHTML = favoris.map(p => `
         <div class="d-flex gap-3 align-items-center border rounded-3 p-2">
-            <img src="${p.img}" 
+            <img src="${p.image}" alt="${escapeHtml(p.nom)}"
                  style="width:56px;height:56px;object-fit:cover;border-radius:8px;"
                  onerror="this.src='/static/img/default_1.png'">
             <div class="flex-grow-1">
                 <div class="small fw-500">${escapeHtml(p.nom)}</div>
                 <div class="text-muted" style="font-size:12px;">
                     FCFA ${parseFloat(p.prix).toLocaleString("fr-FR")}
-                </div>
-                <div class="d-flex align-items-center gap-2 mt-1">
-                    <button class="btn btn-sm btn-outline-secondary rounded-circle p-0"
-                            style="width:24px;height:24px;line-height:1;"
-                            onclick="modifierQuantite(${p.id}, ${p.quantite - 1}); renderDrawer();">−</button>
-                    <span class="small fw-500">${p.quantite}</span>
-                    <button class="btn btn-sm btn-outline-secondary rounded-circle p-0"
-                            style="width:24px;height:24px;line-height:1;"
-                            onclick="modifierQuantite(${p.id}, ${p.quantite + 1}); renderDrawer();">+</button>
                 </div>
             </div>
             <button class="btn btn-sm text-danger"

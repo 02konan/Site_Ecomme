@@ -101,9 +101,9 @@ function afficheBanner(banners) {
                 ? (/^https?:\/\//i.test(banner.img) ? banner.img : `${window.urlBanniereImage}${banner.img}`)
                 : '/static/img/default_1.png';
 
-        console.log('backgroundImage:', backgroundImage);
-        console.log('banner.img:', banner.img);
-        console.log('url complète:', `${window.urlBanniereImage}${banner.img}`);
+        // console.log('backgroundImage:', backgroundImage);
+        // console.log('banner.img:', banner.img);
+        // console.log('url complète:', `${window.urlBanniereImage}${banner.img}`);
 
         slide.innerHTML = `
             <div class="content">
