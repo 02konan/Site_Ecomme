@@ -1,3 +1,5 @@
+import pymysql
+
 from backend.data_base import connexion
 from backend.Models import User
 
@@ -218,7 +220,35 @@ def get_user_id(user_id):
                 return None
     except Exception as e:
         return f"erreur get_user_id: {e}"
-    
+
+def get_search_results(query):
+    try:
+        with connexion() as conn:
+            with conn.cursor() as cursor:
+                sql = """
+                    SELECT 
+                        p.id_produits,
+                        p.nom_produits,
+                        p.descriptin_produits,
+                        p.prix_produits,        -- ← nom exact attendu par le JS
+                        p.id_categorie,
+                        c.nom_categorie AS categories,
+                        pi.url_image    AS img_produits
+                    FROM produits p
+                    LEFT JOIN produit_images pi ON p.id_produits = pi.id_produit
+                    LEFT JOIN categories c      ON p.id_categorie = c.id_categorie
+                    WHERE pi.est_principale = 1 
+                      AND (p.nom_produits LIKE %s OR p.descriptin_produits LIKE %s)
+                    ORDER BY c.nom_categorie
+                    LIMIT 40
+                """
+                like_query = f"%{query}%"
+                cursor.execute(sql, (like_query, like_query))
+                return cursor.fetchall()
+    except Exception as e:
+        print(f"Erreur recherche: {e}")
+        return []
+
 def get_categories_with_subcategories():
    
     try:

@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from backend.creat_data import create_client,creat_commande
 from backend.Auth import Authentification
 from backend.MessageApi import Message
-from backend.read_data import get_user_id,liste_Nos_produits,details_produits,liste_produits,liste_produits_categorie,liste_banners,liste_recents,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
+from backend.read_data import get_search_results, get_user_id,liste_Nos_produits,details_produits,liste_produits,liste_produits_categorie,liste_banners,liste_recents,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
 import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
 from flask_cors import CORS
@@ -31,7 +31,8 @@ def load_user(id_user):
 def restriction():
     tab_route = [ 
                  "login", 
-                 "auth", 
+                 "auth",
+                 "search", 
                  "register", 
                  "commande", 
                  "index", 
@@ -349,8 +350,8 @@ def categorie(id_categorie):
 
 @app.route('/api/search', methods=['GET'])
 def search():
-    """API pour rechercher des produits"""
-    return 0
+    data=get_search_results(request.args.get('query', ''))
+    return jsonify({"data": data})
 
 @app.route('/logout', methods=['GET'])
 def logout():
