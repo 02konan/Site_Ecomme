@@ -149,7 +149,8 @@ function afficheproduit_la_une(produits) {
                             </div>
                         </div>
                         <div class="d-flex box-card-btn">
-                            <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Panier</button>
+                            <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Commander
+                            </button>
                         </div>
                     </div>
                 </a>
@@ -286,8 +287,7 @@ function afficheproduits(produits) {
                 </div>
             </div>
             <div class="d-flex box-card-btn">
-                <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Panier</button>
-                <button class="btn flex-grow-1 btn-sm btn-primary-custom rounded-pill m-0 buy-now" data-id="${pdt.id_produits}"><i class="bi bi-check-circle me-2"></i>Acheter</button>
+                <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Commander</button>
             </div>
         </div>
     </a>
@@ -307,19 +307,19 @@ function afficheproduits(produits) {
                 });
             });
 
-            // Bouton Acheter
-            item.querySelector('.buy-now').addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                ajouterAuPanier({
-                    id:   pdt.id_produits,
-                    nom:  pdt.nom_produits,
-                    prix: pdt.prix_produits,
-                    img:  imageSrc
-                });
-                ouvrirModal();
-                fermerDrawer();
-            });
+            // // Bouton Acheter
+            // item.querySelector('.buy-now').addEventListener('click', (e) => {
+            //     e.preventDefault();
+            //     e.stopPropagation();
+            //     ajouterAuPanier({
+            //         id:   pdt.id_produits,
+            //         nom:  pdt.nom_produits,
+            //         prix: pdt.prix_produits,
+            //         img:  imageSrc
+            //     });
+            //     ouvrirModal();
+            //     fermerDrawer();
+            // });
         });
     } else {
         container.innerHTML = `
@@ -424,8 +424,7 @@ function afficheNosProduits(produits) {
                 </div>
             </div>
             <div class="d-flex box-card-btn">
-                <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Panier</button>
-                <button class="btn flex-grow-1 btn-sm btn-primary-custom rounded-pill m-0 buy-now" data-id="${pdt.id_produits}"><i class="bi bi-check-circle me-2"></i>Acheter</button>
+                <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Commander</button>
             </div>
         </div>
     </a>
@@ -446,16 +445,16 @@ function afficheNosProduits(produits) {
             });
 
             // Bouton Acheter
-            item.querySelector('.buy-now').addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                ajouterAuPanier({
-                    id:   pdt.id_produits,
-                    nom:  pdt.nom_produits,
-                    prix: pdt.prix_produits,
-                    img:  imageSrc
-                });
-            });
+            // item.querySelector('.buy-now').addEventListener('click', (e) => {
+            //     e.preventDefault();
+            //     e.stopPropagation();
+            //     ajouterAuPanier({
+            //         id:   pdt.id_produits,
+            //         nom:  pdt.nom_produits,
+            //         prix: pdt.prix_produits,
+            //         img:  imageSrc
+            //     });
+            // });
         });
     } else {
         container.innerHTML = `
@@ -529,8 +528,7 @@ function afficheproduit_nouveaute(produits) {
                             </div>
                         </div>
                         <div class="d-flex box-card-btn">
-                            <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Panier</button>
-                            <button class="btn flex-grow-1 btn-sm btn-primary-custom rounded-pill m-0 buy-now" data-id="${pdt.id_produits}"><i class="bi bi-check-circle me-2"></i>Acheter</button>
+                            <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Commander</button>
                         </div>
                     </div>
                 </a>
@@ -550,18 +548,18 @@ function afficheproduit_nouveaute(produits) {
                 });
 
                 // Bouton Acheter
-                item.querySelector('.buy-now').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    ajouterAuPanier({
-                        id:   pdt.id_produits,
-                        nom:  pdt.nom_produits,
-                        prix: pdt.prix_produits,
-                        img:  imageSrc
-                    });
-                    ouvrirModal();
-                    fermerDrawer();
-                });
+                // item.querySelector('.buy-now').addEventListener('click', (e) => {
+                //     e.preventDefault();
+                //     e.stopPropagation();
+                //     ajouterAuPanier({
+                //         id:   pdt.id_produits,
+                //         nom:  pdt.nom_produits,
+                //         prix: pdt.prix_produits,
+                //         img:  imageSrc
+                //     });
+                //     ouvrirModal();
+                //     fermerDrawer();
+                            // });
         });
         
         // Initialiser le carrousel pour les nouveautés
@@ -639,8 +637,7 @@ function afficheproduit_recents(produits) {
                             </div>
                         </div>
                         <div class="d-flex box-card-btn">
-                            <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Panier</button>
-                            <button class="btn flex-grow-1 btn-sm btn-primary-custom rounded-pill m-0 buy-now" data-id="${pdt.id_produits}"><i class="bi bi-check-circle me-2"></i>Acheter</button>
+                            <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Commander</button>
                         </div>
                     </div>
                 </a>
@@ -660,18 +657,18 @@ function afficheproduit_recents(produits) {
                 });
 
                 // Bouton Acheter
-                item.querySelector('.buy-now').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    ajouterAuPanier({
-                        id:   pdt.id_produits,
-                        nom:  pdt.nom_produits,
-                        prix: pdt.prix_produits,
-                        img:  imageSrc
-                    });
-                    ouvrirModal();
-                    fermerDrawer();
-                });
+                // item.querySelector('.buy-now').addEventListener('click', (e) => {
+                //     e.preventDefault();
+                //     e.stopPropagation();
+                //     ajouterAuPanier({
+                //         id:   pdt.id_produits,
+                //         nom:  pdt.nom_produits,
+                //         prix: pdt.prix_produits,
+                //         img:  imageSrc
+                //     });
+                //     ouvrirModal();
+                //     fermerDrawer();
+                // });
         });
         
         // Initialiser le carrousel pour les nouveautés
