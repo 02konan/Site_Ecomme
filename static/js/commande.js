@@ -50,57 +50,52 @@ function allerStep2() {
     const nom     = document.getElementById("cmd-nom").value.trim();
     const tel     = document.getElementById("cmd-tel").value.trim();
     const adresse = document.getElementById("cmd-adresse").value.trim();
-    const ville   = document.getElementById("cmd-ville").value.trim();
+    const ville   = document.getElementById("cmd-ville").value.trim() || "Non spécifiée";
 
     if (!nom || !tel || !adresse || !ville) {
         alert("Veuillez remplir tous les champs.");
         return;
     }
 
-    if (getPanier().length === 0) {
-         getrecap(getfavoris(), document.getElementById("recapBody"), totalFavoris, nom, tel, adresse, ville);
-    }else{
-        getrecap(getPanier(), document.getElementById("recapBody"), totalPanier, nom, tel, adresse, ville);
-
-    }
+    
 
     
 
 
     // Affiche le récapitulatif
-    // const panier = getPanier();
-    // const recap  = document.getElementById("recapBody");
+    const panier = getPanier();
+    const recap  = document.getElementById("recapBody");
 
-    // const itemsHtml = panier.map(p => `
-    //     <div class="recap-item">
-    //         <img src="${p.img}" onerror="this.src='/static/img/default_1.png'">
-    //         <div class="flex-grow-1">
-    //             <div class="small fw-500">${escapeHtml(p.nom)}</div>
-    //             <div class="text-muted" style="font-size:12px;">
-    //                 ${p.quantite} × FCFA ${parseFloat(p.prix).toLocaleString("fr-FR")}
-    //             </div>
-    //         </div>
-    //         <div class="small fw-500">
-    //             FCFA ${(p.quantite * parseFloat(p.prix)).toLocaleString("fr-FR")}
-    //         </div>
-    //     </div>
-    // `).join("");
+    const itemsHtml = panier.map(p => `
+        <div class="recap-item">
+            <img src="${p.img}" onerror="this.src='/static/img/default_1.png'">
+            <div class="flex-grow-1">
+                <div class="small fw-500">${escapeHtml(p.nom)}</div>
+                <div class="text-muted" style="font-size:12px;">
+                    ${p.quantite} × FCFA ${parseFloat(p.prix).toLocaleString("fr-FR")}
+                </div>
+            </div>
+            <div class="small fw-500">
+                FCFA ${(p.quantite * parseFloat(p.prix)).toLocaleString("fr-FR")}
+            </div>
+        </div>
+    `).join("");
 
-    // recap.innerHTML = `
-    //     ${itemsHtml}
-    //     <div class="d-flex justify-content-between mt-3 fw-500">
-    //         <span>Total</span>
-    //         <span>FCFA ${totalPanier().toLocaleString("fr-FR")}</span>
-    //     </div>
-    //     <div style="background:#f8f8f8;border-radius:12px;padding:12px;margin-top:12px;font-size:13px;">
-    //         <div><i class="bi bi-person me-2"></i>${escapeHtml(nom)}</div>
-    //         <div class="mt-1"><i class="bi bi-telephone me-2"></i>${escapeHtml(tel)}</div>
-    //         <div class="mt-1"><i class="bi bi-geo-alt me-2"></i>${escapeHtml(adresse)}, ${escapeHtml(ville)}</div>
-    //     </div>
-    // `;
+    recap.innerHTML = `
+        ${itemsHtml}
+        <div class="d-flex justify-content-between mt-3 fw-500">
+            <span>Total</span>
+            <span>FCFA ${totalPanier().toLocaleString("fr-FR")}</span>
+        </div>
+        <div style="background:#f8f8f8;border-radius:12px;padding:12px;margin-top:12px;font-size:13px;">
+            <div><i class="bi bi-person me-2"></i>${escapeHtml(nom)}</div>
+            <div class="mt-1"><i class="bi bi-telephone me-2"></i>${escapeHtml(tel)}</div>
+            <div class="mt-1"><i class="bi bi-geo-alt me-2"></i>${escapeHtml(adresse)}, ${escapeHtml(ville)}</div>
+        </div>
+    `;
 
-    // document.getElementById("step1").style.display = "none";
-    // document.getElementById("step2").style.display = "block";
+    document.getElementById("step1").style.display = "none";
+    document.getElementById("step2").style.display = "block";
 }
 
 // function getrecap(valeurfunc,recapid,totalvaleur,nom,tel,adresse,ville) {

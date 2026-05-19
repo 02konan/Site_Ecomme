@@ -150,7 +150,6 @@ function afficheproduit_la_une(produits) {
                         </div>
                         <div class="d-flex box-card-btn">
                             <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Panier</button>
-                            <button class="btn flex-grow-1 btn-sm btn-primary-custom rounded-pill m-0 buy-now" data-id="${pdt.id_produits}"><i class="bi bi-check-circle me-2"></i>Acheter</button>
                         </div>
                     </div>
                 </a>
@@ -169,17 +168,16 @@ function afficheproduit_la_une(produits) {
                 });
 
                 // Bouton Acheter
-                item.querySelector('.buy-now').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    ajouterAuPanier({
-                        id:   pdt.id_produits,
-                        nom:  pdt.nom_produits,
-                        prix: pdt.prix_produits,
-                        img:  imageSrc
-                    });
-                    window.location.href = "/panier";
-                });
+                // item.querySelector('.buy-now').addEventListener('click', (e) => {
+                //     e.preventDefault();
+                //     e.stopPropagation();
+                //     ajouterAuPanier({
+                //         id:   pdt.id_produits,
+                //         nom:  pdt.nom_produits,
+                //         prix: pdt.prix_produits,
+                //         img:  imageSrc
+                //     });
+                // });
         });
         
         // Initialiser le carrousel après l'ajout des produits
@@ -319,7 +317,8 @@ function afficheproduits(produits) {
                     prix: pdt.prix_produits,
                     img:  imageSrc
                 });
-                window.location.href = "/panier";
+                ouvrirModal();
+                fermerDrawer();
             });
         });
     } else {
@@ -560,7 +559,8 @@ function afficheproduit_nouveaute(produits) {
                         prix: pdt.prix_produits,
                         img:  imageSrc
                     });
-                    window.location.href = "/panier";
+                    ouvrirModal();
+                    fermerDrawer();
                 });
         });
         
@@ -669,7 +669,8 @@ function afficheproduit_recents(produits) {
                         prix: pdt.prix_produits,
                         img:  imageSrc
                     });
-                    window.location.href = "/panier";
+                    ouvrirModal();
+                    fermerDrawer();
                 });
         });
         

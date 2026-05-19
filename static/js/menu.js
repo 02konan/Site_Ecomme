@@ -1,7 +1,5 @@
 // Fichier: menu.js
 
-const { filter } = require("jquery");
-
 document.addEventListener("DOMContentLoaded", () => {
     const containerMenu = document.getElementById('container-menu');
     if (containerMenu) {
@@ -90,12 +88,9 @@ function showErrorMenu(container) {
  */
 function renderCategoriesMenu(categories) {
     const container = document.getElementById('container-menu');
-    const filtre=document.getElementById('filtresCategories');
-
     if (!container) return;
 
     container.innerHTML = '';
-    filtre.innerHTML = '';
 
     categories.forEach((category, index) => {
         const categoryId = `cat-${category.id || index}`;
@@ -103,15 +98,6 @@ function renderCategoriesMenu(categories) {
 
         // Créer l'élément li principal
         const li = document.createElement('li');
-        const filterLi = document.createElement('div');
-        filterLi.className = 'form-check mb-2';
-        filterLi.innerHTML = `
-            <input class="form-check-input" type="checkbox" value="${escapeHtmlSafe(category.id)}" id="filter-${categoryId}">
-            <label class="form-check-label" for="filter-${categoryId}">
-                ${escapeHtmlSafe(category.nom)}
-            </label>
-        `;
-        filtre.appendChild(filterLi);
 
         // Créer le bouton de niveau 1
         const button = document.createElement('button');
@@ -214,7 +200,6 @@ function renderCategoriesMenu(categories) {
         }
 
         container.appendChild(li);
-        
     });
 
     // Réinitialiser les événements du menu après le rendu

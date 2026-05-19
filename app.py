@@ -136,6 +136,7 @@ def login():
 @app.route('/menu')
 def menu():
     data = get_categories_with_subcategories()
+    print("Données récupérées pour le menu:", data)
     if isinstance(data, dict) and not data.get('success', True):
         return jsonify({"error": data.get('error', 'Erreur inconnue')}), 500
     
