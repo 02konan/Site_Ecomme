@@ -222,27 +222,26 @@ def get_user_id(user_id):
         return f"erreur get_user_id: {e}"
 
 def get_search_results(query):
+    if len(query) < 2:
+        return []
     try:
         with connexion() as conn:
             with conn.cursor() as cursor:
                 sql = """
                     SELECT 
-                        p.id_produits,
-                        p.nom_produits,
-                        p.descriptin_produits,
-                        p.prix_produits,        -- ← nom exact attendu par le JS
-                        p.id_categorie,
-                        c.nom_categorie AS categories,
-                        pi.url_image    AS img_produits
+                        p.id          AS id_produits,
+                        p.nom         AS nom_produits,
+                        p.description AS descriptin_produits,
+                        p.prix        AS prix_produits,
+                        pi.url_image  AS img_produits
                     FROM produits p
-                    LEFT JOIN produit_images pi ON p.id_produits = pi.id_produit
-                    LEFT JOIN categories c      ON p.id_categorie = c.id_categorie
-                    WHERE pi.est_principale = 1 
-                      AND (p.nom_produits LIKE %s OR p.descriptin_produits LIKE %s)
-                    ORDER BY c.nom_categorie
-                    LIMIT 40
+                    LEFT JOIN produit_images pi ON p.id = pi.id_produit
+                    WHERE pi.est_principale = 1
+                    AND (LOWER(p.nom) LIKE LOWER(%s) OR LOWER(p.description) LIKE LOWER(%s))
+                    ORDER BY p.nom ASC
+                    LIMIT 40;
                 """
-                like_query = f"%{query}%"
+                like_query = f"{query[:3].lower()}%" 
                 cursor.execute(sql, (like_query, like_query))
                 return cursor.fetchall()
     except Exception as e:

@@ -136,7 +136,6 @@ def login():
 @app.route('/menu')
 def menu():
     data = get_categories_with_subcategories()
-    print("Données récupérées pour le menu:", data)
     if isinstance(data, dict) and not data.get('success', True):
         return jsonify({"error": data.get('error', 'Erreur inconnue')}), 500
     
@@ -352,7 +351,18 @@ def categorie(id_categorie):
 @app.route('/api/search', methods=['GET'])
 def search():
     data=get_search_results(request.args.get('query', ''))
-    return jsonify({"data": data})
+    table=[]
+    if data:
+            for i in data:
+                information={
+                "id_produits":i[0],
+                "nom_produits":i[1],
+                "descriptin_produits":i[2],
+                "prix_produits":i[3],
+                "img_produits": i[4]
+                }
+                table.append(information)
+    return jsonify({"data": table})
 
 @app.route('/logout', methods=['GET'])
 def logout():
