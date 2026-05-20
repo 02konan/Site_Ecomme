@@ -25,9 +25,12 @@ function supprimerDuPanier(id) {
     savePanier(panier);
 }
 
-function modifierQuantite(id, quantite) {
+function modifierQuantites(id, quantite) {
+
+    console.log('>>>', id);
+    
     const panier = getPanier();
-    const index = panier.findIndex(p => p.id === id);
+    const index = panier.findIndex(p => p.id == id);
     if (index !== -1) {
         if (quantite <= 0) {
             supprimerDuPanier(id);
@@ -91,24 +94,28 @@ function renderDrawer() {
         return;
     }
 
-    body.innerHTML = panier.map(p => `
+    body.innerHTML = panier.map(p => {
+        // Debug : vérifier que p.id existe
+        console.log('Produit dans le panier:', p);
+        
+        return `
         <div class="d-flex gap-3 align-items-center border rounded-3 p-2">
             <img src="${p.img}" 
                  style="width:56px;height:56px;object-fit:cover;border-radius:8px;"
                  onerror="this.src='/static/img/default_1.png'">
             <div class="flex-grow-1">
-                <div class="small fw-500">${escapeHtml(p.nom)}</div>
+                <div class="small fw-500">${p.nom}</div>
                 <div class="text-muted" style="font-size:12px;">
                     FCFA ${parseFloat(p.prix).toLocaleString("fr-FR")}
                 </div>
                 <div class="d-flex align-items-center gap-2 mt-1">
                     <button class="btn btn-sm btn-outline-secondary rounded-circle p-0"
                             style="width:24px;height:24px;line-height:1;"
-                            onclick="modifierQuantite(${p.id}, ${p.quantite - 1}); renderDrawer();">−</button>
+                            onclick="modifierQuantites(${p.id}, ${p.quantite - 1}); renderDrawer();">−</button>
                     <span class="small fw-500">${p.quantite}</span>
                     <button class="btn btn-sm btn-outline-secondary rounded-circle p-0"
                             style="width:24px;height:24px;line-height:1;"
-                            onclick="modifierQuantite(${p.id}, ${p.quantite + 1}); renderDrawer();">+</button>
+                            onclick="modifierQuantites(${p.id}, ${p.quantite + 1}); renderDrawer();">+</button>
                 </div>
             </div>
             <button class="btn btn-sm text-danger"
@@ -116,7 +123,7 @@ function renderDrawer() {
                 <i class="bi bi-trash"></i>
             </button>
         </div>
-    `).join("");
+    `}).join("");
 }
 
 // =====================
