@@ -20,7 +20,7 @@ def generer_code_comande():
         print(f"Erreur generer_code_comande: {e}")
         return None
 
-def creat_commande(client, adresse, ville, panier, montant_total, frais_livraisons, notes):
+def creat_commande(client, adresse, ville, panier, montant_total, frais_livraisons):
     try:
         with connexion() as conn:
             with conn.cursor() as cursor:
@@ -55,7 +55,7 @@ def creat_commande(client, adresse, ville, panier, montant_total, frais_livraiso
                     INSERT INTO livraisons (id_commande, adresse, commune,quartier,frais_livraison,notes, statut)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """
-                cursor.execute(sql_livraison, (id_commande, adresse, ville, client['quartier'], frais_livraisons, notes, "en_preparation"))
+                cursor.execute(sql_livraison, (id_commande, adresse, ville, client['quartier'], frais_livraisons, client['notes'], "en_preparation"))
 
             conn.commit()
             return True
