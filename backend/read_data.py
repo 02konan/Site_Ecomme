@@ -159,7 +159,7 @@ def liste_produits_categorie(id_categorie):
                         LEFT JOIN categories 
                             ON sous_categories.id_categorie = categories.id
 
-                        WHERE pi.est_principale = 1 AND categories.id = %s
+                        WHERE pi.est_principale = 1 AND sous_categories.id = %s
 
                     ) AS t
                     ORDER BY t.sous_categories ASC;

@@ -302,6 +302,7 @@ def commande():
         # id_client = session.get("user_id")
         client    = data.get("client")
         panier    = data.get("panier")
+        frais     = data.get("frais_livraison")
         total     = data.get("total")
         # if not id_client:
         #     return jsonify({"success": False, "error": "Non connecté"}), 401
@@ -316,7 +317,8 @@ def commande():
                 adresse,
                 ville,
                 panier,
-               total
+                frais,
+                total
             )
         return jsonify({"success": True})
 

@@ -136,55 +136,70 @@
 
     <!-- Étape 1 : Formulaire livraison -->
     <div class="modal-step" id="step1">
-    <div class="modal-header-cmd">
-        <h2>Informations de livraison</h2>
-        <button onclick="fermerModal()" class="btn btn-sm"><i class="bi bi-x-lg"></i></button>
-    </div>
-    <div class="modal-body-cmd">
-        <div class="mb-3">
-            <label class="form-label">Nom complet</label>
-            <input type="text" class="form-control rounded-pill" id="cmd-nom" placeholder="Ex: Kouassi Jean" value="{{ prefill_nom or '' }}">
+        <div class="modal-header-cmd">
+            <h2>Informations de livraison</h2>
+            <button onclick="fermerModal()" class="btn btn-sm"><i class="bi bi-x-lg"></i></button>
         </div>
-        <div class="mb-3">
-            <label class="form-label">Téléphone</label>
-            <input type="tel" class="form-control rounded-pill" id="cmd-tel" placeholder="Ex: 07 00 00 00 00" value="{{ prefill_tel or '' }}">
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Adresse de livraison</label>
-            <select class="form-control" id="cmd-adresse" onchange="afficherVille()">
-                <option value="">-- Choisir une commune --</option>
-                <option value="Abobo">Abobo</option>
-                <option value="Adjamé">Adjamé</option>
-                <option value="Attécoubé">Attécoubé</option>
-                <option value="Cocody">Cocody</option>
-                <option value="Koumassi">Koumassi</option>
-                <option value="Marcory">Marcory</option>
-                <option value="Plateau">Plateau</option>
-                <option value="Port-Bouët">Port-Bouët</option>
-                <option value="Treichville">Treichville</option>
-                <option value="Yopougon">Yopougon</option>
-                <option value="Bingerville">Bingerville</option>
-                <option value="Songon">Songon</option>
-                <option value="Anyama">Anyama</option>
-                <option value="autre">Autre ville...</option>
-            </select>
-        </div>
+        <div class="modal-body-cmd">
+            <div class="mb-3">
+                <label class="form-label">Nom complet <span class="text-danger">*</span></label>
+                <input type="text" class="form-control rounded-pill" id="cmd-nom" placeholder="Ex: Kouassi Jean" value="{{ prefill_nom or '' }}">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Téléphone <span class="text-danger">*</span></label>
+                <input type="tel" class="form-control rounded-pill" id="cmd-tel" maxlength="10" inputmode="numeric" placeholder="Ex: 07 00 00 00 00" value="{{ prefill_tel or '' }}">
+       
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Commune de livraison <span class="text-danger">*</span></label>
+                <select class="form-control" id="cmd-adresse" onchange="afficherVille()">
+                    <option value="">-- Choisir une commune --</option>
+                    <option value="Abobo"        data-frais="1500">Abobo — Livraison 1 500 FCFA</option>
+                    <option value="Anani"        data-frais="2000">Anani — Livraison 2 000 FCFA</option>
+                    <option value="Adjamé"       data-frais="1500">Adjamé — Livraison 1 500 FCFA</option>
+                    <option value="Attécoubé"    data-frais="1500">Attécoubé — Livraison 1 500 FCFA</option>
+                    <option value="Cocody"       data-frais="1500">Cocody — Livraison 1 500 FCFA</option>
+                    <option value="Grand Bassam" data-frais="2000">Grand Bassam — Livraison 2 000 FCFA</option>
+                    <option value="Koumassi"     data-frais="1500">Koumassi — Livraison 1 500 FCFA</option>
+                    <option value="Marcory"      data-frais="1500">Marcory — Livraison 1 500 FCFA</option>
+                    <option value="Plateau"      data-frais="1500">Plateau — Livraison 1 500 FCFA</option>
+                    <option value="Port-Bouët"   data-frais="1500">Port-Bouët — Livraison 1 500 FCFA</option>
+                    <option value="Treichville"  data-frais="1500">Treichville — Livraison 1 500 FCFA</option>
+                    <option value="Yopougon"     data-frais="1500">Yopougon — Livraison 1 500 FCFA</option>
+                    <option value="Bingerville"  data-frais="1500">Bingerville — Livraison 1 500 FCFA</option>
+                    <option value="Songon"       data-frais="2000">Songon — Livraison 2 000 FCFA</option>
+                    <option value="Anyama"       data-frais="2000">Anyama — Livraison 2 000 FCFA</option>
+                    <option value="Autres"        data-frais="2500">Autres villes (Expedition) — Livraison 2 500 FCFA</option>
+                </select>
+            </div>
 
-        <!-- Champ Ville caché par défaut -->
-        <div class="mb-3" id="div-ville" style="display:none;">
-            <label class="form-label">Ville</label>
-            <input type="text" class="form-control rounded-pill" id="cmd-ville" placeholder="Ex: Bouaké, San Pedro...">
+            <!-- Champ Ville caché par défaut -->
+            <div class="mb-3" id="div-ville" style="display:none;">
+                <label class="form-label">Ville <span class="text-danger">*</span></label>
+                <input type="text" class="form-control rounded-pill" id="cmd-ville" placeholder="Ex: Bouaké, San Pedro...">
+            </div>
+
+            <!-- Champ Quartier -->
+            <div class="mb-3">
+                <label class="form-label">Quartier <span class="text-danger">*</span></label>
+                <input type="text" class="form-control rounded-pill" id="cmd-quartier" placeholder="Ex: Angré, Deux Plateaux, Zone 4...">
+            </div>
+
+            <!-- Notes supplémentaires -->
+            <div class="mb-3">
+                <label class="form-label">Notes supplémentaires <span class="text-muted" style="font-size:0.8rem;">(facultatif)</span></label>
+                <textarea class="form-control" id="cmd-notes" rows="3" placeholder="Ex: Bâtiment bleu, 2ème étage, près de la pharmacie..."></textarea>
+            </div>
+        </div>
+        <div class="modal-footer-cmd">
+            <button onclick="allerStep2()" class="btn btn-dark rounded-pill w-100">
+                Continuer →
+            </button>
+            <button onclick="fermerModal()" class="btn btn-outline-secondary rounded-pill w-100 mb-2">
+                Annuler
+            </button>
         </div>
     </div>
-    <div class="modal-footer-cmd">
-        <button onclick="allerStep2()" class="btn btn-dark rounded-pill w-100">
-            Continuer →
-        </button>
-        <button onclick="fermerModal()" class="btn btn-outline-secondary rounded-pill w-100 mb-2">
-            Annuler
-        </button>
-    </div>
-</div>
 
     <!-- Étape 2 : Récapitulatif -->
     <div class="modal-step" id="step2" style="display:none;">
