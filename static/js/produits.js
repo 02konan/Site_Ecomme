@@ -109,9 +109,29 @@ function afficheproduit_la_une(produits) {
     
     if (produitsLimit && produitsLimit.length > 0) {
         produitsLimit.forEach(pdt => {
-            const prixActuel = pdt.prix_produits;
-            const prixAvant = Math.round(prixActuel * 1.25);
-            const reduction = Math.round(((prixAvant - prixActuel) / prixAvant) * 100);
+            const typeReduction = pdt.type;
+            const reduction = Number(pdt.reduction) || 0;
+            const prixActuel = Number(pdt.prix_produits);
+
+            let prixAvant = prixActuel;
+            let pourcentage = 0;
+
+            if (typeReduction === "montant") {
+
+                prixAvant = prixActuel + reduction;
+
+                pourcentage = Math.round(
+                    ((prixAvant - prixActuel) / prixAvant) * 100
+                );
+
+            } else if (typeReduction === "pourcentage") {
+
+                pourcentage = reduction;
+
+                prixAvant = Math.round(
+                    prixActuel / (1 - pourcentage / 100)
+                );
+            }
             const imageSrc = pdt.img_produits
                 ? (/^https?:\/\//i.test(pdt.img_produits) ? pdt.img_produits : `${window.urlProduitImage}${pdt.img_produits}`)
                 : `/static/img/default_1.png`;
@@ -122,39 +142,103 @@ function afficheproduit_la_une(produits) {
             item.innerHTML = `
                 <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
                     <div class="product-card">
-                        <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction"> -${reduction}%</span>
-                        <button class="like" 
-                                data-favori-id="${pdt.id_produits}"
-                                onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
-                                    id: ${pdt.id_produits},
-                                    nom: '${escapeHtml(pdt.nom_produits)}',
-                                    prix: ${prixActuel},
-                                    image: '${imageSrc}'
-                                })">
-                                <i class="${favoris.some(f => f.id === pdt.id_produits) ? 'bi bi-heart-fill' : 'bi bi-heart'}" 
-                                style="${favoris.some(f => f.id === pdt.id_produits) ? 'color: gold;' : ''}"></i>            
+
+                        ${
+                            pourcentage > 0
+                                ? `<span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">
+                                    -${pourcentage}%
+                                </span>`
+                                : ""
+                        }
+
+                        <button 
+                            class="like"
+                            data-favori-id="${pdt.id_produits}"
+                            onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
+                                id: ${pdt.id_produits},
+                                nom: '${escapeHtml(pdt.nom_produits)}',
+                                prix: ${prixActuel},
+                                image: '${imageSrc}'
+                            })"
+                        >
+                            <i 
+                                class="${
+                                    favoris.some(f => f.id === pdt.id_produits)
+                                        ? 'bi bi-heart-fill'
+                                        : 'bi bi-heart'
+                                }"
+                                style="${
+                                    favoris.some(f => f.id === pdt.id_produits)
+                                        ? 'color: gold;'
+                                        : ''
+                                }"
+                            ></i>
                         </button>
-                        <img src="${imageSrc}" class="product-img" loading="lazy">
+
+                        <img 
+                            src="${imageSrc}" 
+                            class="product-img" 
+                            loading="lazy"
+                        >
+
                         <div class="product-body d-flex">
+
                             <div class="col-8">
-                                <div class="product-title">${escapeHtml(pdt.nom_produits)}</div>
-                                <p class="small product-desc text-muted">${escapeHtml(pdt.descriptin_produits || '')}</p>
+                                <div class="product-title">
+                                    ${escapeHtml(pdt.nom_produits)}
+                                </div>
+
+                                <p class="small product-desc text-muted">
+                                    ${escapeHtml(pdt.descriptin_produits || '')}
+                                </p>
+
                                 <div class="product-star d-flex gap-1">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i><i class="bi bi-star"></i>
-                                    <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">3.2</span>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-half"></i>
+
+                                    <span 
+                                        class="ms-2"
+                                        style="color:var(--text-secondary);font-weight:500;"
+                                    >
+                                        4.7
+                                    </span>
                                 </div>
                             </div>
-                            <div class="col-4 d-flex flex- ps-1">
-                                <div class="product-price ms-auto">FCFA ${prixActuel} <br/> <span class="text-decoration-line-through text-muted">FCFA ${prixAvant}</span></div>
+
+                            <div class="col-4 d-flex flex-column ps-1">
+                                <div class="product-price ms-auto">
+                                    FCFA ${prixActuel}
+
+                                    ${
+                                        prixAvant > prixActuel
+                                            ? `<br>
+                                            <span class="text-decoration-line-through text-muted">
+                                                FCFA ${prixAvant}
+                                            </span>`
+                                            : ""
+                                    }
+                                </div>
                             </div>
+
                         </div>
+
                         <div class="d-flex box-card-btn">
-                            <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Commander
+                            <button 
+                                class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart"
+                                data-id="${pdt.id_produits}"
+                            >
+                                <i class="bi bi-cart me-2"></i>
+                                Commander
                             </button>
                         </div>
+
                     </div>
                 </a>
-            `;
+                `;
+
             container.appendChild(item);
             // Bouton Panier
                 item.querySelector('.add-to-cart').addEventListener('click', (e) => {
@@ -207,6 +291,7 @@ function Produits() {
             console.error("Erreur produits:", err);
         });
 }
+
 function afficheproduits(produits) {
     const container = document.getElementById("listeProduits");
     if (!container) return;
@@ -222,11 +307,33 @@ function afficheproduits(produits) {
         }
 
         let categorieActuelle = null; 
+      
+       
 
         produitsLimit.forEach(pdt => {
-            const prixActuel = pdt.prix_produits;
-            const prixAvant = Math.round(prixActuel * 1.25);
-            const reduction = Math.round(((prixAvant - prixActuel) / prixAvant) * 100);
+            const typeReduction = pdt.type;
+            const reduction = Number(pdt.reduction) || 0;
+            const prixActuel = Number(pdt.prix_produits);
+
+            let prixAvant = prixActuel;
+            let pourcentage = 0;
+
+            if (typeReduction === "montant") {
+
+                prixAvant = prixActuel + reduction;
+
+                pourcentage = Math.round(
+                    ((prixAvant - prixActuel) / prixAvant) * 100
+                );
+
+            } else if (typeReduction === "pourcentage") {
+
+                pourcentage = reduction;
+
+                prixAvant = Math.round(
+                    prixActuel / (1 - pourcentage / 100)
+                );
+            }
             const imageSrc = pdt.img_produits
                 ? (/^https?:\/\//i.test(pdt.img_produits) ? pdt.img_produits : `${window.urlProduitImage}${pdt.img_produits}`)
                 : `/static/img/default_1.png`;
@@ -255,44 +362,105 @@ function afficheproduits(produits) {
 
             const item = document.createElement("div");
             item.className = "col-12 col-sm-6 col-md-4 col-lg-3";
+                item.innerHTML = `
+                <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
+                    <div class="product-card">
 
+                        ${
+                            pourcentage > 0
+                                ? `<span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">
+                                    -${pourcentage}%
+                                </span>`
+                                : ""
+                        }
 
-            item.innerHTML = `
-    <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
-        <div class="product-card">
-            <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction"> -${reduction}%</span>
-            <button class="like" 
-                    data-favori-id="${pdt.id_produits}"
-                    onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
-                        id: ${pdt.id_produits},
-                        nom: '${escapeHtml(pdt.nom_produits)}',
-                        prix: ${prixActuel},
-                        image: '${imageSrc}'
-                    })">
-                    <i class="${favoris.some(f => f.id === pdt.id_produits) ? 'bi bi-heart-fill' : 'bi bi-heart'}" 
-                    style="${favoris.some(f => f.id === pdt.id_produits) ? 'color: gold;' : ''}"></i>            
-            </button>
-            <img src="${imageSrc}" class="product-img" loading="lazy">
-            <div class="product-body d-flex">
-                <div class="col-8">
-                    <div class="product-title">${escapeHtml(pdt.nom_produits)}</div>
-                    <p class="small product-desc text-muted">${escapeHtml(pdt.descriptin_produits || '')}</p>
-                    <div class="product-star d-flex gap-1">
-                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
-                        <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.7</span>
+                        <button 
+                            class="like"
+                            data-favori-id="${pdt.id_produits}"
+                            onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
+                                id: ${pdt.id_produits},
+                                nom: '${escapeHtml(pdt.nom_produits)}',
+                                prix: ${prixActuel},
+                                image: '${imageSrc}'
+                            })"
+                        >
+                            <i 
+                                class="${
+                                    favoris.some(f => f.id === pdt.id_produits)
+                                        ? 'bi bi-heart-fill'
+                                        : 'bi bi-heart'
+                                }"
+                                style="${
+                                    favoris.some(f => f.id === pdt.id_produits)
+                                        ? 'color: gold;'
+                                        : ''
+                                }"
+                            ></i>
+                        </button>
+
+                        <img 
+                            src="${imageSrc}" 
+                            class="product-img" 
+                            loading="lazy"
+                        >
+
+                        <div class="product-body d-flex">
+
+                            <div class="col-8">
+                                <div class="product-title">
+                                    ${escapeHtml(pdt.nom_produits)}
+                                </div>
+
+                                <p class="small product-desc text-muted">
+                                    ${escapeHtml(pdt.descriptin_produits || '')}
+                                </p>
+
+                                <div class="product-star d-flex gap-1">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-half"></i>
+
+                                    <span 
+                                        class="ms-2"
+                                        style="color:var(--text-secondary);font-weight:500;"
+                                    >
+                                        4.7
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-4 d-flex flex-column ps-1">
+                                <div class="product-price ms-auto">
+                                    FCFA ${prixActuel}
+
+                                    ${
+                                        prixAvant > prixActuel
+                                            ? `<br>
+                                            <span class="text-decoration-line-through text-muted">
+                                                FCFA ${prixAvant}
+                                            </span>`
+                                            : ""
+                                    }
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="d-flex box-card-btn">
+                            <button 
+                                class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart"
+                                data-id="${pdt.id_produits}"
+                            >
+                                <i class="bi bi-cart me-2"></i>
+                                Commander
+                            </button>
+                        </div>
+
                     </div>
-                </div>
-                <div class="col-4 d-flex flex-column ps-1">
-                    <div class="product-price ms-auto">FCFA ${prixActuel} <br/> <span class="text-decoration-line-through text-muted">FCFA ${prixAvant}</span></div>
-                </div>
-            </div>
-            <div class="d-flex box-card-btn">
-                <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Commander</button>
-            </div>
-        </div>
-    </a>
-`;
-
+                </a>
+                `;
             container.appendChild(item);
 
             // Bouton Panier
@@ -361,9 +529,29 @@ function afficheNosProduits(produits) {
         // let categorieActuelle = null; 
 
         produitsLimit.forEach(pdt => {
-            const prixActuel = pdt.prix_produits;
-            const prixAvant = Math.round(prixActuel * 1.25);
-            const reduction = Math.round(((prixAvant - prixActuel) / prixAvant) * 100);
+            const typeReduction = pdt.type;
+            const reduction = Number(pdt.reduction) || 0;
+            const prixActuel = Number(pdt.prix_produits);
+
+            let prixAvant = prixActuel;
+            let pourcentage = 0;
+
+            if (typeReduction === "montant") {
+
+                prixAvant = prixActuel + reduction;
+
+                pourcentage = Math.round(
+                    ((prixAvant - prixActuel) / prixAvant) * 100
+                );
+
+            } else if (typeReduction === "pourcentage") {
+
+                pourcentage = reduction;
+
+                prixAvant = Math.round(
+                    prixActuel / (1 - pourcentage / 100)
+                );
+            }
             const imageSrc = pdt.img_produits
                 ? (/^https?:\/\//i.test(pdt.img_produits) ? pdt.img_produits : `${window.urlProduitImage}${pdt.img_produits}`)
                 : `/static/img/default_1.png`;
@@ -392,44 +580,106 @@ function afficheNosProduits(produits) {
 
             const item = document.createElement("div");
             item.className = "col-12 col-sm-6 col-md-4 col-lg-3";
+            item.className = "col-12 col-sm-6 col-md-4 col-lg-3";
+                            item.innerHTML = `
+                            <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
+                                <div class="product-card">
 
+                                    ${
+                                        pourcentage > 0
+                                            ? `<span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">
+                                                -${pourcentage}%
+                                            </span>`
+                                            : ""
+                                    }
 
-            item.innerHTML = `
-    <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
-        <div class="product-card">
-            <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction"> -${reduction}%</span>
-            <button class="like" 
-                    data-favori-id="${pdt.id_produits}"
-                    onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
-                        id: ${pdt.id_produits},
-                        nom: '${escapeHtml(pdt.nom_produits)}',
-                        prix: ${prixActuel},
-                        image: '${imageSrc}'
-                    })">
-                    <i class="${favoris.some(p => p.id === pdt.id_produits) ? 'bi bi-heart-fill' : 'bi bi-heart'}" 
-                    style="${favoris.some(p => p.id === pdt.id_produits) ? 'color: gold;' : ''}"></i>            
-            </button>
-            <img src="${imageSrc}" class="product-img" loading="lazy">
-            <div class="product-body d-flex">
-                <div class="col-8">
-                    <div class="product-title">${escapeHtml(pdt.nom_produits)}</div>
-                    <p class="small product-desc text-muted">${escapeHtml(pdt.descriptin_produits || '')}</p>
-                    <div class="product-star d-flex gap-1">
-                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
-                        <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.7</span>
+                                    <button 
+                                        class="like"
+                            data-favori-id="${pdt.id_produits}"
+                            onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
+                                id: ${pdt.id_produits},
+                                nom: '${escapeHtml(pdt.nom_produits)}',
+                                prix: ${prixActuel},
+                                image: '${imageSrc}'
+                            })"
+                        >
+                            <i 
+                                class="${
+                                    favoris.some(f => f.id === pdt.id_produits)
+                                        ? 'bi bi-heart-fill'
+                                        : 'bi bi-heart'
+                                }"
+                                style="${
+                                    favoris.some(f => f.id === pdt.id_produits)
+                                        ? 'color: gold;'
+                                        : ''
+                                }"
+                            ></i>
+                        </button>
+
+                        <img 
+                            src="${imageSrc}" 
+                            class="product-img" 
+                            loading="lazy"
+                        >
+
+                        <div class="product-body d-flex">
+
+                            <div class="col-8">
+                                <div class="product-title">
+                                    ${escapeHtml(pdt.nom_produits)}
+                                </div>
+
+                                <p class="small product-desc text-muted">
+                                    ${escapeHtml(pdt.descriptin_produits || '')}
+                                </p>
+
+                                <div class="product-star d-flex gap-1">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-half"></i>
+
+                                    <span 
+                                        class="ms-2"
+                                        style="color:var(--text-secondary);font-weight:500;"
+                                    >
+                                        4.7
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-4 d-flex flex-column ps-1">
+                                <div class="product-price ms-auto">
+                                    FCFA ${prixActuel}
+
+                                    ${
+                                        prixAvant > prixActuel
+                                            ? `<br>
+                                            <span class="text-decoration-line-through text-muted">
+                                                FCFA ${prixAvant}
+                                            </span>`
+                                            : ""
+                                    }
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="d-flex box-card-btn">
+                            <button 
+                                class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart"
+                                data-id="${pdt.id_produits}"
+                            >
+                                <i class="bi bi-cart me-2"></i>
+                                Commander
+                            </button>
+                        </div>
+
                     </div>
-                </div>
-                <div class="col-4 d-flex flex-column ps-1">
-                    <div class="product-price ms-auto">FCFA ${prixActuel} <br/> <span class="text-decoration-line-through text-muted">FCFA ${prixAvant}</span></div>
-                </div>
-            </div>
-            <div class="d-flex box-card-btn">
-                <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Commander</button>
-            </div>
-        </div>
-    </a>
-`;
-
+                </a>
+                `;
             container.appendChild(item);
 
             // Bouton Panier
@@ -488,52 +738,134 @@ function afficheproduit_nouveaute(produits) {
 
     if (produitsLimit && produitsLimit.length > 0) {
         produitsLimit.forEach(pdt => {
-            const prixActuel = pdt.prix_produits;
-            const prixAvant = Math.round(prixActuel * 1.25);
-            const reduction = Math.round(((prixAvant - prixActuel) / prixAvant) * 100);
+           const typeReduction = pdt.type;
+            const reduction = Number(pdt.reduction) || 0;
+            const prixActuel = Number(pdt.prix_produits);
+
+            let prixAvant = prixActuel;
+            let pourcentage = 0;
+
+            if (typeReduction === "montant") {
+
+                prixAvant = prixActuel + reduction;
+
+                pourcentage = Math.round(
+                    ((prixAvant - prixActuel) / prixAvant) * 100
+                );
+
+            } else if (typeReduction === "pourcentage") {
+
+                pourcentage = reduction;
+
+                prixAvant = Math.round(
+                    prixActuel / (1 - pourcentage / 100)
+                );
+            }
             const imageSrc = pdt.img_produits
                 ? (/^https?:\/\//i.test(pdt.img_produits) ? pdt.img_produits : `${window.urlProduitImage}${pdt.img_produits}`)
                 : `/static/img/default_1.png`;
 
             const item = document.createElement("div");
             item.className = "products-carousel-slide";
-
-            item.innerHTML = `
+      item.innerHTML = `
                 <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
                     <div class="product-card">
-                        <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction"> -${reduction}%</span>
-                        <button class="like" 
-                                data-favori-id="${pdt.id_produits}"
-                                onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
-                                    id: ${pdt.id_produits},
-                                    nom: '${escapeHtml(pdt.nom_produits)}',
-                                    prix: ${prixActuel},
-                                    image: '${imageSrc}'
-                                })">
-                                <i class="${favoris.some(f => f.id === pdt.id_produits) ? 'bi bi-heart-fill' : 'bi bi-heart'}" 
-                                style="${favoris.some(f => f.id === pdt.id_produits) ? 'color: gold;' : ''}"></i>            
+
+                        ${
+                            pourcentage > 0
+                                ? `<span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">
+                                    -${pourcentage}%
+                                </span>`
+                                : ""
+                        }
+
+                        <button 
+                            class="like"
+                            data-favori-id="${pdt.id_produits}"
+                            onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
+                                id: ${pdt.id_produits},
+                                nom: '${escapeHtml(pdt.nom_produits)}',
+                                prix: ${prixActuel},
+                                image: '${imageSrc}'
+                            })"
+                        >
+                            <i 
+                                class="${
+                                    favoris.some(f => f.id === pdt.id_produits)
+                                        ? 'bi bi-heart-fill'
+                                        : 'bi bi-heart'
+                                }"
+                                style="${
+                                    favoris.some(f => f.id === pdt.id_produits)
+                                        ? 'color: gold;'
+                                        : ''
+                                }"
+                            ></i>
                         </button>
-                        <img src="${imageSrc}" class="product-img" loading="lazy">
+
+                        <img 
+                            src="${imageSrc}" 
+                            class="product-img" 
+                            loading="lazy"
+                        >
+
                         <div class="product-body d-flex">
+
                             <div class="col-8">
-                                <div class="product-title">${escapeHtml(pdt.nom_produits)}</div>
-                                <p class="small product-desc text-muted">${escapeHtml(pdt.descriptin_produits || '')}</p>
+                                <div class="product-title">
+                                    ${escapeHtml(pdt.nom_produits)}
+                                </div>
+
+                                <p class="small product-desc text-muted">
+                                    ${escapeHtml(pdt.descriptin_produits || '')}
+                                </p>
+
                                 <div class="product-star d-flex gap-1">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i><i class="bi bi-star"></i>
-                                    <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">3.2</span>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-half"></i>
+
+                                    <span 
+                                        class="ms-2"
+                                        style="color:var(--text-secondary);font-weight:500;"
+                                    >
+                                        4.7
+                                    </span>
                                 </div>
                             </div>
-                            <div class="col-4 d-flex flex-column">
-                                <div class="product-price ms-auto">FCFA ${prixActuel}<br/><span class="text-decoration-line-through text-muted">FCFA ${prixAvant}</span></div>
+
+                            <div class="col-4 d-flex flex-column ps-1">
+                                <div class="product-price ms-auto">
+                                    FCFA ${prixActuel}
+
+                                    ${
+                                        prixAvant > prixActuel
+                                            ? `<br>
+                                            <span class="text-decoration-line-through text-muted">
+                                                FCFA ${prixAvant}
+                                            </span>`
+                                            : ""
+                                    }
+                                </div>
                             </div>
+
                         </div>
+
                         <div class="d-flex box-card-btn">
-                            <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Commander</button>
+                            <button 
+                                class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart"
+                                data-id="${pdt.id_produits}"
+                            >
+                                <i class="bi bi-cart me-2"></i>
+                                Commander
+                            </button>
                         </div>
+
                     </div>
                 </a>
-                    
-            `;
+                `;
             container.appendChild(item);
             // Bouton Panier
                 item.querySelector('.add-to-cart').addEventListener('click', (e) => {
@@ -597,9 +929,29 @@ function afficheproduit_recents(produits) {
 
     if (produitsLimit && produitsLimit.length > 0) {
         produitsLimit.forEach(pdt => {
-            const prixActuel = pdt.prix_produits;
-            const prixAvant = Math.round(prixActuel * 1.25);
-            const reduction = Math.round(((prixAvant - prixActuel) / prixAvant) * 100);
+             const typeReduction = pdt.type;
+            const reduction = Number(pdt.reduction) || 0;
+            const prixActuel = Number(pdt.prix_produits);
+
+            let prixAvant = prixActuel;
+            let pourcentage = 0;
+
+            if (typeReduction === "montant") {
+
+                prixAvant = prixActuel + reduction;
+
+                pourcentage = Math.round(
+                    ((prixAvant - prixActuel) / prixAvant) * 100
+                );
+
+            } else if (typeReduction === "pourcentage") {
+
+                pourcentage = reduction;
+
+                prixAvant = Math.round(
+                    prixActuel / (1 - pourcentage / 100)
+                );
+            }
             const imageSrc = pdt.img_produits
                 ? (/^https?:\/\//i.test(pdt.img_produits) ? pdt.img_produits : `${window.urlProduitImage}${pdt.img_produits}`)
                 : `/static/img/default_1.png`;
@@ -610,39 +962,103 @@ function afficheproduit_recents(produits) {
             item.innerHTML = `
                 <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
                     <div class="product-card">
-                        <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction"> -${reduction}%</span>
-                        <button class="like" 
-                                data-favori-id="${pdt.id_produits}"
-                                onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
-                                    id: ${pdt.id_produits},
-                                    nom: '${escapeHtml(pdt.nom_produits)}',
-                                    prix: ${prixActuel},
-                                    image: '${imageSrc}'
-                                })">
-                                <i class="${favoris.some(f => f.id === pdt.id_produits) ? 'bi bi-heart-fill' : 'bi bi-heart'}" 
-                                style="${favoris.some(f => f.id === pdt.id_produits) ? 'color: gold;' : ''}"></i>            
+
+                        ${
+                            pourcentage > 0
+                                ? `<span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">
+                                    -${pourcentage}%
+                                </span>`
+                                : ""
+                        }
+
+                        <button 
+                            class="like"
+                            data-favori-id="${pdt.id_produits}"
+                            onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
+                                id: ${pdt.id_produits},
+                                nom: '${escapeHtml(pdt.nom_produits)}',
+                                prix: ${prixActuel},
+                                image: '${imageSrc}'
+                            })"
+                        >
+                            <i 
+                                class="${
+                                    favoris.some(f => f.id === pdt.id_produits)
+                                        ? 'bi bi-heart-fill'
+                                        : 'bi bi-heart'
+                                }"
+                                style="${
+                                    favoris.some(f => f.id === pdt.id_produits)
+                                        ? 'color: gold;'
+                                        : ''
+                                }"
+                            ></i>
                         </button>
-                        <img src="${imageSrc}" class="product-img" loading="lazy">
+
+                        <img 
+                            src="${imageSrc}" 
+                            class="product-img" 
+                            loading="lazy"
+                        >
+
                         <div class="product-body d-flex">
+
                             <div class="col-8">
-                                <div class="product-title">${escapeHtml(pdt.nom_produits)}</div>
-                                <p class="small product-desc text-muted">${escapeHtml(pdt.descriptin_produits || '')}</p>
+                                <div class="product-title">
+                                    ${escapeHtml(pdt.nom_produits)}
+                                </div>
+
+                                <p class="small product-desc text-muted">
+                                    ${escapeHtml(pdt.descriptin_produits || '')}
+                                </p>
+
                                 <div class="product-star d-flex gap-1">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i><i class="bi bi-star"></i>
-                                    <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">3.2</span>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-half"></i>
+
+                                    <span 
+                                        class="ms-2"
+                                        style="color:var(--text-secondary);font-weight:500;"
+                                    >
+                                        4.7
+                                    </span>
                                 </div>
                             </div>
-                            <div class="col-4 d-flex flex-column">
-                                <div class="product-price ms-auto">FCFA ${prixActuel}<br/><span class="text-decoration-line-through text-muted">FCFA ${prixAvant}</span></div>
+
+                            <div class="col-4 d-flex flex-column ps-1">
+                                <div class="product-price ms-auto">
+                                    FCFA ${prixActuel}
+
+                                    ${
+                                        prixAvant > prixActuel
+                                            ? `<br>
+                                            <span class="text-decoration-line-through text-muted">
+                                                FCFA ${prixAvant}
+                                            </span>`
+                                            : ""
+                                    }
+                                </div>
                             </div>
+
                         </div>
+
                         <div class="d-flex box-card-btn">
-                            <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Commander</button>
+                            <button 
+                                class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart"
+                                data-id="${pdt.id_produits}"
+                            >
+                                <i class="bi bi-cart me-2"></i>
+                                Commander
+                            </button>
                         </div>
+
                     </div>
                 </a>
-                    
-            `;
+                `;
+
             container.appendChild(item);
             // Bouton Panier
                 item.querySelector('.add-to-cart').addEventListener('click', (e) => {

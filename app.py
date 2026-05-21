@@ -183,7 +183,9 @@ def nos_produits():
                 "nom_produits":i[1],
                 "descriptin_produits":i[2],
                 "prix_produits":i[3],
-                "img_produits": i[4]
+                "img_produits": i[4],
+                "reduction": i[5],
+                "type": i[6]
                 }
                 table.append(information)
             
@@ -203,7 +205,9 @@ def produits_list():
                 "prix_produits":i[3],
                 "img_produits": i[4],
                 "categories": i[5],
-                "id_categorie": i[6]
+                "id_categorie": i[6],
+                "reduction": i[6],
+                "type": i[7],
             }
             table.append(information)
             
@@ -237,7 +241,9 @@ def produits_nouveaute():
                 "nom_produits":i[1],
                 "descriptin_produits":i[2],
                 "prix_produits":i[3],
-                "img_produits": i[4]
+                "img_produits": i[4],
+                "reduction": i[5],
+                "type": i[6]
             }
             table.append(information)
     return jsonify({"data":table})
@@ -253,7 +259,9 @@ def produit_recents():
                 "nom_produits":i[1],
                 "descriptin_produits":i[2],
                 "prix_produits":i[3],
-                "img_produits": i[4]
+                "img_produits": i[4],
+                "reduction": i[5],
+                "type": i[6]
             }
             table.append(information)
     return jsonify({"data":table})

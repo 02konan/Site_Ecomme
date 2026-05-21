@@ -8,10 +8,16 @@ def liste_produits():
         with connexion() as conn:
             with conn.cursor() as cursor:
                 cursor.execute("""
-                SELECT p.id, p.nom, p.description, p.prix, pi.url_image AS img_produits
+                SELECT p.id, p.nom, p.description, p.prix, pi.url_image AS img_produits , r.valeur AS reduction,
+                r.type AS type
                 FROM produits p
-                LEFT JOIN produit_images pi on p.id = pi.id_produit
-                WHERE pi.est_principale = 1
+                LEFT JOIN produit_images pi on p.id = pi.id_produit 
+                 LEFT JOIN reduction_produits rp
+                    ON p.id = rp.id_produit
+                LEFT JOIN reductions r
+                    ON rp.id_reduction = r.id 
+                    AND r.actif = 1
+                WHERE pi.est_principale = 1 AND p.active=1
                 ORDER BY RAND();
                                """)
                 commandes = cursor.fetchall()
@@ -25,39 +31,49 @@ def liste_Nos_produits():
             with conn.cursor() as cursor:
                 cursor.execute("""
                 SELECT *
-                    FROM (
-                        SELECT 
-                            p.id, 
-                            p.nom, 
-                            p.description, 
-                            p.prix, 
-                            pi.url_image AS img_produits,
-                            categories.nom AS categorie,
-                            categories.id AS IDCategorie,
+FROM (
+    SELECT 
+        p.id, 
+        p.nom, 
+        p.description, 
+        p.prix, 
+        pi.url_image AS img_produits,
+        categories.nom AS categorie,
+        categories.id AS IDCategorie,
+        r.valeur AS reduction,
+        r.type AS type,
 
-                            ROW_NUMBER() OVER (
-                                PARTITION BY categories.id
-                                ORDER BY RAND()
-                            ) AS rn
+        ROW_NUMBER() OVER (
+            PARTITION BY categories.id
+            ORDER BY RAND()
+        ) AS rn
 
-                        FROM produits p
+    FROM produits p
 
-                        JOIN produit_images pi 
-                            ON p.id = pi.id_produit
+    JOIN produit_images pi 
+        ON p.id = pi.id_produit
 
-                        JOIN sous_categories  
-                            ON p.id_sous_categorie = sous_categories.id
+    JOIN sous_categories 
+        ON p.id_sous_categorie = sous_categories.id
 
-                        LEFT JOIN categories 
-                            ON sous_categories.id_categorie = categories.id
+    JOIN categories
+        ON sous_categories.id_categorie = categories.id
 
-                        WHERE pi.est_principale = 1
+    LEFT JOIN reduction_produits rp
+        ON p.id = rp.id_produit
 
-                    ) AS t
+    LEFT JOIN reductions r
+        ON rp.id_reduction = r.id 
+        AND r.actif = 1
 
-                    WHERE t.rn <= 4
+    WHERE pi.est_principale = 1 
+      AND p.active = 1
 
-                    ORDER BY t.categorie ASC;
+) AS t
+
+WHERE t.rn <= 4
+
+ORDER BY t.categorie ASC;
                                """)
                 commandes = cursor.fetchall()
                 return commandes
@@ -72,7 +88,7 @@ def liste_produits_une():
                 SELECT p.id, p.nom, p.description, p.prix, pi.url_image AS img_produits
                 FROM produits p
                 LEFT JOIN produit_images pi on p.id = pi.id_produit
-                WHERE pi.est_principale = 1
+                WHERE pi.est_principale = 1 AND p.active=1
                 ORDER BY RAND();
                                """)
                 commandes = cursor.fetchall()
@@ -85,10 +101,17 @@ def liste_Nouveaute():
         with connexion() as conn:
             with conn.cursor() as cursor:
                 cursor.execute("""
-                SELECT p.id, p.nom, p.description, p.prix, pi.url_image AS img_produits
+                SELECT p.id, p.nom, p.description, p.prix, pi.url_image AS img_produits , r.valeur AS reduction,
+                r.type AS type
                 FROM produits p
                 LEFT JOIN produit_images pi on p.id = pi.id_produit
-                WHERE pi.est_principale = 1
+                LEFT JOIN reduction_produits rp
+                    ON p.id = rp.id_produit
+
+                LEFT JOIN reductions r
+                    ON rp.id_reduction = r.id 
+                    AND r.actif = 1
+                WHERE pi.est_principale = 1 AND p.active=1
                 ORDER BY p.id DESC;
                                """)
                 commandes = cursor.fetchall()
@@ -101,10 +124,16 @@ def liste_recents():
         with connexion() as conn:
             with conn.cursor() as cursor:
                 cursor.execute("""
-                SELECT p.id, p.nom, p.description, p.prix, pi.url_image AS img_produits
+               SELECT p.id, p.nom, p.description, p.prix, pi.url_image AS img_produits , r.valeur AS reduction,
+                r.type AS type
                 FROM produits p
                 LEFT JOIN produit_images pi on p.id = pi.id_produit
-                WHERE pi.est_principale = 1
+                LEFT JOIN reduction_produits rp
+                    ON p.id = rp.id_produit
+                LEFT JOIN reductions r
+                    ON rp.id_reduction = r.id 
+                    AND r.actif = 1
+                WHERE pi.est_principale = 1 AND p.active=1
                 ORDER BY p.id DESC;
                                """)
                 commandes = cursor.fetchall()
@@ -120,7 +149,7 @@ def liste_banners():
                 SELECT id, titre, description, image
                 FROM bannieres
                 WHERE active = 1
-                AND type = 'banner'
+                AND type = 'banner' AND active=1
                 ORDER BY id DESC;
                                """)
                 banners = cursor.fetchall()
@@ -159,7 +188,7 @@ def liste_produits_categorie(id_categorie):
                         LEFT JOIN categories 
                             ON sous_categories.id_categorie = categories.id
 
-                        WHERE pi.est_principale = 1 AND sous_categories.id = %s
+                        WHERE pi.est_principale = 1 AND p.active=1 AND sous_categories.id = %s
 
                     ) AS t
                     ORDER BY t.sous_categories ASC;
@@ -236,7 +265,7 @@ def get_search_results(query):
                         pi.url_image  AS img_produits
                     FROM produits p
                     LEFT JOIN produit_images pi ON p.id = pi.id_produit
-                    WHERE pi.est_principale = 1
+                    WHERE pi.est_principale = 1 AND p.active=1
                     AND (LOWER(p.nom) LIKE LOWER(%s) OR LOWER(p.description) LIKE LOWER(%s))
                     ORDER BY p.nom ASC
                     LIMIT 40;
