@@ -86,6 +86,7 @@ def liste_produits_une():
             with conn.cursor() as cursor:
                 cursor.execute("""
                 SELECT p.id, p.nom, p.description, p.prix, pi.url_image AS img_produits , r.valeur AS reduction,
+                r.type AS type
                 FROM produits p
                 LEFT JOIN produit_images pi on p.id = pi.id_produit
                 LEFT JOIN reduction_produits rp
@@ -204,11 +205,12 @@ def liste_produits_categorie(id_categorie):
                 return resultat
     except Exception as e:
         return (f"Erreur lors de la récupération des produits: {e}")
- 
+
 def details_produits(id):
     try:
         with connexion() as conn:
             with conn.cursor() as cursor:
+                # Requête produit seul
                 cursor.execute("""
                     SELECT p.id, p.nom, p.description, p.prix
                     FROM produits p
@@ -219,6 +221,15 @@ def details_produits(id):
                 if not produit:
                     return None
 
+                # Requête caractéristiques séparée
+                cursor.execute("""
+                    SELECT c.titre, c.valeur
+                    FROM caracteristiques c
+                    WHERE c.id_produit = %s
+                """, (id,))
+                caracteristiques = cursor.fetchall()
+
+                # Requête images
                 cursor.execute("""
                     SELECT url_image, est_principale
                     FROM produit_images
@@ -228,15 +239,11 @@ def details_produits(id):
                 """, (id,))
                 images = cursor.fetchall()
 
-                return produit, images
+                return produit, caracteristiques, images
+
     except Exception as e:
         print(f"Erreur details_produits: {e}")
         return None
-               
-    except Exception as e:
-        print(f"erreur get_user_id: {e}")
-        return None
-
 def get_user_id(user_id):
     try:
         with connexion() as conn:

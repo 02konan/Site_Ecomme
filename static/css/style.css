@@ -2935,3 +2935,62 @@ body.sticky-search-padding {
     line-height: 1.6;
 }
 .auth-terms a { color: var(--primary); }
+
+/* ── Caractéristiques produit ── */
+.product-specs {
+    border-top: 1px solid #e8e8e8;
+    padding-top: 1.5rem;
+}
+
+.specs-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary, #1a1a1a);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.specs-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.65rem 1rem;
+    font-size: 0.875rem;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.15s;
+}
+
+.spec-row:last-child {
+    border-bottom: none;
+}
+
+.spec-row:nth-child(odd) {
+    background: #fafafa;
+}
+
+.spec-row:hover {
+    background: #f3f4f6;
+}
+
+.spec-label {
+    color: #6b7280;
+    font-weight: 500;
+    flex: 0 0 45%;
+}
+
+.spec-value {
+    color: #111827;
+    font-weight: 500;
+    text-align: right;
+    flex: 1;
+}

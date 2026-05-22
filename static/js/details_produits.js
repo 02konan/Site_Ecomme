@@ -117,6 +117,30 @@ function affichedetails_produits(pdt) {
                 </div>
             </div>
         </div>
+        <!-- Section Caractéristiques -->
+<div class="product-specs mt-5" data-aos="fade-up" data-aos-delay="100">
+    <div class="specs-header">
+        <h5 class="specs-title">
+            <i class="bi bi-list-check me-2"></i>Caractéristiques du produit
+        </h5>
+    </div>
+    <div class="specs-grid">
+        ${pdt.caracteristiques && pdt.caracteristiques.length > 0
+            ? pdt.caracteristiques.map(c => `
+                <div class="spec-row">
+                    <span class="spec-label">${c.label}</span>
+                    <span class="spec-value">${c.valeur}</span>
+                </div>
+            `).join('')
+            : `
+            <div class="text-center py-5 nothing">
+                <i class="bi bi-inbox fs-1 text-muted"></i>
+                <p class="text-muted mt-2 mb-0">Aucune caractéristique disponible</p>
+            </div>
+            `
+        }
+    </div>
+</div>
     `;
 
     // Clique sur image miniature → change l'image principale

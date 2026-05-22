@@ -206,8 +206,8 @@ def produits_list():
                 "img_produits": i[4],
                 "categories": i[5],
                 "id_categorie": i[6],
-                "reduction": i[6],
-                "type": i[7],
+                "reduction": i[7],
+                "type": i[8],
             }
             table.append(information)
             
@@ -225,7 +225,9 @@ def produit_une():
                 "nom_produits":i[1],
                 "descriptin_produits":i[2],
                 "prix_produits":i[3],
-                "img_produits": i[4]
+                "img_produits": i[4],
+                "reduction": i[5],
+                "type": i[6]
             }
             table.append(information)
     return jsonify({"data":table})
@@ -266,7 +268,6 @@ def produit_recents():
             table.append(information)
     return jsonify({"data":table})
 
-
 @app.route('/detail_produit/<int:id_produits>')
 def produits_details(id_produits):
     data = details_produits(id_produits)
@@ -274,8 +275,7 @@ def produits_details(id_produits):
     if not data:
         return jsonify({"error": "Produit introuvable"}), 404
 
-    produit, images = data
-
+    produit, caracteristiques, images = data
 
     img_principale = None
     img_secondaires = []
@@ -287,16 +287,18 @@ def produits_details(id_produits):
             img_secondaires.append(img[0])
 
     information = {
-        "id":            produit[0],
-        "nom":           produit[1],
-        "description":   produit[2],
-        "prix":          produit[3],
-        "img_principale": img_principale,
-        "img_secondaires": img_secondaires[:3]  
+        "id":          produit[0],
+        "nom":         produit[1],
+        "description": produit[2],
+        "prix":        str(produit[3]),
+        "caracteristiques": [
+            {"label": c[0], "valeur": c[1]} for c in caracteristiques
+        ],
+        "img_principale":  img_principale,
+        "img_secondaires": img_secondaires[:3]
     }
 
     return jsonify({"data": information})
-
 @app.route('/produit/<int:product_id>')
 def product(product_id):
     """Page détail d'un produit"""
