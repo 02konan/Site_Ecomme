@@ -85,9 +85,14 @@ def liste_produits_une():
         with connexion() as conn:
             with conn.cursor() as cursor:
                 cursor.execute("""
-                SELECT p.id, p.nom, p.description, p.prix, pi.url_image AS img_produits
+                SELECT p.id, p.nom, p.description, p.prix, pi.url_image AS img_produits , r.valeur AS reduction,
                 FROM produits p
                 LEFT JOIN produit_images pi on p.id = pi.id_produit
+                LEFT JOIN reduction_produits rp
+                    ON p.id = rp.id_produit
+                LEFT JOIN reductions r
+                    ON rp.id_reduction = r.id 
+                    AND r.actif = 1
                 WHERE pi.est_principale = 1 AND p.active=1
                 ORDER BY RAND();
                                """)
