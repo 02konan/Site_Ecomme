@@ -318,15 +318,11 @@ def commande():
         if not panier:
             return jsonify({"success": False, "error": "Panier vide"}), 400
 
-        adresse = client.get("adresse")
-        ville   = client.get("ville")
+       
         creat_commande(
-             client,
-                adresse,
-                ville,
+                client,
                 panier,
-                frais,
-                total
+                frais
             )
         return jsonify({"success": True})
 

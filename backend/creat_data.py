@@ -1,6 +1,7 @@
 from backend.data_base import connexion
 from backend.Auth import verifie_mail
 import bcrypt
+from decimal import Decimal
 
 
 def generer_code_comande():
@@ -20,7 +21,7 @@ def generer_code_comande():
         print(f"Erreur generer_code_comande: {e}")
         return None
 
-def creat_commande(client, adresse, ville, panier, montant_total, frais_livraisons):
+def creat_commande(client, panier, frais_livraisons):
     try:
         with connexion() as conn:
             with conn.cursor() as cursor:
@@ -37,7 +38,8 @@ def creat_commande(client, adresse, ville, panier, montant_total, frais_livraiso
                     INSERT INTO commandes (code_commande, id_client, total, statut)
                     VALUES (%s, %s, %s, %s)
                 """
-                cursor.execute(sql_commande, (code_commande, id_client, montant_total, "en_attente"))
+                montant_total = sum(Decimal(item["prix"]) * int(item["quantite"]) for item in panier)
+                cursor.execute(sql_commande, (code_commande, id_client, montant_total , "en_attente"))
                 id_commande = cursor.lastrowid
 
                 sql_ligne = """
@@ -52,10 +54,10 @@ def creat_commande(client, adresse, ville, panier, montant_total, frais_livraiso
                     cursor.execute(sql_stock, (item["quantite"], item["id_produit"], item["quantite"]))
                    
                 sql_livraison = """
-                    INSERT INTO livraisons (id_commande, adresse, commune,quartier,frais_livraison,notes, statut)
+                    INSERT INTO livraisons (id_commande, adresse, commune,quartier,frais_livraisons,notes, statut)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """
-                cursor.execute(sql_livraison, (id_commande, adresse, ville, client['quartier'], frais_livraisons, client['notes'], "en_preparation"))
+                cursor.execute(sql_livraison, (id_commande, client['adresse'], client['ville'], client['quartier'], frais_livraisons, client['notes'], "en_preparation"))
 
             conn.commit()
             return True

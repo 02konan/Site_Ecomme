@@ -3,37 +3,36 @@
 {% block title %}Tous nos produits - eShop{% endblock %}
 
 {% block content %}
-    {% include 'banner.html' %}
+<div class="py-5">
+    <div class="container py-5">
+        <!-- Header -->
+        <div class="row mb-4 py-3">
+            <div class="col-12">
+                <h1 class="subtitle" data-aos="fade-up">Nos Produits</h1>
+                <p class="text-muted" data-aos="zoom-out" data-aos-delay="200">Découvrez notre vaste sélection de produits de qualité</p>
+            </div>
+        </div>
 
-   <div class="container py-5">
-    <!-- Header -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <h1 class="subtitle" data-aos="fade-up">Nos Produits</h1>
-            <p class="text-muted" data-aos="zoom-out" data-aos-delay="200">Découvrez notre vaste sélection de produits de qualité</p>
+        <!-- Barre outils : bouton filtre + tri -->
+        <div class="d-flex align-items-center justify-content-between mb-4" data-aos="fade-up">
+            <button class="btn btn-outline-secondary rounded-pill d-flex align-items-center gap-2" onclick="ouvrirDrawerFiltres()">
+                <i class="bi bi-sliders"></i> Filtres
+                <span id="filtres-compteur" class="badge bg-dark rounded-pill" style="display:none;">0</span>
+            </button>
+            <!-- <select class="form-select form-select-sm w-auto rounded-pill">
+                <option>Trier par : Popularité</option>
+                <option>Prix croissant</option>
+                <option>Prix décroissant</option>
+                <option>Nouveautés</option>
+                <option>Mieux notés</option>
+            </select> -->
+        </div>
+
+        <!-- Grille produits -->
+        <div class="row g-4" id="NosProduits" data-aos="fade-up" data-aos-delay="0">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3"></div>
         </div>
     </div>
-
-    <!-- Barre outils : bouton filtre + tri -->
-    <div class="d-flex align-items-center justify-content-between mb-4" data-aos="fade-up">
-        <button class="btn btn-outline-secondary rounded-pill d-flex align-items-center gap-2" onclick="ouvrirDrawerFiltres()">
-            <i class="bi bi-sliders"></i> Filtres
-            <span id="filtres-compteur" class="badge bg-dark rounded-pill" style="display:none;">0</span>
-        </button>
-        <select class="form-select form-select-sm w-auto rounded-pill">
-            <option>Trier par : Popularité</option>
-            <option>Prix croissant</option>
-            <option>Prix décroissant</option>
-            <option>Nouveautés</option>
-            <option>Mieux notés</option>
-        </select>
-    </div>
-
-    <!-- Grille produits -->
-    <div class="row g-4" id="NosProduits" data-aos="fade-up" data-aos-delay="0">
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3"></div>
-    </div>
-</div>
 </div>
 
 <!-- ===== DRAWER FILTRES ===== -->

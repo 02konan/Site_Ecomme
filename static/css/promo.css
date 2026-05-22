@@ -1,0 +1,15 @@
+@keyframes promo-bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+  @keyframes promo-tick { 0%{transform:scale(1)} 40%{transform:scale(1.08)} 100%{transform:scale(1)} }
+  .promo-banner { background:#12130F; border-radius:16px; padding:1.25rem 1.5rem; display:flex; flex-direction:column; align-items:center; gap:1rem; }
+  .promo-top { display:flex; align-items:center; justify-content:space-between; width:100%; flex-wrap:wrap; gap:.75rem; }
+  .promo-badge { background:#f2d649; color:#12130F; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:5px 14px; border-radius:999px; white-space:nowrap; animation:promo-bob 2.5s ease-in-out infinite; }
+  .promo-msg { color:#fff; font-size:16px; font-weight:500; flex:1; text-align:center; margin:0; }
+  .promo-msg span { color:#f2d649; }
+  .btn-promo { background:#f2d649; color:#12130F; border:none; border-radius:10px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer; transition:opacity .15s; }
+  .btn-promo:hover { opacity:.85; }
+  .promo-countdown { display:flex; align-items:center; gap:8px; }
+  .cd-unit { display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .cd-num { background:#f2d649; color:#12130F; font-size:26px; font-weight:700; width:62px; height:56px; border-radius:10px; display:flex; align-items:center; justify-content:center; }
+  .cd-num.tick { animation:promo-tick .3s ease; }
+  .cd-lbl { color:rgba(255,255,255,0.45); font-size:10px; text-transform:uppercase; letter-spacing:1px; }
+  .cd-sep { color:#f2d649; font-size:24px; font-weight:700; margin-bottom:16px; }
