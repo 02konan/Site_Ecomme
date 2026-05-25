@@ -2,6 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("heroCarousel")) {
         initBanner();
     }
+    if (document.getElementById("oneViewSection")) {
+        AlaUne();
+    }
 });
 
 function initBanner() {
@@ -133,6 +136,64 @@ function afficheBanner(banners) {
         });
     }
 }
+function AlaUne() {
+    fetch("/api/alaune/")
+    .then(res => res.json())
+    .then(json => {                          
+        if (json.data && json.data.length > 0) {  
+            afficheAlaUne(json.data[0]);           
+        }
+    });
+}
+function afficheAlaUne(produit) {
+    const section = document.getElementById("oneViewSection");
+    if (!section) return;
+
+    const carousel     = section.querySelector('#oneViewCarousel');
+    const carouselInner = carousel?.querySelector('.carousel-inner');
+    const titleEl      = section.querySelector('.one-view-content .title');
+    const descEl       = section.querySelector('.one-view-content .desc');
+    const btnEl        = section.querySelector('.one-view-content .btn');
+
+    if (!carouselInner || !titleEl || !descEl) return;
+
+    // --- Images ---
+    carouselInner.innerHTML = '';
+
+    const images = Array.isArray(produit.images) && produit.images.length > 0
+    ? produit.images
+    : [null];
+
+    images.forEach((imgRaw, index) => {
+        const imgSrc = imgRaw
+            ? (/^https?:\/\//i.test(imgRaw) ? imgRaw : `${window.urlProduitImage}${imgRaw}`)
+            : '/static/img/default_product.png';
+
+        const slide = document.createElement('div');
+        slide.classList.add('carousel-item');
+        if (index === 0) slide.classList.add('active');
+
+        slide.innerHTML = `<img src="${escapeHtml(imgSrc)}" class="d-block w-100" alt="${escapeHtml(produit.titre || '')}">`;
+        carouselInner.appendChild(slide);
+    });
+
+    // --- Texte ---
+    titleEl.textContent = produit.titre       || 'Produit à la une';
+    descEl.textContent  = produit.description || 'Découvrez ce produit exceptionnel.';
+
+    if (btnEl) {
+        btnEl.href        = `/produit/${produit.id}`;
+        btnEl.textContent = 'En savoir plus';
+    }
+
+    section.classList.remove('loading');
+
+    // --- Bootstrap Carousel ---
+    if (typeof bootstrap !== 'undefined' && bootstrap.Carousel) {
+        new bootstrap.Carousel(carousel, { interval: 3000, ride: 'carousel', wrap: true });
+    }
+}
+
 
 function escapeHtml(str) {
     if (!str) return '';

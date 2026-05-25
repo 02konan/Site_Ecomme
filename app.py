@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from backend.creat_data import create_client,creat_commande
 from backend.Auth import Authentification
 from backend.MessageApi import Message
-from backend.read_data import get_search_results, get_user_id,liste_Nos_produits,details_produits,liste_produits,liste_produits_categorie,liste_banners,liste_recents,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
+from backend.read_data import get_search_results, get_user_id,liste_Nos_produits,details_produits, liste_alaune,liste_produits,liste_produits_categorie,liste_banners,liste_recents,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
 import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
 from flask_cors import CORS
@@ -47,10 +47,11 @@ def restriction():
                  "produit_recents", 
                  "produits_nouveaute", 
                  "banner",
+                 "banners_alaune",
                  "categorie_produits",
                  "categorie",
-                 "https://divix.alwaysdata.net/ecommerce/uploads/produits/",
-                 "https://divix.alwaysdata.net/ecommerce/uploads/bannieres/",
+                 "https://divix.alwaysdata.net/uploads/produits/",
+                 "https://divix.alwaysdata.net/uploads/bannieres/",
                  "static"   
                 ] 
     if not (current_user.is_authenticated or session.get('connecter')) and request.endpoint not in tab_route:
@@ -167,6 +168,24 @@ def banner():
             table.append(information)
     return jsonify({"data":table})
 
+@app.route('/api/alaune/')
+def banners_alaune():
+    data = liste_alaune()
+    produits = {}
+
+    for row in data:
+        pid = row[0]
+        if pid not in produits:
+            produits[pid] = {
+                "id":          row[0],
+                "titre":       row[1],
+                "description": row[2],
+                "images":      []
+            }
+        if row[3]:  # url_image peut être NULL (LEFT JOIN)
+            produits[pid]["images"].append(row[3])
+
+    return jsonify({"data": list(produits.values())})
 #-----------------PRODUITS---------------------
 @app.route('/produits')
 def produits():
@@ -367,7 +386,9 @@ def search():
                 "nom_produits":i[1],
                 "descriptin_produits":i[2],
                 "prix_produits":i[3],
-                "img_produits": i[4]
+                "img_produits": i[4],
+                "reduction": i[5],
+                "type": i[6]
                 }
                 table.append(information)
     return jsonify({"data": table})

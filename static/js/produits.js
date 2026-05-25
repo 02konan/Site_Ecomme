@@ -16,7 +16,7 @@ let carouselTrack = null;
 let carouselPrevBtn = null;
 let carouselNextBtn = null;
 let carouselDotsContainer = null;
-window.urlProduitImage = "https://divix.alwaysdata.net/ecommerce/uploads/produits/";
+window.urlProduitImage = "https://divix.alwaysdata.net/uploads/produits/";
 
 
 
@@ -107,30 +107,22 @@ function afficheproduit_la_une(produits) {
     // Limiter à 12 produits maximum
     const produitsLimit = produits.slice(0, 12);
     
-    if (produitsLimit && produitsLimit.length > 0) {
+    if (produitsLimit && produitsLimit.length > 0) {    
         produitsLimit.forEach(pdt => {
-            const typeReduction = pdt.type;
+           const typeReduction = pdt.type;
             const reduction = Number(pdt.reduction) || 0;
-            const prixActuel = Number(pdt.prix_produits);
+            const prixOriginal = Number(pdt.prix_produits);
 
-            let prixAvant = prixActuel;
+            let prixFinal = prixOriginal;
             let pourcentage = 0;
 
-            if (typeReduction === "montant") {
-
-                prixAvant = prixActuel + reduction;
-
-                pourcentage = Math.round(
-                    ((prixAvant - prixActuel) / prixAvant) * 100
-                );
-
-            } else if (typeReduction === "pourcentage") {
-
+            if (typeReduction === "pourcentage") {
                 pourcentage = reduction;
+                prixFinal = prixOriginal * (1 - reduction / 100);
 
-                prixAvant = Math.round(
-                    prixActuel / (1 - pourcentage / 100)
-                );
+            } else if (typeReduction === "montant") {
+                pourcentage = ((reduction / prixOriginal) * 100).toFixed(0);
+                prixFinal = Math.max(0, prixOriginal - reduction);
             }
             const imageSrc = pdt.img_produits
                 ? (/^https?:\/\//i.test(pdt.img_produits) ? pdt.img_produits : `${window.urlProduitImage}${pdt.img_produits}`)
@@ -138,8 +130,7 @@ function afficheproduit_la_une(produits) {
 
             const item = document.createElement("div");
             item.className = "products-carousel-slide";
-
-            item.innerHTML = `
+      item.innerHTML = `
                 <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
                     <div class="product-card">
 
@@ -157,7 +148,7 @@ function afficheproduit_la_une(produits) {
                             onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
                                 id: ${pdt.id_produits},
                                 nom: '${escapeHtml(pdt.nom_produits)}',
-                                prix: ${prixActuel},
+                                prix: ${prixFinal},
                                 image: '${imageSrc}'
                             })"
                         >
@@ -210,13 +201,13 @@ function afficheproduit_la_une(produits) {
 
                             <div class="col-4 d-flex flex-column ps-1">
                                 <div class="product-price ms-auto">
-                                    FCFA ${prixActuel}
+                                    FCFA ${prixFinal}
 
                                     ${
-                                        prixAvant > prixActuel
+                                        prixOriginal > prixFinal
                                             ? `<br>
                                             <span class="text-decoration-line-through text-muted">
-                                                FCFA ${prixAvant}
+                                                FCFA ${prixOriginal}
                                             </span>`
                                             : ""
                                     }
@@ -238,7 +229,6 @@ function afficheproduit_la_une(produits) {
                     </div>
                 </a>
                 `;
-
             container.appendChild(item);
             // Bouton Panier
                 item.querySelector('.add-to-cart').addEventListener('click', (e) => {
@@ -247,7 +237,7 @@ function afficheproduit_la_une(produits) {
                     ajouterAuPanier({
                         id:   pdt.id_produits,
                         nom:  pdt.nom_produits,
-                        prix: pdt.prix_produits,
+                        prix: prixFinal,
                         img:  imageSrc
                     });
                 });
@@ -259,14 +249,16 @@ function afficheproduit_la_une(produits) {
                 //     ajouterAuPanier({
                 //         id:   pdt.id_produits,
                 //         nom:  pdt.nom_produits,
-                //         prix: pdt.prix_produits,
+                //         prix: prixFinal,
                 //         img:  imageSrc
                 //     });
-                // });
+                //     ouvrirModal();
+                //     fermerDrawer();
+                            // });
         });
         
-        // Initialiser le carrousel après l'ajout des produits
-        initCarousel();
+        // Initialiser le carrousel pour les nouveautés
+        initCarouselNouveaute();
         
     } else {
         container.innerHTML = `
@@ -291,7 +283,6 @@ function Produits() {
             console.error("Erreur produits:", err);
         });
 }
-
 function afficheproduits(produits) {
     const container = document.getElementById("listeProduits");
     if (!container) return;
@@ -311,28 +302,20 @@ function afficheproduits(produits) {
        
 
         produitsLimit.forEach(pdt => {
-            const typeReduction = pdt.type;
+               const typeReduction = pdt.type;
             const reduction = Number(pdt.reduction) || 0;
-            const prixActuel = Number(pdt.prix_produits);
+            const prixOriginal = Number(pdt.prix_produits);
 
-            let prixAvant = prixActuel;
+            let prixFinal = prixOriginal;
             let pourcentage = 0;
 
-            if (typeReduction === "montant") {
-
-                prixAvant = prixActuel + reduction;
-
-                pourcentage = Math.round(
-                    ((prixAvant - prixActuel) / prixAvant) * 100
-                );
-
-            } else if (typeReduction === "pourcentage") {
-
+            if (typeReduction === "pourcentage") {
                 pourcentage = reduction;
+                prixFinal = prixOriginal * (1 - reduction / 100);
 
-                prixAvant = Math.round(
-                    prixActuel / (1 - pourcentage / 100)
-                );
+            } else if (typeReduction === "montant") {
+                pourcentage = ((reduction / prixOriginal) * 100).toFixed(0);
+                prixFinal = Math.max(0, prixOriginal - reduction);
             }
             const imageSrc = pdt.img_produits
                 ? (/^https?:\/\//i.test(pdt.img_produits) ? pdt.img_produits : `${window.urlProduitImage}${pdt.img_produits}`)
@@ -380,7 +363,7 @@ function afficheproduits(produits) {
                             onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
                                 id: ${pdt.id_produits},
                                 nom: '${escapeHtml(pdt.nom_produits)}',
-                                prix: ${prixActuel},
+                                prix: ${prixFinal},
                                 image: '${imageSrc}'
                             })"
                         >
@@ -433,13 +416,13 @@ function afficheproduits(produits) {
 
                             <div class="col-4 d-flex flex-column ps-1">
                                 <div class="product-price ms-auto">
-                                    FCFA ${prixActuel}
+                                    FCFA ${prixFinal}
 
                                     ${
-                                        prixAvant > prixActuel
+                                        prixFinal < prixOriginal
                                             ? `<br>
                                             <span class="text-decoration-line-through text-muted">
-                                                FCFA ${prixAvant}
+                                                FCFA ${prixOriginal}
                                             </span>`
                                             : ""
                                     }
@@ -520,86 +503,48 @@ function afficheNosProduits(produits) {
     const produitsLimit = produits;
 
     if (produitsLimit && produitsLimit.length > 0) {
-        
-        // const h5 = container.previousElementSibling;
-        // if (h5 && h5.tagName === 'H5') {
-        //     h5.textContent = produitsLimit[0].categories || '';
-        // }
-
-        // let categorieActuelle = null; 
-
         produitsLimit.forEach(pdt => {
             const typeReduction = pdt.type;
             const reduction = Number(pdt.reduction) || 0;
-            const prixActuel = Number(pdt.prix_produits);
+            const prixOriginal = Number(pdt.prix_produits);
 
-            let prixAvant = prixActuel;
+            let prixFinal = prixOriginal;
             let pourcentage = 0;
 
-            if (typeReduction === "montant") {
-
-                prixAvant = prixActuel + reduction;
-
-                pourcentage = Math.round(
-                    ((prixAvant - prixActuel) / prixAvant) * 100
-                );
-
-            } else if (typeReduction === "pourcentage") {
-
+            if (typeReduction === "pourcentage") {
                 pourcentage = reduction;
+                prixFinal = prixOriginal * (1 - reduction / 100);
 
-                prixAvant = Math.round(
-                    prixActuel / (1 - pourcentage / 100)
-                );
+            } else if (typeReduction === "montant") {
+                pourcentage = ((reduction / prixOriginal) * 100).toFixed(0);
+                prixFinal = Math.max(0, prixOriginal - reduction);
             }
+
             const imageSrc = pdt.img_produits
                 ? (/^https?:\/\//i.test(pdt.img_produits) ? pdt.img_produits : `${window.urlProduitImage}${pdt.img_produits}`)
                 : `/static/img/default_1.png`;
 
-            // if (pdt.categories !== categorieActuelle) {
-            //     categorieActuelle = pdt.categories;
-
-            //     const separateur = document.createElement("div");
-            //     separateur.className = "col-12 categorie-separateur";
-               
-            //     separateur.innerHTML = `
-            //        <div class="w-100">
-            //             <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
-            //                 <h6 class="categorie-titre text-muted fw-semibold m-0">
-            //                     <span>${escapeHtml(categorieActuelle || '')}</span>
-            //                 </h6>
-            //                 <a href="/categorie/${pdt.id_categorie}" class="text-decoration-none">
-            //                     <div class="d-flex align-items-center gap-1">Voir Plus...</i></div>
-            //                 </a>
-            //             </div>
-            //             <hr class="mt-0 mb-3">
-            //         </div>
-            //     `;
-            //     container.appendChild(separateur);
-            // }
-
             const item = document.createElement("div");
             item.className = "col-12 col-sm-6 col-md-4 col-lg-3";
-            item.className = "col-12 col-sm-6 col-md-4 col-lg-3";
-                            item.innerHTML = `
-                            <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
-                                <div class="product-card">
+            item.innerHTML = `
+                <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
+                    <div class="product-card">
 
-                                    ${
-                                        pourcentage > 0
-                                            ? `<span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">
-                                                -${pourcentage}%
-                                            </span>`
-                                            : ""
-                                    }
+                        ${
+                            pourcentage > 0
+                                ? `<span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">
+                                    -${pourcentage}%
+                                </span>`
+                                : ""
+                        }
 
-                                    <button 
-                                        class="like"
+                        <button 
+                            class="like"
                             data-favori-id="${pdt.id_produits}"
                             onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
                                 id: ${pdt.id_produits},
                                 nom: '${escapeHtml(pdt.nom_produits)}',
-                                prix: ${prixActuel},
+                                prix: ${prixFinal},
                                 image: '${imageSrc}'
                             })"
                         >
@@ -652,13 +597,13 @@ function afficheNosProduits(produits) {
 
                             <div class="col-4 d-flex flex-column ps-1">
                                 <div class="product-price ms-auto">
-                                    FCFA ${prixActuel}
+                                    FCFA ${Math.round(prixFinal)}
 
                                     ${
-                                        prixAvant > prixActuel
+                                        prixFinal < prixOriginal
                                             ? `<br>
                                             <span class="text-decoration-line-through text-muted">
-                                                FCFA ${prixAvant}
+                                                FCFA ${prixOriginal}
                                             </span>`
                                             : ""
                                     }
@@ -679,7 +624,7 @@ function afficheNosProduits(produits) {
 
                     </div>
                 </a>
-                `;
+            `;
             container.appendChild(item);
 
             // Bouton Panier
@@ -689,22 +634,10 @@ function afficheNosProduits(produits) {
                 ajouterAuPanier({
                     id:   pdt.id_produits,
                     nom:  pdt.nom_produits,
-                    prix: pdt.prix_produits,
+                    prix: prixFinal,
                     img:  imageSrc
                 });
             });
-
-            // Bouton Acheter
-            // item.querySelector('.buy-now').addEventListener('click', (e) => {
-            //     e.preventDefault();
-            //     e.stopPropagation();
-            //     ajouterAuPanier({
-            //         id:   pdt.id_produits,
-            //         nom:  pdt.nom_produits,
-            //         prix: pdt.prix_produits,
-            //         img:  imageSrc
-            //     });
-            // });
         });
     } else {
         container.innerHTML = `
@@ -736,30 +669,22 @@ function afficheproduit_nouveaute(produits) {
 
     const produitsLimit = produits.slice(0, 12);
 
-    if (produitsLimit && produitsLimit.length > 0) {
+    if (produitsLimit && produitsLimit.length > 0) {    
         produitsLimit.forEach(pdt => {
            const typeReduction = pdt.type;
             const reduction = Number(pdt.reduction) || 0;
-            const prixActuel = Number(pdt.prix_produits);
+            const prixOriginal = Number(pdt.prix_produits);
 
-            let prixAvant = prixActuel;
+            let prixFinal = prixOriginal;
             let pourcentage = 0;
 
-            if (typeReduction === "montant") {
-
-                prixAvant = prixActuel + reduction;
-
-                pourcentage = Math.round(
-                    ((prixAvant - prixActuel) / prixAvant) * 100
-                );
-
-            } else if (typeReduction === "pourcentage") {
-
+            if (typeReduction === "pourcentage") {
                 pourcentage = reduction;
+                prixFinal = prixOriginal * (1 - reduction / 100);
 
-                prixAvant = Math.round(
-                    prixActuel / (1 - pourcentage / 100)
-                );
+            } else if (typeReduction === "montant") {
+                pourcentage = ((reduction / prixOriginal) * 100).toFixed(0);
+                prixFinal = Math.max(0, prixOriginal - reduction);
             }
             const imageSrc = pdt.img_produits
                 ? (/^https?:\/\//i.test(pdt.img_produits) ? pdt.img_produits : `${window.urlProduitImage}${pdt.img_produits}`)
@@ -785,7 +710,7 @@ function afficheproduit_nouveaute(produits) {
                             onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
                                 id: ${pdt.id_produits},
                                 nom: '${escapeHtml(pdt.nom_produits)}',
-                                prix: ${prixActuel},
+                                prix: ${prixFinal},
                                 image: '${imageSrc}'
                             })"
                         >
@@ -838,13 +763,13 @@ function afficheproduit_nouveaute(produits) {
 
                             <div class="col-4 d-flex flex-column ps-1">
                                 <div class="product-price ms-auto">
-                                    FCFA ${prixActuel}
+                                    FCFA ${prixFinal}
 
                                     ${
-                                        prixAvant > prixActuel
+                                        prixOriginal > prixFinal
                                             ? `<br>
                                             <span class="text-decoration-line-through text-muted">
-                                                FCFA ${prixAvant}
+                                                FCFA ${prixOriginal}
                                             </span>`
                                             : ""
                                     }
@@ -874,7 +799,7 @@ function afficheproduit_nouveaute(produits) {
                     ajouterAuPanier({
                         id:   pdt.id_produits,
                         nom:  pdt.nom_produits,
-                        prix: pdt.prix_produits,
+                        prix: prixFinal,
                         img:  imageSrc
                     });
                 });
@@ -886,7 +811,7 @@ function afficheproduit_nouveaute(produits) {
                 //     ajouterAuPanier({
                 //         id:   pdt.id_produits,
                 //         nom:  pdt.nom_produits,
-                //         prix: pdt.prix_produits,
+                //         prix: prixFinal,
                 //         img:  imageSrc
                 //     });
                 //     ouvrirModal();
@@ -926,31 +851,22 @@ function afficheproduit_recents(produits) {
     container.innerHTML = "";
 
     const produitsLimit = produits.slice(0, 12);
-
-    if (produitsLimit && produitsLimit.length > 0) {
+if (produitsLimit && produitsLimit.length > 0) {    
         produitsLimit.forEach(pdt => {
-             const typeReduction = pdt.type;
+           const typeReduction = pdt.type;
             const reduction = Number(pdt.reduction) || 0;
-            const prixActuel = Number(pdt.prix_produits);
+            const prixOriginal = Number(pdt.prix_produits);
 
-            let prixAvant = prixActuel;
+            let prixFinal = prixOriginal;
             let pourcentage = 0;
 
-            if (typeReduction === "montant") {
-
-                prixAvant = prixActuel + reduction;
-
-                pourcentage = Math.round(
-                    ((prixAvant - prixActuel) / prixAvant) * 100
-                );
-
-            } else if (typeReduction === "pourcentage") {
-
+            if (typeReduction === "pourcentage") {
                 pourcentage = reduction;
+                prixFinal = prixOriginal * (1 - reduction / 100);
 
-                prixAvant = Math.round(
-                    prixActuel / (1 - pourcentage / 100)
-                );
+            } else if (typeReduction === "montant") {
+                pourcentage = ((reduction / prixOriginal) * 100).toFixed(0);
+                prixFinal = Math.max(0, prixOriginal - reduction);
             }
             const imageSrc = pdt.img_produits
                 ? (/^https?:\/\//i.test(pdt.img_produits) ? pdt.img_produits : `${window.urlProduitImage}${pdt.img_produits}`)
@@ -958,8 +874,7 @@ function afficheproduit_recents(produits) {
 
             const item = document.createElement("div");
             item.className = "products-carousel-slide";
-
-            item.innerHTML = `
+      item.innerHTML = `
                 <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
                     <div class="product-card">
 
@@ -977,7 +892,7 @@ function afficheproduit_recents(produits) {
                             onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
                                 id: ${pdt.id_produits},
                                 nom: '${escapeHtml(pdt.nom_produits)}',
-                                prix: ${prixActuel},
+                                prix: ${prixFinal},
                                 image: '${imageSrc}'
                             })"
                         >
@@ -1030,13 +945,13 @@ function afficheproduit_recents(produits) {
 
                             <div class="col-4 d-flex flex-column ps-1">
                                 <div class="product-price ms-auto">
-                                    FCFA ${prixActuel}
+                                    FCFA ${prixFinal}
 
                                     ${
-                                        prixAvant > prixActuel
+                                        prixOriginal > prixFinal
                                             ? `<br>
                                             <span class="text-decoration-line-through text-muted">
-                                                FCFA ${prixAvant}
+                                                FCFA ${prixOriginal}
                                             </span>`
                                             : ""
                                     }
@@ -1058,7 +973,6 @@ function afficheproduit_recents(produits) {
                     </div>
                 </a>
                 `;
-
             container.appendChild(item);
             // Bouton Panier
                 item.querySelector('.add-to-cart').addEventListener('click', (e) => {
@@ -1067,7 +981,7 @@ function afficheproduit_recents(produits) {
                     ajouterAuPanier({
                         id:   pdt.id_produits,
                         nom:  pdt.nom_produits,
-                        prix: pdt.prix_produits,
+                        prix: prixFinal,
                         img:  imageSrc
                     });
                 });
@@ -1079,12 +993,12 @@ function afficheproduit_recents(produits) {
                 //     ajouterAuPanier({
                 //         id:   pdt.id_produits,
                 //         nom:  pdt.nom_produits,
-                //         prix: pdt.prix_produits,
+                //         prix: prixFinal,
                 //         img:  imageSrc
                 //     });
                 //     ouvrirModal();
                 //     fermerDrawer();
-                // });
+                            // });
         });
         
         // Initialiser le carrousel pour les nouveautés
