@@ -198,6 +198,8 @@ def liste_produits_categorie(id_categorie):
                             p.prix, 
                             pi.url_image AS img_produits,
                             sous_categories.nom AS sous_categories,
+                            r.valeur AS reduction,
+                            r.type AS type,
                             ROW_NUMBER() OVER (
                                 PARTITION BY categories.id
                                 ORDER BY RAND()
@@ -213,6 +215,13 @@ def liste_produits_categorie(id_categorie):
 
                         LEFT JOIN categories 
                             ON sous_categories.id_categorie = categories.id
+                            
+                        LEFT JOIN reduction_produits rp
+                            ON p.id = rp.id_produit
+
+                        LEFT JOIN reductions r
+                            ON rp.id_reduction = r.id 
+                            AND r.actif = 1
 
                         WHERE pi.est_principale = 1 AND p.active=1 AND sous_categories.id = %s
 
