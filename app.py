@@ -365,6 +365,8 @@ def categorie_produits(id_categorie):
                     "prix_produits":        i[3],
                     "img_produits":         i[4],
                     "sous_categorie":       i[5],
+                    "reduction":            i[6],
+                    "type":                 i[7]
                 })
         return jsonify({"data": table})  
     except Exception as e:

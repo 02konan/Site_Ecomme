@@ -41,9 +41,21 @@ function affichecategorie(produits) {
         let categorieActuelle = null; 
 
         produitsLimit.forEach(pdt => {
-            const prixActuel = pdt.prix_produits;
-            const prixAvant = Math.round(prixActuel * 1.25);
-            const reduction = Math.round(((prixAvant - prixActuel) / prixAvant) * 100);
+            const typeReduction = pdt.type;
+            const reduction = Number(pdt.reduction) || 0;
+            const prixOriginal = Number(pdt.prix_produits);
+
+            let prixFinal = prixOriginal;
+            let pourcentage = 0;
+
+            if (typeReduction === "pourcentage") {
+                pourcentage = reduction;
+                prixFinal = prixOriginal * (1 - reduction / 100);
+
+            } else if (typeReduction === "montant") {
+                pourcentage = ((reduction / prixOriginal) * 100).toFixed(0);
+                prixFinal = Math.max(0, prixOriginal - reduction);
+            }
             const imageSrc = pdt.img_produits
                 ? (/^https?:\/\//i.test(pdt.img_produits) ? pdt.img_produits : `${window.urlProduitImage}${pdt.img_produits}`)
                 : `/static/img/default_1.png`;
@@ -64,31 +76,104 @@ function affichecategorie(produits) {
 
             const item = document.createElement("div");
             item.className = "col-12 col-sm-6 col-md-4 col-lg-3";
+ item.innerHTML = `
+                <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
+                    <div class="product-card">
 
-            item.innerHTML = `
-                    <a href="/produit/${pdt.id_produits}" class="text-decoration-none">
-                        <div class="product-card">
-                            <span class="badge text-bg-danger rounded-pill px-2 py-1 reduction"> -${reduction}%</span>
-                            <div class="like"><i class="bi bi-heart"></i></div>
-                            <img src="${imageSrc}" class="product-img" loading="lazy">
-                            <div class="product-body d-flex">
-                                <div class="col-8">
-                                    <div class="product-title">${escapeHtml(pdt.nom_produits)}</div>
-                                    <p class="small product-desc text-muted">${escapeHtml(pdt.description_produits || '')}</p>
-                                    <div class="product-star d-flex gap-1">
-                                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
-                                        <span class="ms-2" style="color:var(--text-secondary);font-weight:500;">4.7</span>
-                                    </div>
+                        ${
+                            pourcentage > 0
+                                ? `<span class="badge text-bg-danger rounded-pill px-2 py-1 reduction">
+                                    -${pourcentage}%
+                                </span>`
+                                : ""
+                        }
+
+                        <button 
+                            class="like"
+                            data-favori-id="${pdt.id_produits}"
+                            onclick="event.preventDefault(); event.stopPropagation(); toggleFavori({
+                                id: ${pdt.id_produits},
+                                nom: '${escapeHtml(pdt.nom_produits)}',
+                                prix: ${prixFinal},
+                                image: '${imageSrc}'
+                            })"
+                        >
+                            <i 
+                                class="${
+                                    favoris.some(f => f.id === pdt.id_produits)
+                                        ? 'bi bi-heart-fill'
+                                        : 'bi bi-heart'
+                                }"
+                                style="${
+                                    favoris.some(f => f.id === pdt.id_produits)
+                                        ? 'color: gold;'
+                                        : ''
+                                }"
+                            ></i>
+                        </button>
+
+                        <img 
+                            src="${imageSrc}" 
+                            class="product-img" 
+                            loading="lazy"
+                        >
+
+                        <div class="product-body d-flex">
+
+                            <div class="col-8">
+                                <div class="product-title">
+                                    ${escapeHtml(pdt.nom_produits)}
                                 </div>
-                                <div class="col-4 d-flex flex-column ps-1">
-                                    <div class="product-price ms-auto">FCFA ${prixActuel} <br/> <span class="text-decoration-line-through text-muted">FCFA ${prixAvant}</span></div>
+
+                                <p class="small product-desc text-muted">
+                                    ${escapeHtml(pdt.descriptin_produits || '')}
+                                </p>
+
+                                <div class="product-star d-flex gap-1">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-half"></i>
+
+                                    <span 
+                                        class="ms-2"
+                                        style="color:var(--text-secondary);font-weight:500;"
+                                    >
+                                        4.7
+                                    </span>
                                 </div>
                             </div>
-                            <div class="d-flex box-card-btn">
-                                <button class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart" data-id="${pdt.id_produits}"><i class="bi bi-cart me-2"></i>Panier</button>
+
+                            <div class="col-4 d-flex flex-column ps-1">
+                                <div class="product-price ms-auto">
+                                    FCFA ${prixFinal}
+
+                                    ${
+                                        prixFinal < prixOriginal
+                                            ? `<br>
+                                            <span class="text-decoration-line-through text-muted">
+                                                FCFA ${prixOriginal}
+                                            </span>`
+                                            : ""
+                                    }
+                                </div>
                             </div>
+
                         </div>
-                    </a>
+
+                        <div class="d-flex box-card-btn">
+                            <button 
+                                class="btn flex-grow-1 btn-sm btn-dark rounded-pill m-0 add-to-cart"
+                                data-id="${pdt.id_produits}"
+                            >
+                                <i class="bi bi-cart me-2"></i>
+                                Commander
+                            </button>
+                        </div>
+
+                    </div>
+                </a>
                 `;
 
             container.appendChild(item);
