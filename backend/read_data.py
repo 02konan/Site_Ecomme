@@ -189,9 +189,7 @@ def liste_produits_categorie(id_categorie):
         with connexion() as conn:
             with conn.cursor() as cursor:
                 sql="""
-                  SELECT *
-                    FROM (
-                        SELECT 
+                  SELECT 
                             p.id, 
                             p.nom, 
                             p.description, 
@@ -199,11 +197,7 @@ def liste_produits_categorie(id_categorie):
                             pi.url_image AS img_produits,
                             sous_categories.nom AS sous_categories,
                             r.valeur AS reduction,
-                            r.type AS type,
-                            ROW_NUMBER() OVER (
-                                PARTITION BY categories.id
-                                ORDER BY RAND()
-                            ) AS rn
+                            r.type AS type
 
                         FROM produits p
 
@@ -215,18 +209,15 @@ def liste_produits_categorie(id_categorie):
 
                         LEFT JOIN categories 
                             ON sous_categories.id_categorie = categories.id
-                            
                         LEFT JOIN reduction_produits rp
                             ON p.id = rp.id_produit
 
                         LEFT JOIN reductions r
                             ON rp.id_reduction = r.id 
-                            AND r.actif = 1
+                            AND r.actif = 1    
 
-                        WHERE pi.est_principale = 1 AND p.active=1 AND sous_categories.id = %s
-
-                    ) AS t
-                    ORDER BY t.sous_categories ASC;
+                        WHERE pi.est_principale = 1 AND p.active=1 AND categories.id = %s
+ORDER BY sous_categories.nom ASC;
                     
                 """
                 cursor.execute(sql,(id_categorie,))

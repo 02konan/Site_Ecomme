@@ -147,7 +147,7 @@ function affichecategorie(produits) {
 
                             <div class="col-4 d-flex flex-column ps-1">
                                 <div class="product-price ms-auto">
-                                    FCFA ${Math.round(prixFinal)}
+                                    FCFA ${prixFinal}
 
                                     ${
                                         prixFinal < prixOriginal
@@ -174,7 +174,8 @@ function affichecategorie(produits) {
 
                     </div>
                 </a>
-            `;
+                `;
+
             container.appendChild(item);
 
             // Bouton Panier
