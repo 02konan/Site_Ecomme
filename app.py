@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from backend.creat_data import create_client,creat_commande
 from backend.Auth import Authentification
 from backend.MessageApi import Message
-from backend.read_data import get_search_results, get_user_id,liste_Nos_produits,details_produits, liste_alaune,liste_produits,liste_produits_categorie,liste_banners,liste_recents,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
+from backend.read_data import liste_produits_sous_categorie,get_search_results, get_user_id,liste_Nos_produits,details_produits, liste_alaune,liste_produits,liste_produits_categorie,liste_banners,liste_recents,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
 import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
 from flask_cors import CORS
@@ -50,6 +50,8 @@ def restriction():
                  "banners_alaune",
                  "categorie_produits",
                  "categorie",
+                 "sous_categorie_produits",
+                 "sous_categorie",
                  "https://divix.alwaysdata.net/uploads/produits/",
                  "https://divix.alwaysdata.net/uploads/bannieres/",
                  "static"   
@@ -375,6 +377,31 @@ def categorie_produits(id_categorie):
 @app.route('/categorie/<int:id_categorie>')
 def categorie(id_categorie):
     return render_template("categorie_list.html")
+
+@app.route('/sous_categorie_produits/<int:id_sous_categorie>')
+def sous_categorie_produits(id_sous_categorie):
+    try:
+        data = liste_produits_sous_categorie(id_sous_categorie)
+        table = []
+        if data:
+            for i in data:
+                table.append({
+                    "id_produits":          i[0],
+                    "nom_produits":         i[1],
+                    "description_produits": i[2],  
+                    "prix_produits":        i[3],
+                    "img_produits":         i[4],
+                    "sous_categorie":       i[5],
+                    "reduction":            i[6],
+                    "type":                 i[7]
+                })
+        return jsonify({"data": table})  
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/sous_categorie/<int:id_sous_categorie>')
+def sous_categorie(id_sous_categorie):
+    return render_template("souscategorie.html")
     
 
 @app.route('/api/search', methods=['GET'])

@@ -161,7 +161,7 @@ function renderCategoriesMenu(categories) {
                 } else {
                     // Pas de niveau 3, créer un lien direct vers la sous-catégorie
                     const directLink = document.createElement('a');
-                    directLink.href = `/categorie/${escapeHtmlSafe(subcategory.id)}`;
+                    directLink.href = `/sous_categorie/${escapeHtmlSafe(subcategory.id)}`;
                     directLink.className = 'level2-link';
                     directLink.style.display = 'flex';
                     directLink.style.alignItems = 'center';
@@ -183,7 +183,7 @@ function renderCategoriesMenu(categories) {
         } else {
             // Si pas de sous-catégories, ajouter un lien direct
             const directLink = document.createElement('a');
-            directLink.href = `/categorie/${escapeHtmlSafe(category.id)}`;
+            directLink.href = `/sous_categorie/${escapeHtmlSafe(category.id)}`;
             directLink.className = 'offcanvas-link-level1';
             directLink.style.display = 'flex';
             directLink.style.alignItems = 'center';

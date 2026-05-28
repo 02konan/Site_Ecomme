@@ -1987,6 +1987,9 @@ img.logo.other{
         margin: 0 !important;
         margin-top: 0.75rem !important;
     }
+    .subtitle-section {
+    padding-top: 80px; /* légèrement plus que la hauteur de la navbar */
+}
 
     /* Carousel produits — scrollable SANS BARRE DE SCROLL */
     .products-carousel-wrapper {

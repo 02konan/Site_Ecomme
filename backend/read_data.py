@@ -217,7 +217,7 @@ def liste_produits_categorie(id_categorie):
                             AND r.actif = 1    
 
                         WHERE pi.est_principale = 1 AND p.active=1 AND categories.id = %s
-ORDER BY sous_categories.nom ASC;
+                        ORDER BY sous_categories.nom ASC;
                     
                 """
                 cursor.execute(sql,(id_categorie,))
@@ -225,6 +225,50 @@ ORDER BY sous_categories.nom ASC;
                 return resultat
     except Exception as e:
         return (f"Erreur lors de la récupération des produits: {e}")
+
+
+def liste_produits_sous_categorie(id_sous_categorie):
+    try:
+        with connexion() as conn:
+            with conn.cursor() as cursor:
+                sql="""
+                  SELECT 
+                            p.id, 
+                            p.nom, 
+                            p.description, 
+                            p.prix, 
+                            pi.url_image AS img_produits,
+                            sous_categories.nom AS sous_categories,
+                            r.valeur AS reduction,
+                            r.type AS type
+
+                        FROM produits p
+
+                        JOIN produit_images pi 
+                            ON p.id = pi.id_produit
+
+                        JOIN sous_categories  
+                            ON p.id_sous_categorie = sous_categories.id
+
+                        LEFT JOIN categories 
+                            ON sous_categories.id_categorie = categories.id
+                        LEFT JOIN reduction_produits rp
+                            ON p.id = rp.id_produit
+
+                        LEFT JOIN reductions r
+                            ON rp.id_reduction = r.id 
+                            AND r.actif = 1    
+
+                        WHERE pi.est_principale = 1 AND p.active=1 AND sous_categories.id = %s
+                        ORDER BY sous_categories.nom ASC;
+                    
+                """
+                cursor.execute(sql,(id_sous_categorie,))
+                resultat = cursor.fetchall()
+                return resultat
+    except Exception as e:
+        return (f"Erreur lors de la récupération des produits: {e}")
+
 
 def details_produits(id):
     try:
