@@ -164,6 +164,24 @@ def liste_banners():
         print(f"Erreur lors de la récupération des produits: {e}") 
         return []       
 
+  
+def liste_event():
+    try:
+        with connexion() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute("""
+                SELECT id, titre, description, image
+                FROM bannieres
+                WHERE active = 1
+                AND type = 'event' AND active=1
+                ORDER BY id DESC;
+                               """)
+                banners = cursor.fetchall()
+                return banners
+    except Exception as e:
+        print(f"Erreur lors de la récupération des produits: {e}") 
+        return []       
+
 
 def liste_alaune():
     try:
@@ -343,7 +361,12 @@ def get_search_results(query):
                         r.type AS type
                     FROM produits p
                     LEFT JOIN produit_images pi ON p.id = pi.id_produit
-                    LEFT JOIN reductions r ON p.id = r.id_produit
+                    LEFT JOIN reduction_produits rp
+                            ON p.id = rp.id_produit
+
+                        LEFT JOIN reductions r
+                            ON rp.id_reduction = r.id 
+                            AND r.actif = 1 
                     WHERE pi.est_principale = 1 AND p.active=1
                     AND (LOWER(p.nom) LIKE LOWER(%s) OR LOWER(p.description) LIKE LOWER(%s))
                     ORDER BY p.nom ASC

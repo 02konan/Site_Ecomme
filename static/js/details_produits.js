@@ -186,6 +186,5 @@ function affichedetails_produits(pdt) {
             prix: pdt.prix,
             img:  `${window.urlProduitImage}${pdt.img_principale}`
         }, qty);
-        window.location.href = "/panier";
     });
 }
