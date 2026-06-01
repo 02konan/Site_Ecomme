@@ -164,6 +164,23 @@ def liste_banners():
         print(f"Erreur lors de la récupération des produits: {e}") 
         return []       
 
+def liste_Event():
+    try:
+        with connexion() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute("""
+                SELECT id, titre, description, image
+                FROM bannieres
+                WHERE active = 1
+                AND type = 'event' AND active=1
+                ORDER BY id DESC;
+                               """)
+                banners = cursor.fetchall()
+                return banners
+    except Exception as e:
+        print(f"Erreur lors de la récupération des produits: {e}") 
+        return [] 
+
 def liste_alaune():
     try:
         with connexion() as conn:

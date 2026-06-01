@@ -136,6 +136,7 @@ function afficheBanner(banners) {
         });
     }
 }
+
 function AlaUne() {
     fetch("/api/alaune/")
     .then(res => res.json())
@@ -194,6 +195,20 @@ function afficheAlaUne(produit) {
     }
 }
 
+
+function Event() {
+    fetch("/api/Event/")
+    .then(res => res.json())
+    .then(json => {                          
+        if (json.data && json.data.length > 0) {  
+            afficheEvent(json.data[0]);           
+        }
+    });
+}
+
+function AfficheEvent(params) {
+    container=document.getElementById("")
+}
 
 function escapeHtml(str) {
     if (!str) return '';

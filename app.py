@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from backend.creat_data import create_client,creat_commande
 from backend.Auth import Authentification
 from backend.MessageApi import Message
-from backend.read_data import liste_produits_sous_categorie,get_search_results, get_user_id,liste_Nos_produits,details_produits, liste_alaune,liste_produits,liste_produits_categorie,liste_banners,liste_recents,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
+from backend.read_data import liste_produits_sous_categorie,liste_Event,get_search_results, get_user_id,liste_Nos_produits,details_produits, liste_alaune,liste_produits,liste_produits_categorie,liste_banners,liste_recents,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
 import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
 from flask_cors import CORS
@@ -188,6 +188,26 @@ def banners_alaune():
             produits[pid]["images"].append(row[3])
 
     return jsonify({"data": list(produits.values())})
+
+@app.route('/api/Event/')
+def banners_Event():
+    data = liste_Event()
+    produits = {}
+
+    for row in data:
+        pid = row[0]
+        if pid not in produits:
+            produits[pid] = {
+                "id":          row[0],
+                "titre":       row[1],
+                "description": row[2],
+                "images":      []
+            }
+        if row[3]:  
+            produits[pid]["images"].append(row[3])
+
+    return jsonify({"data": list(produits.values())})
+
 #-----------------PRODUITS---------------------
 @app.route('/produits')
 def produits():
