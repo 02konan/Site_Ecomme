@@ -226,7 +226,6 @@ def liste_produits_categorie(id_categorie):
     except Exception as e:
         return (f"Erreur lors de la récupération des produits: {e}")
 
-
 def liste_produits_sous_categorie(id_sous_categorie):
     try:
         with connexion() as conn:
@@ -269,7 +268,6 @@ def liste_produits_sous_categorie(id_sous_categorie):
     except Exception as e:
         return (f"Erreur lors de la récupération des produits: {e}")
 
-
 def details_produits(id):
     try:
         with connexion() as conn:
@@ -308,6 +306,7 @@ def details_produits(id):
     except Exception as e:
         print(f"Erreur details_produits: {e}")
         return None
+
 def get_user_id(user_id):
     try:
         with connexion() as conn:
@@ -343,7 +342,12 @@ def get_search_results(query):
                         r.type AS type
                     FROM produits p
                     LEFT JOIN produit_images pi ON p.id = pi.id_produit
-                    LEFT JOIN reductions r ON p.id = r.id_produit
+                    LEFT JOIN reduction_produits rp
+                            ON p.id = rp.id_produit
+
+                        LEFT JOIN reductions r
+                            ON rp.id_reduction = r.id 
+                            AND r.actif = 1 
                     WHERE pi.est_principale = 1 AND p.active=1
                     AND (LOWER(p.nom) LIKE LOWER(%s) OR LOWER(p.description) LIKE LOWER(%s))
                     ORDER BY p.nom ASC
