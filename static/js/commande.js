@@ -27,7 +27,7 @@ function afficherVille() {
     const adresse = document.getElementById('cmd-adresse').value;
     const divVille = document.getElementById('div-ville');
     
-    if (adresse === 'autre') {
+    if (adresse === 'Autres') {
         divVille.style.display = 'block';
     } else {
         divVille.style.display = 'none';

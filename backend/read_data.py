@@ -164,7 +164,6 @@ def liste_banners():
         print(f"Erreur lors de la récupération des produits: {e}") 
         return []       
 
-
 def liste_alaune():
     try:
         with connexion() as conn:
@@ -189,7 +188,7 @@ def liste_produits_categorie(id_categorie):
         with connexion() as conn:
             with conn.cursor() as cursor:
                 sql="""
-                  SELECT 
+                    SELECT 
                             p.id, 
                             p.nom, 
                             p.description, 
@@ -209,15 +208,16 @@ def liste_produits_categorie(id_categorie):
 
                         LEFT JOIN categories 
                             ON sous_categories.id_categorie = categories.id
+                            
                         LEFT JOIN reduction_produits rp
                             ON p.id = rp.id_produit
 
                         LEFT JOIN reductions r
-                            ON rp.id_reduction = r.id 
-                            AND r.actif = 1    
+                            ON rp.id_reduction = r.id AND r.actif = 1
+                                
 
                         WHERE pi.est_principale = 1 AND p.active=1 AND categories.id = %s
-                        ORDER BY sous_categories.nom ASC;
+                        ORDER BY sous_categories.nom DESC;
                     
                 """
                 cursor.execute(sql,(id_categorie,))

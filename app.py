@@ -54,6 +54,8 @@ def restriction():
                  "sous_categorie",
                  "https://divix.alwaysdata.net/uploads/produits/",
                  "https://divix.alwaysdata.net/uploads/bannieres/",
+                 "- https://www.instagram.com/touachatci?igsh=MXNvN3ptbWxvMjlrbA==",
+                 "- https://www.tiktok.com/@touachat?_r=1&_t=ZS-96ZdBm2ZAuK",
                  "static"   
                 ] 
     if not (current_user.is_authenticated or session.get('connecter')) and request.endpoint not in tab_route:
