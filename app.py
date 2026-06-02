@@ -48,6 +48,7 @@ def restriction():
                  "produits_nouveaute", 
                  "banner",
                  "banners_alaune",
+                 "banners_Event",
                  "categorie_produits",
                  "categorie",
                  "sous_categorie_produits",
@@ -60,11 +61,13 @@ def restriction():
         return redirect(url_for("auth"))
     
 #-----------------INDEX---------------------
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
 #-----------------AUTHENTIFICATION---------------------
+
 @app.route('/authentification/verifier')
 def verifcation_auth():
     if 'user_id' in session:
@@ -209,6 +212,7 @@ def banners_Event():
     return jsonify({"data": list(produits.values())})
 
 #-----------------PRODUITS---------------------
+
 @app.route('/produits')
 def produits():
     return render_template('produits_list.html')
@@ -340,12 +344,14 @@ def produits_details(id_produits):
     }
 
     return jsonify({"data": information})
+
 @app.route('/produit/<int:product_id>')
 def product(product_id):
     """Page détail d'un produit"""
     return render_template('product_detail.html')
 
 #-----------------COMMANDE---------------------
+
 @app.route('/commande/create', methods=['POST']) 
 def commande():
     try:

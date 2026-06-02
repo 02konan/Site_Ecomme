@@ -5,6 +5,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("oneViewSection")) {
         AlaUne();
     }
+    if (document.getElementById("eventeaffiche")) {
+        fetchEvents();
+    }
 });
 
 function initBanner() {
@@ -196,18 +199,38 @@ function afficheAlaUne(produit) {
 }
 
 
-function Event() {
+function fetchEvents() {
     fetch("/api/Event/")
     .then(res => res.json())
     .then(json => {                          
         if (json.data && json.data.length > 0) {  
-            afficheEvent(json.data[0]);           
+            AfficheEvent(json.data);           
         }
     });
 }
 
-function AfficheEvent(params) {
-    container=document.getElementById("")
+function AfficheEvent(dataEvent) {
+    const container = document.getElementById("eventeaffiche");
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    dataEvent.forEach((item, index) => {
+        const imageSource = Array.isArray(item.images) ? item.images[0] : item.images;
+        const backgroundImage = imageSource
+            ? (/^https?:\/\//i.test(imageSource) ? imageSource : `${window.urlBanniereImage}${imageSource}`)
+            : '/static/img/default_1.png';
+
+        const altText = item.titre ? `Événement : ${item.titre}` : `Événement ${index + 1}`;
+
+        container.insertAdjacentHTML('beforeend', `
+            <div class="col-12 col-md-6 col-lg-6">
+                <div class="event-content event-other-content">
+                    <img src="${escapeHtml(backgroundImage)}" alt="${escapeHtml(altText)}">
+                </div>
+            </div>
+        `);
+    });
 }
 
 function escapeHtml(str) {
