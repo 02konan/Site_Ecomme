@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from backend.creat_data import create_client,creat_commande
 from backend.Auth import Authentification
 from backend.MessageApi import Message
-from backend.read_data import liste_produits_sous_categorie,liste_Event,get_search_results, get_user_id,liste_Nos_produits,details_produits, liste_alaune,liste_produits,liste_produits_categorie,liste_banners,liste_recents,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
+from backend.read_data import liste_fotter,liste_produits_sous_categorie,liste_Event,get_search_results, get_user_id,liste_Nos_produits,details_produits, liste_alaune,liste_produits,liste_produits_categorie,liste_banners,liste_recents,liste_produits_une,liste_Nouveaute,get_categories_with_subcategories
 import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
 from flask_cors import CORS
@@ -53,6 +53,7 @@ def restriction():
                  "categorie",
                  "sous_categorie_produits",
                  "sous_categorie",
+                 "footer",
                  "https://divix.alwaysdata.net/uploads/produits/",
                  "https://divix.alwaysdata.net/uploads/bannieres/",
                  "static"   
@@ -65,6 +66,19 @@ def restriction():
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/api/footer')
+def footer():
+    data=liste_fotter()
+    table=[]
+    for i in data:
+        information={
+           "id":i[0],
+           "nom":i[1]
+        }
+        table.append(information)
+    
+    return jsonify({"data":table})
 
 #-----------------AUTHENTIFICATION---------------------
 

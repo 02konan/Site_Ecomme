@@ -181,6 +181,25 @@ def liste_Event():
         print(f"Erreur lors de la récupération des produits: {e}") 
         return [] 
 
+def liste_fotter():
+    try:
+        with connexion()as conn:
+            with conn.cursor() as cursor:
+                sql="""
+                    SELECT 
+                            c.id, 
+                            c.nom 
+                        FROM categories c
+                        WHERE 1
+                        ORDER BY c.nom ASC
+                """
+                cursor.execute(sql)
+                result_footer=cursor.fetchall()
+                return result_footer
+    except Exception as e:
+        print(f"Erreur lors de la récupération des categorie: {e}")
+        return[]        
+                
 def liste_alaune():
     try:
         with connexion() as conn:

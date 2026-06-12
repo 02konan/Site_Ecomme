@@ -2798,6 +2798,230 @@ body.sticky-search-padding {
     margin-bottom: -1px;
     transition: all .2s;
 }
+
+/* ========================
+   PRODUCTS HERO CARDS - MODERN DESIGN
+   ======================== */
+.products-hero-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    padding: 40px 32px;
+    color: var(--white);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 320px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.products-hero-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+    pointer-events: none;
+}
+
+.products-hero-card--primary {
+    background: linear-gradient(135deg, #f7edd4 0%, #d8b96f 100%);
+    box-shadow: 0 16px 40px rgba(100, 63, 10, 0.12);
+    color: #2f2a1d;
+}
+
+.products-hero-card--primary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 22px 48px rgba(100, 63, 10, 0.16);
+}
+
+.products-hero-card--secondary {
+    background: linear-gradient(135deg, #f4eedf 0%, #c9b48a 100%);
+    box-shadow: 0 16px 40px rgba(110, 80, 28, 0.12);
+    color: #2f2a1d;
+}
+
+.products-hero-card--secondary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 22px 48px rgba(110, 80, 28, 0.16);
+}
+
+.products-hero-card__content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.products-hero-card__icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.products-hero-card:hover .products-hero-card__icon {
+    background: rgba(255, 255, 255, 0.35);
+    transform: scale(1.1);
+}
+
+.products-hero-card__title {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.products-hero-card__desc {
+    font-size: 15px;
+    opacity: 0.95;
+    margin: 0;
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+.products-hero-card__stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 8px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat__number {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.stat__label {
+    font-size: 12px;
+    opacity: 0.85;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.products-hero-card__decoration {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    top: -100px;
+    right: -100px;
+    z-index: 0;
+}
+
+/* ========================
+   RESPONSIVE PRODUCTS HERO CARDS
+   ======================== */
+@media (max-width: 991px) {
+    .products-hero-card {
+        min-height: 280px;
+        padding: 32px 24px;
+    }
+    
+    .products-hero-card__title {
+        font-size: 26px;
+    }
+    
+    .products-hero-card__desc {
+        font-size: 14px;
+    }
+    
+    .products-hero-card__stats {
+        gap: 24px;
+    }
+}
+
+@media (max-width: 575px) {
+    .products-hero-card {
+        min-height: 240px;
+        padding: 24px 20px;
+    }
+    
+    .products-hero-card__title {
+        font-size: 22px;
+    }
+    
+    .products-hero-card__desc {
+        font-size: 13px;
+    }
+    
+    .products-hero-card__icon {
+        width: 48px;
+        height: 48px;
+        font-size: 24px;
+    }
+    
+    .products-hero-card__stats {
+        gap: 16px;
+        margin-top: 12px;
+    }
+    
+    .stat__number {
+        font-size: 16px;
+    }
+    
+    .stat__label {
+        font-size: 11px;
+    }
+}
+
+/* ========================
+   FLOATING WHATSAPP BUTTON
+   ======================== */
+.whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 20px;
+    right: 20px;
+    background: #25D366;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+    z-index: 1100;
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.whatsapp-float:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.22);
+}
+.whatsapp-float svg {
+    width: 34px;
+    height: 34px;
+    display: block;
+}
+
+@media (max-width: 576px) {
+    .whatsapp-float {
+        width: 52px;
+        height: 52px;
+        bottom: 16px;
+        right: 16px;
+    }
+    .whatsapp-float svg { width: 30px; height: 30px; }
+}
 .auth-tab.active {
     color: var(--dark);
     border-bottom-color: var(--primary);

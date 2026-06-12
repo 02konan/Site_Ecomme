@@ -257,8 +257,8 @@ function afficheproduit_la_une(produits) {
                             // });
         });
         
-        // Initialiser le carrousel pour les nouveautés
-        initCarouselNouveaute();
+        // Initialiser le carrousel pour les produits les plus vendus
+        initCarousel();
         
     } else {
         container.innerHTML = `
@@ -819,7 +819,7 @@ function afficheproduit_nouveaute(produits) {
                             // });
         });
         
-        // Initialiser le carrousel pour les nouveautés
+        // Initialiser le carrousel pour les produits récents (nouveautés)
         initCarouselNouveaute();
         
     } else {
@@ -1001,8 +1001,8 @@ if (produitsLimit && produitsLimit.length > 0) {
                             // });
         });
         
-        // Initialiser le carrousel pour les nouveautés
-        initCarouselNouveaute();
+        // Initialiser le carrousel pour les produits récents
+        initCarouselRecents();
         
     } else {
         container.innerHTML = `
@@ -1157,6 +1157,100 @@ function initCarouselNouveaute() {
     goTo(0);
 }
 
+/* Fonction générique pour initialiser un carrousel */
+function createCarouselInitializer(trackId, prevId, nextId, dotsId) {
+    return function initCarousel() {
+        const track = document.getElementById(trackId);
+        const prevBtn = document.getElementById(prevId);
+        const nextBtn = document.getElementById(nextId);
+        const dotsContainer = document.getElementById(dotsId);
+        
+        if (!track) return;
+        
+        const slides = Array.from(track.querySelectorAll('.products-carousel-slide'));
+        if (slides.length === 0) return;
+        
+        let current = 0;
+        
+        function getVisible() {
+            if (window.innerWidth < 576) return 1;
+            if (window.innerWidth < 992) return 2;
+            return 4;
+        }
+        
+        function getGap() {
+            return window.innerWidth < 576 ? 0 : 16;
+        }
+        
+        function getTotal() {
+            return slides.length - getVisible() + 1;
+        }
+        
+        function buildDots() {
+            if (!dotsContainer) return;
+            dotsContainer.innerHTML = '';
+            const total = getTotal();
+            for (let i = 0; i < total; i++) {
+                const dot = document.createElement('button');
+                dot.classList.add('dot');
+                if (i === current) dot.classList.add('active');
+                dot.addEventListener('click', () => goTo(i));
+                dotsContainer.appendChild(dot);
+            }
+        }
+        
+        function updateDots() {
+            if (!dotsContainer) return;
+            dotsContainer.querySelectorAll('.dot').forEach((d, i) => {
+                d.classList.toggle('active', i === current);
+            });
+        }
+        
+        function updateBtns() {
+            if (prevBtn) prevBtn.disabled = current === 0;
+            if (nextBtn) nextBtn.disabled = current >= getTotal() - 1;
+        }
+        
+        function goTo(index) {
+            current = Math.max(0, Math.min(index, getTotal() - 1));
+            const slideWidth = slides[0].offsetWidth + getGap();
+            track.style.transform = `translateX(-${current * slideWidth}px)`;
+            updateDots();
+            updateBtns();
+        }
+        
+        function next() {
+            if (current < getTotal() - 1) {
+                goTo(current + 1);
+            }
+        }
+        
+        function prev() {
+            if (current > 0) {
+                goTo(current - 1);
+            }
+        }
+        
+        // Nettoyer et ajouter les événements
+        if (prevBtn) {
+            const newPrevBtn = prevBtn.cloneNode(true);
+            prevBtn.parentNode.replaceChild(newPrevBtn, prevBtn);
+            newPrevBtn.addEventListener('click', prev);
+        }
+        
+        if (nextBtn) {
+            const newNextBtn = nextBtn.cloneNode(true);
+            nextBtn.parentNode.replaceChild(newNextBtn, nextBtn);
+            newNextBtn.addEventListener('click', next);
+        }
+        
+        buildDots();
+        goTo(0);
+    };
+}
+
+// Créer les fonctions d'initialisation pour chaque carrousel
+const initCarouselRecents = createCarouselInitializer('productsTrackRecents', 'productsPrevRecents', 'productsNextRecents', 'productsDotsRecents');
 
 function buildCarouselDots() {
     if (!carouselDotsContainer) return;

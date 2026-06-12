@@ -8,6 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("eventeaffiche")) {
         fetchEvents();
     }
+    if (document.getElementById("footerliste")) {
+        fetchFooter()
+    }
 });
 
 function initBanner() {
@@ -198,7 +201,6 @@ function afficheAlaUne(produit) {
     }
 }
 
-
 function fetchEvents() {
     fetch("/api/Event/")
     .then(res => res.json())
@@ -231,6 +233,35 @@ function AfficheEvent(dataEvent) {
             </div>
         `);
     });
+}
+function fetchFooter() {
+    fetch("/api/footer")
+        .then(res => res.json())
+        .then(json => {
+            if (json.data && json.data.length > 0) {
+                renderFooter(json.data);
+            }
+        })
+        .catch(err => console.error("Erreur fetch footer:", err));
+}
+
+function renderFooter(data) {
+    const container = document.getElementById("footerliste");
+    if (!container) return;
+
+    const ul = document.createElement("ul");
+    ul.classList.add("footer-links");
+
+    data.forEach(item => {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = "#";
+        a.textContent = item.nom;
+        li.appendChild(a);
+        ul.appendChild(li);
+    });
+
+    container.appendChild(ul);
 }
 
 function escapeHtml(str) {

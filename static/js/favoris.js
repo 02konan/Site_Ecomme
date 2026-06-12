@@ -10,6 +10,7 @@ function getfavoris() {
 function saveFavoris(favoris) {
     localStorage.setItem("favoris", JSON.stringify(favoris));
     updateCompteurFavoris();
+    syncBoutonsFavoris();
 }
 /* Ouvrir / Fermer le drawer favoris */
 function ouvrirDrawerFavoris() {
@@ -69,7 +70,6 @@ function totalFavoris() {
 }
 /* Mettre à jour le badge compteur */
 function updateCompteurFavoris() {
-    const total = getPanier().reduce((acc, p) => acc + p.quantite, 0);
     const badge = document.getElementById('favoris-compteur');
     if (!badge) return; 
 
